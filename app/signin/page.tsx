@@ -127,6 +127,11 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { login } from '@/redux/slices/userSlice';
+
+
 
 function Copyright(props: any) {
   return (
@@ -145,13 +150,21 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
+
+  const dispatch:AppDispatch=useDispatch();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    const details={
       email: data.get('email'),
       password: data.get('password'),
-    });
+    }
+
+
+    dispatch(login(details));
+
+    console.log("object")
+
   };
 
   return (
@@ -190,8 +203,11 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box component="form" noValidate
+             onSubmit={handleSubmit} 
+             sx={{ mt: 1 }}>
               <TextField
+              type='Email'
                 margin="normal"
                 required
                 fullWidth
@@ -199,6 +215,7 @@ export default function SignInSide() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+
                 autoFocus
               />
               <TextField

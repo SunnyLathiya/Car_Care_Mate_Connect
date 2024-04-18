@@ -1,12 +1,357 @@
-import React from 'react'
 
-const page = () => {
-  return (
-    <div style={{position:"relative",width:"88%",overflow:"hidden",backgroundColor:"green", top:"81px", left:"11.5%", zIndex:"-1"}}>
-        <h1>Sunny Lathiya</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, similique itaque. Assumenda dolore nisi autem, ullam, quam itaque unde porro dolor consectetur adipisci numquam quisquam odit pariatur tenetur fuga. Officiis ab adipisci dolores enim blanditiis nesciunt ullam quia quas optio natus, aut, quod velit quam culpa expedita nam fuga modi nulla suscipit, excepturi maiores exercitationem ratione? Saepe tenetur accusantium vel dignissimos ipsa nam in doloribus atque quod. Laboriosam odio sit soluta, harum eligendi repellat, earum pariatur quos, in fugit ut. Itaque totam commodi culpa at tempore quam, reiciendis asperiores odit cumque illo, quasi, fuga ad excepturi voluptates ratione aspernatur vitae tenetur deleniti quo voluptatibus dicta alias distinctio? Debitis, expedita commodi maiores hic iure possimus, nihil quae laborum, qui inventore tenetur ea. Aliquid modi soluta at doloremque quasi sed error illum voluptatum. Numquam cumque repellat quaerat asperiores mollitia molestias officia exercitationem pariatur vitae culpa esse voluptates, ducimus adipisci quidem sint facilis aut dolores consectetur cupiditate error! Incidunt, velit quaerat placeat animi assumenda sequi consequatur excepturi veniam eum a corporis cumque! Consequatur vitae delectus dolor ea ipsa ullam necessitatibus quos atque odit! Magnam dolor, illo voluptatibus officiis omnis suscipit possimus consectetur aliquam iure. Aut provident alias impedit, repellat doloribus voluptatibus recusandae assumenda pariatur modi. Quae quidem a, quasi saepe consequatur reiciendis voluptas tenetur maxime. Iste nihil eligendi cumque sunt magni quae animi aspernatur debitis nam expedita. Ex quidem porro, quaerat aliquam iusto adipisci necessitatibus inventore nostrum quae in dolore maxime expedita. Eius, beatae exercitationem tempore, natus assumenda sed ex soluta suscipit officia laudantium dignissimos ullam numquam vero nihil aliquam consequatur nesciunt accusamus amet itaque deserunt totam harum quibusdam, mollitia iure! Quos commodi ducimus at. Commodi vero laborum magnam earum tempora nostrum fugiat quas molestias non et voluptates dolores libero animi aperiam illum in sint est sapiente odio vel numquam rem ipsum, provident saepe. Repellat pariatur autem natus nulla quae, soluta ipsa ipsum temporibus nam, suscipit asperiores magnam. Reiciendis animi, voluptatem, aspernatur hic id omnis eos laudantium saepe harum aperiam veritatis aliquid facere, vero illum molestiae ipsum architecto eius. Distinctio alias aut voluptate saepe suscipit, eum nam explicabo sunt quaerat vitae sequi nulla? Quo vitae alias cum assumenda. Aspernatur esse laborum sapiente ea nihil soluta pariatur aut libero, iste inventore nam tenetur dolor sit unde quidem perspiciatis dolorum distinctio natus ex voluptatibus! Rerum voluptatum fuga ab nisi et veniam nemo cupiditate delectus. Consequuntur, veniam? Est quo, perferendis, rem expedita voluptatibus laboriosam at accusamus possimus cum repellat iste totam ad dolor minus numquam dignissimos vero veniam sequi exercitationem aliquid nam iure sed distinctio repellendus! A modi eum quia hic ducimus asperiores eius commodi magnam nobis assumenda laboriosam eaque ipsam corporis possimus autem debitis, adipisci libero blanditiis cum, distinctio dolorem facilis non inventore exercitationem! Exercitationem, quae obcaecati. Sequi dicta nam earum non odio consectetur voluptatem aspernatur iste, possimus autem dolor iusto quia tenetur laboriosam eveniet culpa molestias facere consequuntur itaque nulla modi aperiam velit tempore? Ad quibusdam recusandae doloremque vel! Quod, at quibusdam repellat dolorem nam, unde in animi odio repellendus voluptates voluptate dicta dignissimos.</p>
-    </div>
-  )
+
+// import React, { useEffect, useState } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useSnackbar } from 'notistack';
+// import { addCar, getAllCars } from '@/redux/slices/carSlice';
+// import { AppDispatch, RootState } from '@/redux/store';
+// import MaterialTable, { Column } from "material-table";
+// import { AddBox, DeleteOutline, Edit, SaveAlt, Search, Cancel } from '@material-ui/icons';
+
+// interface CarData {
+//   name: string;
+//   brand: string;
+//   tableData?: any; // Add tableData property to CarData interface
+// }
+
+// function Cars() {
+//   const { cars } = useSelector((state: RootState) => state.car);
+//   const { enqueueSnackbar } = useSnackbar();
+//   const dispatch: AppDispatch = useDispatch();
+//   const [formData, setFormData] = useState<CarData>({ name: '', brand: '' });
+  
+//   useEffect(() => {
+//     dispatch(getAllCars());
+//   }, []);
+
+//   const columns = [
+//     { title: "Name", field: "name" },
+//     { title: "Brand", field: "brand" },
+//   ];
+
+//   const handleRowAdd = async (newData: CarData) => {
+//     try {
+//       await dispatch(addCar(formData));
+//       enqueueSnackbar('Car added successfully', {
+//         variant: 'success',
+//       });
+//       setFormData({ name: '', brand: '' });
+//     } catch (error) {
+//       console.error('Error occurred while adding car:', error);
+//       enqueueSnackbar('Failed to add car', {
+//         variant: 'error',
+//       });
+//     }
+//   };
+
+//   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const { name, value } = e.target;
+//     setFormData({ ...formData, [name]: value });
+//   };
+
+//   return (
+//       <div style={{ marginTop: '90px', marginBottom: '20px', marginLeft: '180px', width: '85%' }}>
+//       <MaterialTable
+//         title="CARS DATA"
+//         columns={columns}
+//         data={cars.map((car: CarData) => ({ ...car, tableData: {} }))}
+//         editable={{
+//           onRowAdd: handleRowAdd,
+//         }}
+//         icons={{
+//           Add: () => <AddBox />,
+//           Edit: () => <Edit />,
+//           Delete: () => <DeleteOutline />,
+//           Save: () => <SaveAlt />,
+//           Clear: () => <Cancel />,
+//           Search: () => <Search />,
+//           FirstPage: () => <span>First</span>,
+//           LastPage: () => <span>Last</span>,
+//           NextPage: () => <span>Next</span>,
+//           PreviousPage: () => <span>Previous</span>,
+//         }}
+    
+//         options={{
+//           headerStyle: {
+//             backgroundColor: "#01579b",
+//             color: "#FFF",
+//           },
+//           actionsCellStyle: {
+//             backgroundColor: "#FFF",
+//           },
+//         }}
+//       />
+//     </div>
+//   );
+// }
+
+// export default Cars;
+
+
+// "use client"
+// import React, { useEffect, useState } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useSnackbar } from 'notistack';
+// import { addCar, getAllCars, deleteCar, updateCar } from '@/redux/slices/carSlice';
+// import { AppDispatch, RootState } from '@/redux/store';
+// import MaterialTable, { Column } from 'material-table';
+// import { AddBox, Cancel, DeleteOutline, Edit, SaveAlt, Search } from '@mui/icons-material';
+// import { alpha } from '@material-ui/core/styles';
+
+
+// interface CarData {
+//   name: string;
+//   brand: string;
+// }
+
+// function Cars() {
+//   const { cars } = useSelector((state: RootState) => state.car);
+//   const { enqueueSnackbar } = useSnackbar();
+//   const dispatch: AppDispatch = useDispatch();
+//   const [formData, setFormData] = useState<CarData>({ name: '', brand: '' });
+
+//   useEffect(() => {
+//     dispatch(getAllCars());
+//   }, [dispatch]);
+
+//   // const handleRowAdd = async () => {
+//   //   try {
+//   //     await dispatch(addCar(formData));
+//   //     enqueueSnackbar('Car added successfully', {
+//   //       variant: 'success',
+//   //     });
+//   //     setFormData({ name: '', brand: '' });
+//   //   } catch (error) {
+//   //     console.error('Error occurred while adding car:', error);
+//   //     enqueueSnackbar('Failed to add car', {
+//   //       variant: 'error',
+//   //     });
+//   //   }
+//   // };
+  
+//   const handleRowAdd = async () => {
+//     try {
+//       // Ensure that both name and brand are provided in the formData
+//       if (!formData.name || !formData.brand) {
+//         throw new Error('Name and brand are required.');
+//       }
+      
+//       await dispatch(addCar(formData));
+//       enqueueSnackbar('Car added successfully', {
+//         variant: 'success',
+//       });
+//       setFormData({ name: '', brand: '' });
+//     } catch (error) {
+//       console.error('Error occurred while adding car:', error);
+//       enqueueSnackbar('Failed to add car', {
+//         variant: 'error',
+//       });
+//     }
+//   };
+  
+  
+
+//   const handleRowDelete = async (oldData: CarData) => {
+//     try {
+//       await dispatch(deleteCar(oldData._id)); // Pass the carId to deleteCar action
+//       enqueueSnackbar('Car deleted successfully', {
+//         variant: 'success',
+//       });
+//     } catch (error) {
+//       console.error('Error occurred while deleting car:', error);
+//       enqueueSnackbar('Failed to delete car', {
+//         variant: 'error',
+//       });
+//     }
+//   };
+
+//   const handleRowUpdate = async (newData: CarData, oldData: CarData | undefined) => {
+//     if (oldData) {
+//       try {
+//         await dispatch(updateCar(newData));
+//         enqueueSnackbar('Car updated successfully', {
+//           variant: 'success',
+//         });
+//       } catch (error) {
+//         console.error('Error occurred while updating car:', error);
+//         enqueueSnackbar('Failed to update car', {
+//           variant: 'error',
+//         });
+//       }
+//     }
+//   };
+
+//   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const { name, value } = e.target;
+//     setFormData({ ...formData, [name]: value });
+//   };
+
+//   const columns: Column<CarData>[] = [
+//     { title: 'Name', field: 'name' },
+//     { title: 'Brand', field: 'brand' },
+//   ];
+
+//   // function handleRowUpdate(newData: CarData, oldData?: CarData | undefined): Promise<any> {
+//   //   throw new Error('Function not implemented.');
+//   // }
+
+//   return (
+//     <div style={{ marginTop: '90px', marginBottom: '20px', marginLeft: '180px', width: '85%' }}>
+//       <MaterialTable
+//         title="CARS DATA"
+//         columns={columns}
+//         data={cars.map((car: CarData) => ({ ...car, tableData: {} }))}
+//         editable={{
+//           onRowAdd: handleRowAdd,
+//           onRowUpdate: handleRowUpdate,
+//           onRowDelete: handleRowDelete,
+//         }}
+//         icons={{
+//           Add: () => <AddBox />,
+//           Edit: () => <Edit />,
+//           Delete: () => <DeleteOutline />,
+//           Save: () => <SaveAlt />,
+//           Clear: () => <Cancel />,
+//           Search: () => <Search />,
+//           FirstPage: () => <span>First</span>,
+//           LastPage: () => <span>Last</span>,
+//           NextPage: () => <span>Next</span>,
+//           PreviousPage: () => <span>Previous</span>,
+//         }}
+//         options={{
+//           headerStyle: {
+//             backgroundColor: "#01579b",
+//             color: "#FFF",
+//           },
+//           actionsCellStyle: {
+//             backgroundColor: "#FFF",
+//           },
+//         }}
+//       />
+//     </div>
+//   );
+// }
+
+// export default Cars;
+
+"use client"
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from 'notistack';
+import MaterialTable, { Column } from 'material-table';
+import { AddBox, Cancel, DeleteOutline, Edit, SaveAlt, Search } from '@mui/icons-material';
+import { RootState, AppDispatch } from '@/redux/store';
+import { addCar, getAllCars, deleteCar, updateCar } from '@/redux/slices/carSlice';
+
+interface CarData {
+  name: string;
+  brand: string;
 }
 
-export default page
+function Cars() {
+  const { cars } = useSelector((state: RootState) => state.car);
+  const { enqueueSnackbar } = useSnackbar();
+  const dispatch: AppDispatch = useDispatch();
+  const [formData, setFormData] = useState<CarData>({ name: '', brand: '' });
+
+  useEffect(() => {
+    dispatch(getAllCars());
+  }, [dispatch]);
+
+  const handleRowAdd = async (newRow: CarData) => {
+    try {
+      if (!newRow.name || !newRow.brand) {
+        throw new Error('Name and brand are required.');
+      }
+      
+      await dispatch(addCar(newRow));
+      enqueueSnackbar('Car added successfully', {
+        variant: 'success',
+      });
+    } catch (error) {
+      console.error('Error occurred while adding car:', error);
+      enqueueSnackbar('Failed to add car', {
+        variant: 'error',
+      });
+    }
+  };
+
+  const handleRowDelete = async (oldRow: CarData) => {
+    try {
+      await dispatch(deleteCar(oldRow._id)); // Pass the carId to deleteCar action
+      enqueueSnackbar('Car deleted successfully', {
+        variant: 'success',
+      });
+    } catch (error) {
+      console.error('Error occurred while deleting car:', error);
+      enqueueSnackbar('Failed to delete car', {
+        variant: 'error',
+      });
+    }
+  };
+
+  const handleRowUpdate = async (newRow: CarData, oldRow: CarData | undefined) => {
+    if (oldRow) {
+      try {
+        await dispatch(updateCar(newRow));
+        enqueueSnackbar('Car updated successfully', {
+          variant: 'success',
+        });
+      } catch (error) {
+        console.error('Error occurred while updating car:', error);
+        enqueueSnackbar('Failed to update car', {
+          variant: 'error',
+        });
+      }
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const columns: Column<CarData>[] = [
+    { title: 'Name', field: 'name' },
+    { title: 'Brand', field: 'brand' },
+  ];
+
+
+const enhancedCars = cars.map((car: CarData, index: number) => ({ ...car, tableData: { id: index } }));
+
+return (
+  <div style={{marginTop:"100px", marginLeft:"12%"}}>
+    <MaterialTable
+      title="Cars Data"
+      columns={columns}
+      data={enhancedCars}
+      editable={{
+        onRowAdd: handleRowAdd,
+        onRowUpdate: handleRowUpdate,
+        onRowDelete: handleRowDelete,
+      }}
+      icons={{
+        Add: () => <AddBox />,
+        Edit: () => <Edit />,
+        Delete: () => <DeleteOutline />,
+        Save: () => <SaveAlt />,
+        Clear: () => <Cancel />,
+        Search: () => <Search />,
+      }}
+      options={{
+        headerStyle: {
+          backgroundColor: "#01579b",
+          color: "#FFF",
+        },
+        actionsCellStyle: {
+          backgroundColor: "#FFF",
+        },
+      }}
+    />
+  </div>
+);
+
+}
+
+export default Cars;
+
