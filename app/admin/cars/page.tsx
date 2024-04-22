@@ -237,11 +237,11 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSnackbar } from 'notistack';
 import MaterialTable, { Column } from 'material-table';
-import { AddBox, Cancel, DeleteOutline, Edit, SaveAlt, Search } from '@mui/icons-material';
+import { Add, AddBox, ArrowUpward, Cancel, Check, ChevronLeft, ChevronRight, Clear, Delete, DeleteOutline, Edit, FirstPage, LastPage, SaveAlt, Search } from '@mui/icons-material';
 import { RootState, AppDispatch } from '@/redux/store';
-import { addCar, getAllCars, deleteCar, updateCar } from '@/redux/slices/carSlice';
+import { addCar, getAllCars, deleteCar, updateCar } from '@/redux/slices/adminSlices/carSlice';
+import { Bounce, toast } from 'react-toastify';
 
 interface CarData {
   name: string;
@@ -250,9 +250,23 @@ interface CarData {
 
 function Cars() {
   const { cars } = useSelector((state: RootState) => state.car);
-  const { enqueueSnackbar } = useSnackbar();
   const dispatch: AppDispatch = useDispatch();
   const [formData, setFormData] = useState<CarData>({ name: '', brand: '' });
+
+  useEffect(() => {
+    toast.info('Car detailes page!', {
+      position: "bottom-left",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      transition: Bounce,
+      });
+  }, [])
+
 
   useEffect(() => {
     dispatch(getAllCars());
@@ -265,28 +279,17 @@ function Cars() {
       }
       
       await dispatch(addCar(newRow));
-      enqueueSnackbar('Car added successfully', {
-        variant: 'success',
-      });
+
     } catch (error) {
       console.error('Error occurred while adding car:', error);
-      enqueueSnackbar('Failed to add car', {
-        variant: 'error',
-      });
     }
   };
 
   const handleRowDelete = async (oldRow: CarData) => {
     try {
       await dispatch(deleteCar(oldRow._id)); // Pass the carId to deleteCar action
-      enqueueSnackbar('Car deleted successfully', {
-        variant: 'success',
-      });
     } catch (error) {
       console.error('Error occurred while deleting car:', error);
-      enqueueSnackbar('Failed to delete car', {
-        variant: 'error',
-      });
     }
   };
 
@@ -294,14 +297,10 @@ function Cars() {
     if (oldRow) {
       try {
         await dispatch(updateCar(newRow));
-        enqueueSnackbar('Car updated successfully', {
-          variant: 'success',
-        });
+
       } catch (error) {
         console.error('Error occurred while updating car:', error);
-        enqueueSnackbar('Failed to update car', {
-          variant: 'error',
-        });
+  
       }
     }
   };
@@ -331,12 +330,21 @@ return (
         onRowDelete: handleRowDelete,
       }}
       icons={{
-        Add: () => <AddBox />,
-        Edit: () => <Edit />,
-        Delete: () => <DeleteOutline />,
-        Save: () => <SaveAlt />,
-        Clear: () => <Cancel />,
-        Search: () => <Search />,
+        Add: Add,
+        Check: Check,
+        Clear: Clear,
+        Delete: Delete,
+        DetailPanel: ChevronRight,
+        Edit: Edit,
+        Export: ArrowUpward,
+        Filter: Search,
+        FirstPage: FirstPage,
+        LastPage: LastPage,
+        NextPage: ChevronRight,
+        PreviousPage: ChevronLeft,
+        ResetSearch: Clear,
+        Search: Search,
+        SortArrow: ArrowUpward,
       }}
       options={{
         headerStyle: {

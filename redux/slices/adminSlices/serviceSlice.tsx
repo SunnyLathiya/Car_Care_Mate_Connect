@@ -3,6 +3,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 // import { ToastError, ToastSuccess } from '@/components/custom-error/toast';
 import Cookies from 'js-cookie';
+import {Bounce, toast} from 'react-toastify';
 
 export const getAllServices = createAsyncThunk(
     'services/findallservices',
@@ -11,6 +12,7 @@ export const getAllServices = createAsyncThunk(
             const response = await axios.get(`http://localhost:4000/api/v1/admin/findallservices`);
             return response.data;
         } catch (error: any) {
+            toast.error('Error in fatch Services Page!');
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -25,11 +27,13 @@ export const addService = createAsyncThunk(
             const response = await axios.post(`http://localhost:4000/api/v1/admin/addservice`, newService, { headers: {
                 Authorization: `Bearer ${token}`, // Send token in the Authorization header
               },});
-            // ToastSuccess('Car added successfully');
+              
+              toast.success('New Service added!');
 
-            console.log(response)
             return response.data;
         } catch (error: any) {
+
+            toast.error('Error in new service create!');
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -45,8 +49,30 @@ export const deleteService = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
+            toast.success('Service Delete Successfully!', {
+                position: "bottom-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+                });
             return serviceId; // Return the ID of the deleted car upon successful deletion
         } catch (error: any) {
+            toast.error('Error in Delete New Service!', {
+                position: "bottom-left",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                transition: Bounce,
+                });
             throw (error as AxiosError).response?.data || error.message;
         }
     }

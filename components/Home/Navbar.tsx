@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
   const [show, setShow] = useState(true);
 
 
-  const [userRole,setUserRole] = useState<string | undefined>("isAdmin")
+  const [userRole,setUserRole] = useState<string | undefined>("isCustomer")
 
   // const [isCustomer, setIsCustomer] = useState(true);
   // const [isAdmin, setIsAdmin] = useState(false);

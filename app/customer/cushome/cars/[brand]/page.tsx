@@ -3,59 +3,69 @@ import React, { useEffect, useState } from "react";
 import { Grid, Card, CardContent, CircularProgress, Typography, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "@/css/customers/Brands.module.css";
-// import CarService from "../../services/member/car/car_services";
+import axios from "axios";
+import { useParams, useRouter } from 'next/navigation';
 
-const Brands: React.FC = () => {
-  const [brands, setBrands] = useState<any[]>([]);
+const Brands: React.FC = (props: any) => {
+  const router = useRouter();
+  const { brand } = useParams<{ brand: string }>();
+  const [cars, setCars] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("");
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
   };
 
-//   const retrieveBrands = () => {
-//     CarService.getAllBrands()
-//       .then((response) => {
-//         setBrands(response);
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   };
+  const retrieveCars = () => {
+    axios.post('http://localhost:4000/api/v1/admin/findbybrand', { brand })
+      .then((response) => {
+        setCars(response.data.cars);
+        // console.log(response.data.cars)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  
 
-//   useEffect(() => {
-//     retrieveBrands();
-//   }, []);
+  useEffect(() => {
+    retrieveCars();
+  }, []);
 
-  const getCarCard = (brand: string) => {
+  const getCarCard = (car: any) => {
     return (
-      <Grid item xs={6} sm={4} md={3} lg={2} key={brand}>
-        {/* <Card className="card" onClick={() => console.log(`/cust_home/cars/${brands[brand]}`)}>
+      <Grid item xs={6} sm={4} md={3} lg={2} key={car._id}>
+        <Card className="card" onClick={() => router.push(`customer/cushome/services/${car._id}`)}>
           <CardContent>
-            <Typography className="text">{brands[brand]}</Typography>
+            <Typography className="text">{car.name}</Typography>
           </CardContent>
-        </Card> */}
+        </Card>
       </Grid>
     );
   };
 
-  return (
-    <div className={`${styles.brand}`}>
-      <h1 className={`${styles.title}`}>Available Brands</h1>
+  return (<>
+
+    <div>
+    {/* <CarouselComponent /> */}
+    <div className={`${styles.brand}`} style={{"marginTop":"200px"}}>
+      <h1 className={`${styles.title}`}>{`Available ${brand} Cars`}</h1>
 
       <div className={`${styles.search}`}>
         <SearchIcon className={`${styles.searchIcon}`} />
-        <TextField className={`${styles.searchInput}`} label="Search for Brands" onChange={handleSearchChange} />
+        <TextField
+          className={`${styles.searchInput}`}
+          label="Search for Cars"
+          onChange={handleSearchChange}
+          />
       </div>
 
-      {brands ? (
-        <Grid container spacing={3} item className={`${styles.grid_container}`}>
-          {/* {Object.keys(brands).map((brand) => brands[brand].includes(filter) && getCarCard(brand))} */}
-        </Grid>
-      ) : (
-        <CircularProgress />
-      )}
+      <Grid container spacing={3} className={`${styles.grid_container}`}>
+        {cars.map((car) => car.name.includes(filter) && getCarCard(car))}
+      </Grid>
     </div>
+  </div>
+          </>
   );
 };
 

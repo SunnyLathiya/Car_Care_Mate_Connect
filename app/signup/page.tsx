@@ -157,11 +157,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 import { useFormik } from "formik";
 import { signUpSchema } from '@/components/schemas';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { User } from '../types';
-import { registerUser } from '@/redux/slices/userSlice';
 
 
 interface RegisterFormValues {
@@ -194,23 +191,17 @@ const defaultTheme = createTheme();
 
 export default function SignInSide() {
 
-  const dispatch = useDispatch();
-
   const handleSubmit = async (formData: RegisterFormValues) => {
     const user: User = {
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,
       password: formData.password,
-      user: undefined
+      user: undefined,
+      token: ''
     };
     
-    try {
-      // Dispatch the registerUser action with the user object
-      await dispatch(registerUser(user));
-    } catch (error) {
-      // Handle any errors here
-    }
+    
   };
 
   const formik = useFormik<RegisterFormValues>({

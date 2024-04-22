@@ -3,38 +3,45 @@ import React, { useEffect, useState } from "react";
 import { Grid, Card, CardContent, CircularProgress, Typography, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "@/css/customers/Brands.module.css"
-// import CarService from "../../services/member/car/car_services";
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+
 
 const Brands: React.FC = () => {
+
   const [brands, setBrands] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("");
+  const router = useRouter();
+  
+  
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
   };
 
-//   const retrieveBrands = () => {
-//     CarService.getAllBrands()
-//       .then((response) => {
-//         setBrands(response);
-//       })
-//       .catch((err) => {
-//         console.log(err);
-//       });
-//   };
+  const retrieveBrands = () => {
+    axios.get('http://localhost:4000/api/v1/admin/findallbrands')
+      .then((response) => {
+        setBrands(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  
 
-//   useEffect(() => {
-//     retrieveBrands();
-//   }, []);
+  useEffect(() => {
+    retrieveBrands();
+  }, []);
 
-  const getCarCard = (brand: string) => {
+  const getCarCard = (brand: any) => {
     return (
       <Grid item xs={6} sm={4} md={3} lg={2} key={brand}>
-        {/* <Card className="card" onClick={() => console.log(`/cust_home/cars/${brands[brand]}`)}>
+        <Card className={`${styles.card}`} onClick={() => router.push(`/customer/cushome/cars/${encodeURIComponent(brands[brand])}`)}>
           <CardContent>
-            <Typography className="text">{brands[brand]}</Typography>
+            <Typography style={{fontSize:"xx-large"}}>{brands[brand]}</Typography>
           </CardContent>
-        </Card> */}
+        </Card>
       </Grid>
     );
   };
@@ -50,7 +57,7 @@ const Brands: React.FC = () => {
 
       {brands ? (
         <Grid container spacing={3} item className={`${styles.grid_container}`}>
-          {/* {Object.keys(brands).map((brand) => brands[brand].includes(filter) && getCarCard(brand))} */}
+          {Object.keys(brands).map((brand) => brands[brand].includes(filter) && getCarCard(brand))}
         </Grid>
       ) : (
         <CircularProgress />
@@ -60,3 +67,4 @@ const Brands: React.FC = () => {
 };
 
 export default Brands;
+

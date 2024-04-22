@@ -33,14 +33,18 @@
 
 import { configureStore } from '@reduxjs/toolkit';
 import userSlice from './slices/userSlice';
-import carSlice from './slices/carSlice';
-import serviceSlice from './slices/serviceSlice';
+import carSlice from './slices/adminSlices/carSlice';
+import serviceSlice from './slices/adminSlices/serviceSlice';
+import adminMechSlice from './slices/adminSlices/adminMechSlice';
+import orderSlice from './slices/adminSlices/orderSlice';
 
 export const store = configureStore({
   reducer: {
     user: userSlice,
     car: carSlice,
-    service: serviceSlice
+    service: serviceSlice,
+    adminMech: adminMechSlice,
+    order: orderSlice
   },
 });
 
