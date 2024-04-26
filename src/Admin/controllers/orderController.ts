@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import orderModel from '../../Order/models/orderModel'
+import orderModel, { Order } from '../../Order/models/orderModel'
 import userModel from '../../Auth/models/userModel';
 
 
@@ -81,4 +81,29 @@ export const findCompletedOrders = (req: Request, res: Response) => {
       });
   };
 
+  
+  export const findCompletedOrdersProfit = async (req: Request, res: Response) => {
+    try {
+      // Find all completed orders
+      const completedOrders: Order[] = await orderModel.find({ status: "COMPLATED" }).exec();
+
+      if (completedOrders.length === 0) {
+        return res.status(404).json({
+          message: "No completed orders found",
+        });
+      }
+  
+      const totalServicePrice = completedOrders.reduce((total, order) => total + order.servicePrice, 0);
+  
+      res.status(200).json({
+        totalServicePrice,
+      });
+    } catch (err) {
+      console.error("Find All Completed Orders sum Error: ", err);
+      res.status(500).json({
+        error: "Internal Server Error",
+      });
+    }
+  };
+  
 

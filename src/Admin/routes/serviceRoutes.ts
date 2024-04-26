@@ -15,6 +15,8 @@ router.patch("/updateservice/:serviceId", auth, Admin, updateService);
 
 router.delete("/deleteservice/:serviceId", auth, Admin, deleteService);
 
-router.get("/findbyserviceid/:serviceId", auth, Admin, findByServiceId);
+router.get("/findbyserviceid/:serviceId", 
+// auth, Admin, 
+findByServiceId);
 
 export default router;

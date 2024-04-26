@@ -7,13 +7,13 @@ import { auth, Customer } from "../../middleware/authMiddleware";
 
 router.post(
   "/addorder/:customerId",
-  auth, Customer,
+  // auth, Customer,
   addOrder
 );
 
 router.get(
   "/findOrders/:customerId",
-  auth, Customer,
+  // auth, Customer,
   findMyOrders
 );
 

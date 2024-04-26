@@ -20,7 +20,6 @@ export const addOrder = async (req: Request<any, any, OrderRequestBody>, res: Re
 
   const customer:  User  | null = await userModel.findById(req.params.customerId);
   const customerName: string | undefined = customer?.firstName;
-  // *********
 
   const order = new OrderModel({
     customerId: req.params.customerId,

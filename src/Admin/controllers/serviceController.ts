@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import serviceModel, {Service} from '../models/serviceModel';
 
-
+ 
 export const addService = (req: Request, res: Response): void => {
   serviceModel.findOne({ name: req.body.name })
     .exec()
@@ -58,8 +58,6 @@ export const findAll = (req: Request, res: Response): void => {
       });
     });
 };
-
-
 
 export const updateService = async (req: Request, res: Response): Promise<void> => {
   try {

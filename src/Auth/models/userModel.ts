@@ -14,6 +14,7 @@ interface User extends Document {
   token?: string | null;
   resetPasswordExpires?: Date | null;
   id: string;
+  carSelected: string[];
 }
 
 const userSchema: Schema = new Schema({
@@ -102,6 +103,9 @@ const userSchema: Schema = new Schema({
     minLength: 3,
     maxLength: 50,
   },
+  carSelected: [{
+    type: String
+  }]
 });
 
 export default mongoose.model<User>("User", userSchema);

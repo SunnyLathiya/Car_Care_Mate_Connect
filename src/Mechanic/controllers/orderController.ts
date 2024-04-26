@@ -7,6 +7,7 @@ export const findInProcessOrders = (req: Request, res: Response): void => {
     $or: [
       { mechanicId: req.params.mechId, status: "IN-PROCESS" },
       { mechanicId: req.params.mechId, status: "ACCEPTED" },
+      { mechanicId: req.params.mechId, status: "PENDING" },
     ],
   })
     .exec()
@@ -17,7 +18,7 @@ export const findInProcessOrders = (req: Request, res: Response): void => {
         });
       } else {
         res.status(200).json({
-          orders: response,
+          response,
         });
       }
     })

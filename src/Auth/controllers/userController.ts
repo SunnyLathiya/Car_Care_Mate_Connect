@@ -156,6 +156,7 @@ export const sendOTP = async (req: Request, res: Response) => {
         password: hashedPassword,
         confirmPassword: hashedPassword,
         accountType,
+        carSelected: null,
         additionalDetails: profileDetails._id,
         image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
       });
@@ -186,6 +187,8 @@ export const sendOTP = async (req: Request, res: Response) => {
       }
   
       let user = await userModel.findOne({ email }).populate("additionalDetails");
+      console.log(user)
+      // console.log(user.username)
   
       if (!user) {
         return res.status(401).json({
@@ -197,7 +200,6 @@ export const sendOTP = async (req: Request, res: Response) => {
       const payload = {
         email: user.email,
         id: user._id,
-        firstName: user.firstName,
         accountType: user.accountType,
       };
 
@@ -206,13 +208,13 @@ export const sendOTP = async (req: Request, res: Response) => {
       if (await bcrypt.compare(password, user.password)) {
         // Password matches
         let token = jwt.sign(payload, sss, {
-          expiresIn: "2h",
+          expiresIn: "10h",
         });
   
         user.token = token;
         // user.password = undefined;
 
-        user = user.toObject(); // Convert to plain JavaScript object
+        user = user.toObject();
 
       // Create a new object without the password property
       const { password: _, ...userWithoutPassword } = user;

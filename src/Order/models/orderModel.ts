@@ -15,17 +15,17 @@ export interface Order extends Document {
 }
 
 const orderSchema: Schema = new Schema({
-  customerId: { type: String, required: true },
-  customerName: { type: String, required: true },
-  carName: { type: String, required: true },
-  carNumber: { type: String, required: true },
-  custAddress: { type: String, required: true, maxlength: 40 },
-  serviceName: { type: String, required: true },
+  customerId: { type: String },
+  customerName: { type: String },
+  carName: { type: String },
+  carNumber: { type: String },
+  custAddress: { type: String, maxlength: 40 },
+  serviceName: { type: String },
   servicePrice: { type: Number, required: true, min: 0 },
   mechanicId: { type: String },
   requestedOn: { type: Date, default: Date.now, required: true },
   deliveredOn: { type: Date },
-  status: { type: String, required: true, default:"PENDING" },
+  status: { type: String, default:"PENDING" },
 });
 
 export default model<Order>("Order", orderSchema);
