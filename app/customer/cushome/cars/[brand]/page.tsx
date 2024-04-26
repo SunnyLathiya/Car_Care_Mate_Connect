@@ -12,6 +12,7 @@ const Brands: React.FC = (props: any) => {
   const [cars, setCars] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("");
 
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
   };

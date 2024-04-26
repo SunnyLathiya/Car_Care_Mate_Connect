@@ -1,23 +1,18 @@
 "use client"
-import React, { useState } from 'react'
+import { findCompletedOrdersProfit } from '@/redux/slices/adminSlices/orderSlice';
+import { AppDispatch, RootState } from '@/redux/store';
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const page: React.FC = () => {
     const [orders, setOrders] = useState<any[]>([]);
-
-    
-  // const getCompletedOrders = () => {
-  //   AdminOrders.findCompletedOrders()
-  //     .then((res) => {
-  //       setOrders(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getCompletedOrders();
-  // }, []);
+    const rrr = useSelector((state: RootState) => state.order.totalProfit.totalServicePrice);
+    console.log("hello", rrr)
+    const dispatch: AppDispatch = useDispatch();
+    useEffect(() => {
+      dispatch(findCompletedOrdersProfit());
+    }, [dispatch]);
 
 
   return (
@@ -27,10 +22,10 @@ const page: React.FC = () => {
 
     <h1>WELCOME ADMIN</h1>
     <h1>
-      Your Total Earnings: &#8377;
+      Your Total Earnings: {rrr}.
       {orders
         .map((order) => order.servicePrice)
-        .reduce((prev, next) => prev + next, 0)}
+        .reduce((prev, next) => prev + next, 0)}Rs.
     </h1>
     <hr />
     </div>

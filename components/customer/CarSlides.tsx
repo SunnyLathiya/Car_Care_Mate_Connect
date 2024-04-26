@@ -1,6 +1,7 @@
 "use client"
 import React from "react";
 import { Carousel } from "react-bootstrap";
+// import Carousel  from "react-bootstrap/Carousel";
 // import "./CSS/CarouselComp.css";
 import Image from "next/image";
 import  Ima1 from "../../public/images/carslide/Untitled design (3).png";
@@ -12,7 +13,6 @@ import  Ima5 from "../../public/images/carslide/Untitled design (7).png";
 
 const CarSlides: React.FC = () => {
   return (
-    <div>
         <div style={{ marginTop:"90px", marginBottom:"20px"}}>
        <Carousel>
         <Carousel.Item>
@@ -30,8 +30,7 @@ const CarSlides: React.FC = () => {
         <Carousel.Item>
           <Image style={{ height:"350px", width:"100%"}} src={Ima5} alt="Slider 1" />
         </Carousel.Item>
-      </Carousel> 
-    </div>
+      </Carousel>   
     </div>
   )
 }

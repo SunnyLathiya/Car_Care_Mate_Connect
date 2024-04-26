@@ -116,8 +116,14 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { Grid } from "@material-ui/core";
-import axios from 'axios'; // Import Axios library
+import axios from 'axios';
 import styles from "@/css/customers/Services.module.css"
+import { useParams, useRouter } from "next/navigation";
+import { Dispatch } from "redux";
+import { useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "@/redux/store";
+import userSlice, { setCarSelected } from "@/redux/slices/userSlice";
+import { useSelector } from "react-redux";
 
 interface Service {
   _id: string;
@@ -141,8 +147,14 @@ const useStyles = makeStyles({
 const Services: React.FC = () => {
   const classes = useStyles();
   const [services, setServices] = useState<Service[]>([]);
+  const router = useRouter();
+
+  const { id } = useParams<{ id: string }>();
+  const dispatch: AppDispatch = useDispatch();
+
 
   useEffect(() => {
+    dispatch(setCarSelected(id));
     // Fetch services data from the backend
     axios.get('http://localhost:4000/api/v1/admin/findallservices')
       .then(response => {
@@ -151,9 +163,12 @@ const Services: React.FC = () => {
       .catch(error => {
         console.error('Error fetching services:', error);
       });
-  }, []);
-  
-  // Empty dependency array to run effect only once when component mounts
+  }, [id, dispatch]);
+
+  const handleBuyClick = (serviceId: string) => {
+    router.push(`/customer/cushome/order/${serviceId}`);
+  };
+
 
 
   console.log(services)
@@ -194,7 +209,7 @@ const Services: React.FC = () => {
               <span className="timeline">
                 {`service done in ${service.timeRequired}`}
               </span>
-              <button className={`${styles.buy_button}`}>Buy</button>
+              <button className={`${styles.buy_button}`} onClick={() => handleBuyClick(service._id)}>Buy</button>
             </div>
           </CardContent>
         </Card>
@@ -204,7 +219,7 @@ const Services: React.FC = () => {
 
   return (
     <div className="container" style={{"marginTop":"150px"}}>
-       <button onClick={() => history.push(`/cust_home`)}>Change Car</button>
+       <button onClick={() => router.push(`/customer/cushome`)}>Change Car</button>
        <hr />
       <Grid container spacing={5} className="grid_container">
         {services.map((service) => getServiceCards(service))}
@@ -215,4 +230,5 @@ const Services: React.FC = () => {
 };
 
 export default Services;
+
 

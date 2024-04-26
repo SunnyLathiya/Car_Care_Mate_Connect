@@ -1,9 +1,8 @@
 
+import { ToastError, ToastInfo, ToastSuccess } from '@/components/common/Toast';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-// import { ToastError, ToastSuccess } from '@/components/custom-error/toast';
 import Cookies from 'js-cookie';
-import {Bounce, toast} from 'react-toastify';
 
 export const getAllServices = createAsyncThunk(
     'services/findallservices',
@@ -12,7 +11,6 @@ export const getAllServices = createAsyncThunk(
             const response = await axios.get(`http://localhost:4000/api/v1/admin/findallservices`);
             return response.data;
         } catch (error: any) {
-            toast.error('Error in fatch Services Page!');
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -25,15 +23,13 @@ export const addService = createAsyncThunk(
 
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/addservice`, newService, { headers: {
-                Authorization: `Bearer ${token}`, // Send token in the Authorization header
+                Authorization: `Bearer ${token}`,
               },});
-              
-              toast.success('New Service added!');
-
+              ToastSuccess("New Service added successfully");
             return response.data;
         } catch (error: any) {
 
-            toast.error('Error in new service create!');
+            ToastError("Problem in new service create!")
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -49,30 +45,10 @@ export const deleteService = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
-            toast.success('Service Delete Successfully!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            ToastSuccess("Service Delete Successfully!");
             return serviceId; // Return the ID of the deleted car upon successful deletion
         } catch (error: any) {
-            toast.error('Error in Delete New Service!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            ToastError("Error in Delete New Service!")
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -88,8 +64,10 @@ export const updateService = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
+            ToastSuccess("Service Updated Successfully!");
             return response.data; 
         } catch (error: any) {
+            ToastError("Problem in Service Update!")
             throw (error as AxiosError).response?.data || error.message;
         }
     }

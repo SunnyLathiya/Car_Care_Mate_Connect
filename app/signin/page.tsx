@@ -130,6 +130,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { login } from '@/redux/slices/userSlice';
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+import { jwtDecode } from 'jwt-decode';
+import { useState } from 'react';
 
 
 
@@ -146,25 +150,65 @@ function Copyright(props: any) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
 
   const dispatch:AppDispatch=useDispatch();
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   const details={
+  //     email: data.get('email'),
+  //     password: data.get('password'),
+  //   }
+
+  //   dispatch(login(details));
+
+  // };
+
+  const handleSubmit = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const details={
-      email: data.get('email'),
-      password: data.get('password'),
+    setLoading(true);
+    setError('');
+
+    try {
+      const data = new FormData(event.currentTarget);
+      const userDetails = {
+        email: data.get('email'),
+        password: data.get('password'),
+      };
+      const response = await dispatch(login(userDetails));
+
+      const token = response.payload.token;
+      const decodedToken = jwtDecode(token);
+      const accountType = decodedToken.accountType;
+
+      // Redirect based on accountType
+      // switch (accountType) {
+      //   case 'Customer':
+      //     router.push('/customer/cushome');
+      //     break;
+      //   case 'Admin':
+      //     router.push('/admin/home');
+      //     break;
+      //   case 'Mechanic':
+      //     router.push('/mechanic/home');
+      //     break;
+      //   default:
+      //     router.push('/login');
+      //     break;
+      // }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      setError('Invalid email or password');
+    } finally {
+      setLoading(false);
     }
-
-
-    dispatch(login(details));
-
-    console.log("object")
-
   };
 
   return (

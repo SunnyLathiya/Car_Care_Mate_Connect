@@ -1,4 +1,5 @@
 "use client"
+import { ToastError, ToastSuccess } from '@/components/common/Toast';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
@@ -8,9 +9,7 @@ export const findPlacedOrders = createAsyncThunk(
     'order/findplacedorders',
     async () => {
         try {
-
             const token = Cookies.get('token');
-
             const response = await axios.get(`http://localhost:4000/api/v1/admin/findplacedorders`, {
                      headers: {
                        Authorization: `Bearer ${token}`,
@@ -52,10 +51,27 @@ export const updateOrder = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
-            toast.success('Order detailes updated successfully!');
+            ToastSuccess("Mechanic Assign Successfully!");
             return response.data; 
         } catch (error: any) {
-            toast.error('Problem in  mechanic assign!');
+            ToastError("Problem in Assign Mechanic!");
+            throw (error as AxiosError).response?.data || error.message;
+        }
+    }
+);
+
+export const findCompletedOrdersProfit = createAsyncThunk(
+    'order/findCompletedOrdersProfit',
+    async () => {
+        try {
+            const token = Cookies.get('token');
+            const response = await axios.get(`http://localhost:4000/api/v1/admin/findcompletedordersprofit`, {
+                     headers: {
+                       Authorization: `Bearer ${token}`,
+                   }});
+            return response.data;
+        } catch (error: any) {
+            toast.error(' Error in completed order profit page!');
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -67,6 +83,7 @@ const initialState = {
     completedOrders: [],
     loading: false,
     error: null as string | null,
+    totalProfit: 0,
 };
 
 const orderSlice = createSlice({
@@ -121,7 +138,23 @@ const orderSlice = createSlice({
             .addCase(updateOrder.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to update order';
-            });
+            })
+
+            .addCase(findCompletedOrdersProfit.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(findCompletedOrdersProfit.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.totalProfit = action.payload;
+                console.log("profit", action.payload)
+                // console.log(state.orders)
+            })
+            .addCase(findCompletedOrdersProfit.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to fetch cars';
+            })
         },
 });
 

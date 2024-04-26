@@ -1,30 +1,17 @@
 "use client"
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
-// import { ToastError, ToastSuccess } from '@/components/custom-error/toast';
-// import { ToastSuccess } from '@/components/custom-error/toast';
 import Cookies from 'js-cookie';
-import { Bounce, toast } from 'react-toastify';
+import { ToastSuccess, ToastError, ToastInfo } from '@/components/common/Toast';
 
 export const getAllCars = createAsyncThunk(
     'cars/getAll',
     async () => {
         try {
             const response = await axios.get(`http://localhost:4000/api/v1/admin/findallcars`);
-
             return response.data;
         } catch (error: any) {
-            toast.error(' Error in Car detailes page!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            ToastError("Error in Car detailes page!")
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -40,32 +27,12 @@ export const addCar = createAsyncThunk(
                 Authorization: `Bearer ${token}`, // Send token in the Authorization header
               },});
 
-              toast.success(' Car created successfully!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+              ToastSuccess("Car created successfully!")
 
             return response.data;
         } catch (error: any) {
 
-            toast.error(' new car not created!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            ToastError("Problem in create new Car Detail")
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -82,19 +49,10 @@ export const deleteCar = createAsyncThunk(
                 },
             });
 
-            toast.success(' car details deleted successfully!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            ToastSuccess("car details deleted successfully!")
             return carId; // Return the ID of the deleted car upon successful deletion
         } catch (error: any) {
+            ToastError("Problem in Delete Car Details!");
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -109,30 +67,10 @@ export const updateCar = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
-            toast.success('Car detailes updated successfully!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            ToastSuccess("Car detailes updated successfully!");
             return response.data; 
         } catch (error: any) {
-            toast.error('Problem in  update car details!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            ToastError("Problem in  update car details!")
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -142,6 +80,7 @@ const initialState = {
     cars: [],
     loading: false,
     error: null as string | null,
+    success: false
 };
 
 const carSlice = createSlice({
@@ -157,6 +96,7 @@ const carSlice = createSlice({
             .addCase(getAllCars.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
+                state.success = true;
                 state.cars = action.payload;
             })
             .addCase(getAllCars.rejected, (state, action) => {

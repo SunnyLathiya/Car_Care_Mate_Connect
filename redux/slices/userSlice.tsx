@@ -118,6 +118,8 @@ import { createAsyncThunk, createSlice, PayloadAction , AsyncThunkAction} from '
 import { User } from '../../app/types';
 import axios from 'axios';
 import Cookies from 'js-cookie'; 
+import { useRouter } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 
 export const registerUser = createAsyncThunk(
     'user/register',
@@ -138,35 +140,42 @@ export const login = createAsyncThunk(
     'user/login',
     async (userData: any, { rejectWithValue }) => {
       try {
-          console.log(userData)
+        console.log(userData)
         const createUser = await axios.post(`http://localhost:4000/api/v1/login`, userData)
-        // ToastSuccess(createUser.data.message)
-        return createUser.data
+        //ToastSuccess(createUser.data.message)
+         return createUser.data
       } catch (error : any) {
         console.log("object")
         return rejectWithValue(error.response.data);
       }
     }
-  ) ;
-
+  );
 interface UserState {
   user: User | null;
   loading: boolean;
   error: string | null;
   token:string;
+  carSelected: string;
+  accountType: string;
 }
 
 const initialState: UserState = {
   user: null,
   loading: false,
   error: null,
-  token:""
+  token:"",
+  carSelected: "",
+  accountType: ""
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setCarSelected: (state, action: PayloadAction<string>) => {
+      state.carSelected = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
@@ -177,6 +186,14 @@ const userSlice = createSlice({
         state.loading = false;
         state.user = action.payload;
       })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(login.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
         state.loading = false;
         state.user = action.payload;    
@@ -184,13 +201,21 @@ const userSlice = createSlice({
         state.token=action.payload.token;
         Cookies.set('token', action.payload.token);
 
+        const decodedToken = jwtDecode(action.payload.token);
+        console.log("decodedtoken", decodedToken);
+        state.accountType = decodedToken.accountType;
+        console.log(state.accountType);
       })
-      .addCase(registerUser.rejected, (state, action) => {
+      .addCase(login.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        // state.error = action.payload;
       });
+     
   },
 });
+
+
+export const { setCarSelected } = userSlice.actions;
 
 export default userSlice.reducer;
 

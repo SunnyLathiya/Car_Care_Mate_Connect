@@ -84,6 +84,7 @@ const Mechanic: React.FC<Props> = () => {
   const handleRowDelete = async (oldRow: MechanicData) => {
     try {
       await dispatch(deleteMechanic(oldRow._id)); // Pass the carId to deleteCar action
+      
     } catch (error) {
       console.error('Error occurred while deleting car:', error);
     }

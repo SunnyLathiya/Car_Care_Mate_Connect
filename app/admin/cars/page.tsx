@@ -242,6 +242,7 @@ import { Add, AddBox, ArrowUpward, Cancel, Check, ChevronLeft, ChevronRight, Cle
 import { RootState, AppDispatch } from '@/redux/store';
 import { addCar, getAllCars, deleteCar, updateCar } from '@/redux/slices/adminSlices/carSlice';
 import { Bounce, toast } from 'react-toastify';
+import { ToastInfo } from '@/components/common/Toast';
 
 interface CarData {
   name: string;
@@ -249,28 +250,17 @@ interface CarData {
 }
 
 function Cars() {
-  const { cars } = useSelector((state: RootState) => state.car);
+  const { cars, success } = useSelector((state: RootState) => state.car);
   const dispatch: AppDispatch = useDispatch();
   const [formData, setFormData] = useState<CarData>({ name: '', brand: '' });
 
-  useEffect(() => {
-    toast.info('Car detailes page!', {
-      position: "bottom-left",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: Bounce,
-      });
-  }, [])
-
 
   useEffect(() => {
+    if (success) {
+      ToastInfo("All Cars Page!")
+    }
     dispatch(getAllCars());
-  }, [dispatch]);
+  }, [dispatch, success]);
 
   const handleRowAdd = async (newRow: CarData) => {
     try {
@@ -314,7 +304,6 @@ function Cars() {
     { title: 'Name', field: 'name' },
     { title: 'Brand', field: 'brand' },
   ];
-
 
 const enhancedCars = cars.map((car: CarData, index: number) => ({ ...car, tableData: { id: index } }));
 

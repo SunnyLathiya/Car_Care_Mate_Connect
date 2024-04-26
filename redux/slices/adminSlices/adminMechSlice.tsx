@@ -1,4 +1,5 @@
 "use client"
+import { ToastError, ToastSuccess } from '@/components/common/Toast';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
@@ -54,23 +55,15 @@ export const deleteMechanic = createAsyncThunk(
                 },
             });
 
-            toast.success(' Mechanic account deleted successfully!', {
-                position: "bottom-left",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-                transition: Bounce,
-                });
+            ToastSuccess("Mechanic account deleted successfully!")
             return mechId; 
         } catch (error: any) {
+            ToastError("Error in mechanic account delete!");
             throw (error as AxiosError).response?.data || error.message;
         }
     }
 );
+
 
 
 const initialState = {

@@ -10,6 +10,7 @@ import { Add, AddBox, ArrowUpward, Cancel, Check, ChevronLeft, ChevronRight, Cle
 import { RootState, AppDispatch } from '@/redux/store';
 import { addService, getAllServices, deleteService, updateService } from '@/redux/slices/adminSlices/serviceSlice';
 import { Bounce, toast } from 'react-toastify';
+import Loader from '@/components/loader';
 
 interface ServiceData {
   name: string;
@@ -23,26 +24,13 @@ interface ServiceData {
 function Services() {
   // const { services } = useSelector((state: RootState) => state.service);
   const {services} = useSelector((state: RootState) => state.service);
+  // console.log(loading);
   // const data = [...servicese]
   // console.log(data);
-
-  useEffect(() => {
-    toast.info('Service detailes page!', {
-      position: "bottom-left",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "colored",
-      transition: Bounce,
-      });
-  }, [])
   
-
   // console.log(services).
   const dispatch: AppDispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState<ServiceData>({ name: '', price: '', description:'', timeRequired:'', where:'', serviceType: '' });
 
   useEffect(() => {
@@ -54,31 +42,34 @@ function Services() {
       if (!newRow.name || !newRow.price || !newRow.description || !newRow.timeRequired || !newRow.where) {
         throw new Error('All fields are required');
       }
-      
+      setLoading(true)
       await dispatch(addService(newRow));
-      
+      setLoading(false)
     } catch (error) {
       console.error('Error occurred while adding new service:', error);
-      
+      setLoading(false)
     }
   };
 
   const handleRowDelete = async (oldRow: ServiceData) => {
     try {
-      await dispatch(deleteService(oldRow._id)); // Pass the carId to deleteCar action
-      
+      setLoading(true)
+      await dispatch(deleteService(oldRow._id));
+      setLoading(false)
     } catch (error) {
       console.error('Error occurred while deleting service:', error);
-      
+      setLoading(false)
     }
   };
 
   const handleRowUpdate = async (newRow: ServiceData, oldRow: ServiceData | undefined) => {
     if (oldRow) {
       try {
+        setLoading(true)
         await dispatch(updateService(newRow));
-        
+        setLoading(false)
       } catch (error) {
+        setLoading(false)
         console.error('Error occurred while updating car:', error);
         
       }
@@ -100,45 +91,49 @@ function Services() {
   ];
 
   const enhancedServices = services.map((service:ServiceData, index: number) => ({ ...service, tableData: { id: index } }));
-return (
+  return (
+
   <div style={{marginTop:"100px", marginLeft:"180px"}}>
+  { loading ? (<Loader/>) : (
     <MaterialTable
-      title="Services Data"
-      columns={columns}
-      data={ enhancedServices }
-      editable={{
-        onRowAdd: handleRowAdd,
-        onRowUpdate: handleRowUpdate,
-        onRowDelete: handleRowDelete,
-      }}
-      icons={{
-        Add: Add,
-        Check: Check,
-        Clear: Clear,
-        Delete: Delete,
-        DetailPanel: ChevronRight,
-        Edit: Edit,
-        Export: ArrowUpward,
-        Filter: Search,
-        FirstPage: FirstPage,
-        LastPage: LastPage,
-        NextPage: ChevronRight,
-        PreviousPage: ChevronLeft,
-        ResetSearch: Clear,
-        Search: Search,
-        SortArrow: ArrowUpward,
-      }}
-      options={{
-        headerStyle: {
-          backgroundColor: "#01579b",
-          color: "#FFF",
-        },
-        actionsCellStyle: {
-          backgroundColor: "#FFF",
-        },
-      }}
-    />
-  </div>
+    title="Services Data"
+    columns={columns}
+    data={ enhancedServices }
+    editable={{
+      onRowAdd: handleRowAdd,
+      onRowUpdate: handleRowUpdate,
+      onRowDelete: handleRowDelete,
+    }}
+    icons={{
+      Add: Add,
+      Check: Check,
+      Clear: Clear,
+      Delete: Delete,
+      DetailPanel: ChevronRight,
+      Edit: Edit,
+      Export: ArrowUpward,
+      Filter: Search,
+      FirstPage: FirstPage,
+      LastPage: LastPage,
+      NextPage: ChevronRight,
+      PreviousPage: ChevronLeft,
+      ResetSearch: Clear,
+      Search: Search,
+      SortArrow: ArrowUpward,
+    }}
+    options={{
+      headerStyle: {
+        backgroundColor: "#01579b",
+        color: "#FFF",
+      },
+      actionsCellStyle: {
+        backgroundColor: "#FFF",
+      },
+    }}
+  />
+  )}
+</div>
+  
 );
 
 }
