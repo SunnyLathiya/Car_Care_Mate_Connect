@@ -135,6 +135,10 @@ import { useSelector } from 'react-redux';
 import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
 
+interface LoginFormValues {
+  email: string;
+  password: string;
+}
 
 
 function Copyright(props: any) {
@@ -158,54 +162,89 @@ export default function SignInSide() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [formData, setFormData] = useState<LoginFormValues>({
+    email: '',
+    password: '',
+  });
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+  });
   
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
-  //   const data = new FormData(event.currentTarget);
-  //   const details={
-  //     email: data.get('email'),
-  //     password: data.get('password'),
-  //   }
 
-  //   dispatch(login(details));
-
-  // };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: '', // Clear error message when user starts typing
+    }));
+  };
 
   const handleSubmit = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
     event.preventDefault();
-    setLoading(true);
-    setError('');
+
+    // Basic client-side validation
+    let valid = true;
+    const newErrors = {
+      email: '',
+      password: '',
+    };
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+      valid = false;
+    }
+
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required';
+      valid = false;
+    }
+
+    if (!valid) {
+      setErrors(newErrors);
+      return;
+    }
+    
 
     try {
-      const data = new FormData(event.currentTarget);
-      const userDetails = {
-        email: data.get('email'),
-        password: data.get('password'),
-      };
-      const response = await dispatch(login(userDetails));
+      // const data = new FormData(event.currentTarget);
+      // const userDetails = {
+      //   email: data.get('email'),
+      //   password: data.get('password'),
+      // };
+      // const response = await dispatch(login(userDetails));
+      const response = await dispatch(login(formData));
 
       const token = response.payload.token;
       const decodedToken = jwtDecode(token);
       const accountType = decodedToken.accountType;
 
       // Redirect based on accountType
-      // switch (accountType) {
-      //   case 'Customer':
-      //     router.push('/customer/cushome');
-      //     break;
-      //   case 'Admin':
-      //     router.push('/admin/home');
-      //     break;
-      //   case 'Mechanic':
-      //     router.push('/mechanic/home');
-      //     break;
-      //   default:
-      //     router.push('/login');
-      //     break;
-      // }
+      switch (accountType) {
+        case 'Customer':
+          router.push('/customer/cushome');
+          break;
+        case 'Admin':
+          router.push('/admin/home');
+          break;
+        case 'Mechanic':
+          router.push('/mechanic/home');
+          break;
+        default:
+          router.push('/login');
+          break;
+      }
     } catch (error) {
       console.error('Error logging in:', error);
-      setError('Invalid email or password');
+      // Handle specific error cases if needed
+      setErrors({
+        ...errors,
+        password: 'Invalid email or password', // Display generic error message
+      });
     } finally {
       setLoading(false);
     }
@@ -250,8 +289,8 @@ export default function SignInSide() {
             <Box component="form" noValidate
              onSubmit={handleSubmit} 
              sx={{ mt: 1 }}>
-              <TextField
-              type='Email'
+             
+             <TextField
                 margin="normal"
                 required
                 fullWidth
@@ -259,8 +298,11 @@ export default function SignInSide() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-
                 autoFocus
+                value={formData.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
               />
               <TextField
                 margin="normal"
@@ -271,6 +313,10 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={formData.password}
+                onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -281,12 +327,13 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
               >
                 Sign In
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link href="/forgotpassword" variant="body2">
                     Forgot password?
                   </Link>
                 </Grid>

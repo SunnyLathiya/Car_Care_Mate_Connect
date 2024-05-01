@@ -5,6 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import styles from "@/css/customers/Brands.module.css";
 import axios from "axios";
 import { useParams, useRouter } from 'next/navigation';
+import CarSlides from "@/components/customer/CarSlides";
 
 const Brands: React.FC = (props: any) => {
   const router = useRouter();
@@ -36,9 +37,9 @@ const Brands: React.FC = (props: any) => {
   const getCarCard = (car: any) => {
     return (
       <Grid item xs={6} sm={4} md={3} lg={2} key={car._id}>
-        <Card className="card" onClick={() => router.push(`customer/cushome/services/${car._id}`)}>
+        <Card className={`${styles.card}`} onClick={() => router.push(`customer/cushome/services/${car._id}`)}>
           <CardContent>
-            <Typography className="text">{car.name}</Typography>
+            <Typography className={`${styles.text}`}>{car.name}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -49,7 +50,8 @@ const Brands: React.FC = (props: any) => {
 
     <div>
     {/* <CarouselComponent /> */}
-    <div className={`${styles.brand}`} style={{"marginTop":"200px"}}>
+    <CarSlides/>
+    <div className={`${styles.brand}`}>
       <h1 className={`${styles.title}`}>{`Available ${brand} Cars`}</h1>
 
       <div className={`${styles.search}`}>
@@ -66,7 +68,7 @@ const Brands: React.FC = (props: any) => {
       </Grid>
     </div>
   </div>
-          </>
+  </>
   );
 };
 

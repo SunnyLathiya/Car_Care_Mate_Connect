@@ -1,11 +1,17 @@
 
 "use client"
-import React from 'react'
+import Navbar from '@/components/Home/Navbar'
+import { redirect, useRouter } from 'next/navigation'
+import React, { useEffect } from 'react'
 
 const page: React.FC = () => {
+ 
 
 
   return (
+    <>
+
+    
     <div style={{marginTop:"80px", marginBottom:"20px"}}>
     <hr />
     <div style={{marginTop:"80px", textAlign: "center"}}>
@@ -16,6 +22,8 @@ const page: React.FC = () => {
     <hr />
     </div>
   </div>
+    </>
+    
   )
 }
 

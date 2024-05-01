@@ -5,6 +5,50 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { Typography } from "@material-ui/core";
+import styles from "../../../css/customers/Myorder.module.css";
+
+
+interface MyOrderComponentProps {
+  status: 'PLACED' | 'PENDING' | 'IN-PROCESS' | 'COMPLETED';
+}
+const MyOrderComponent: React.FC<MyOrderComponentProps> = ({ status }) => {
+  // Determine which steps should be active based on the status
+  const getActiveSteps = (status: MyOrderComponentProps['status']) => {
+    switch (status) {
+      case 'PLACED':
+        return [styles.step1]; // Only the first step is active
+      case 'PENDING':
+        return [styles.step1, styles.step2]; // First two steps are active
+      case 'IN-PROCESS':
+        return [styles.step1, styles.step2, styles.step3]; // First three steps are active
+      case 'COMPLETED':
+        return [styles.step1, styles.step2, styles.step3, styles.step4]; // All steps are active
+      default:
+        return []; // No steps are active by default
+    }
+  };
+
+  const activeSteps = getActiveSteps(status);
+
+  return (
+    <div>
+      <ul>
+        <li className={`${styles.step0} ${activeSteps.includes(styles.step1) ? styles.active : ''}`} id={styles.step1}>
+          Placed
+        </li>
+        <li className={`${styles.step0} ${activeSteps.includes(styles.step2) ? styles.active : ''} text-center`} id={styles.step2}>
+          Pending
+        </li>
+        <li className={`${styles.step0} ${activeSteps.includes(styles.step3) ? styles.active : ''} text-right`} id={styles.step3}>
+          In-Process
+        </li>
+        <li className={`${styles.step0} ${activeSteps.includes(styles.step4) ? styles.active : ''} text-right`} id={styles.step4}>
+          Completed
+        </li>
+      </ul>
+    </div>
+  );
+};
 
 interface User {
   userId: string;
@@ -23,10 +67,119 @@ interface Order {
   servicePrice: string;
 }
 
+// Pending, In-Progress, Complated
+const isValidStatus = (status: string): status is MyOrderComponentProps['status'] => {
+  return ['PLACED', 'PENDING', 'IN-PROCESS', 'COMPLETED'].includes(status);
+};
+
+const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => void })  => {
+
+  const status = isValidStatus(order.status) ? order.status : 'PLACED';
+  return(
+      <div className={styles.card} style={{marginTop:"150px", width:"70%"}}>
+
+<div className="row">
+<div className={`col ${styles.title}`} style={{ marginLeft: '50px' }}> Purchase Reciept </div>
+<div className={`col ${styles.title} text-right `} style={{ marginRight: '50px' }}> <h3> {order.status} </h3> </div>
+</div>
+      <div className={styles.info}>
+          <div className="row">
+              <div className="col-7">
+                  <span id={styles.heading}> <b>Date</b></span><br/>
+                  <span id={styles.details}>10 October 2018</span>
+             </div>
+              <div className="col-5 pull-right">
+                  <span id={styles.heading}> <b>Order No.</b></span><br/>
+                  <span id={styles.details}>{order._id}</span>
+              </div>
+          </div>      
+      </div>      
+      <div className={styles.pricing}>
+          <div className="row">
+              <div className="col-4">
+                  <span id={styles.price}><b>CAR NAME:</b></span>
+              </div>
+              <div className="col-6">
+                  <span id={styles.price}>{order.carName}</span>  
+              </div>
+          </div>
+          <div className="row">
+              <div className="col-4">
+                  <span id={styles.price}> <b>CAR NUMBER:</b> </span>
+              </div>
+              <div className="col-6">
+                  <span id={styles.price}>{order.carNumber}</span>  
+              </div>
+          </div>
+         <div className="row">
+              <div className="col-4">
+                  <span id={styles.name}> <b>SERVICE NAME:</b> </span>
+              </div>
+              <div className="col-6">
+                  <span id={styles.name}>{order.serviceName} </span>
+              </div>
+          </div>
+          <div className="row">
+              <div className="col-4">
+                  <span id={styles.name}> <b>ADDRESS:</b> </span>
+              </div>
+              <div className="col-6">
+                  <span id={styles.name}>{order.custAddress} </span>
+              </div>
+          </div>
+      </div>
+      <div className={styles.total}>
+          <div className="row">
+              <div className="col-9"></div>
+              <div className="col-3"><big>{order.servicePrice}Rs.</big></div>
+          </div>
+      </div>
+      <div className={styles.tracking}>
+          <div className={styles.title}>Tracking Order</div>
+      </div>
+      <div className={styles.progressTrack}>
+          <ul id={styles.progressbar}>
+              {/* <li className={`${styles.step0}  ${styles.active}`} id={styles.step1}>Placed</li>
+              <li className={`${styles.step0}  ${styles.active}`} id={styles.step2}>Pending</li>
+              <li className={`${styles.step0}  ${styles.active}`} id={styles.step3}>In-Process</li>
+              <li className={`${styles.step0}  ${styles.active}`} id={styles.step4}>Complated</li> */}
+
+              {/* <li className={`${styles.step0} ${order.status === 'PLACED' ? `${styles.active}` : ''}`} id={styles.step1}>Placed</li>
+              <li className={`${styles.step0} ${order.status === 'PENDING' ? `${styles.active} text-center` : (order.status !== 'Complated' ? '' : `${styles.active}`)}`} id={styles.step2}>Pending</li>
+              <li className={`${styles.step0} ${order.status === 'IN-PROCESS' ? `${styles.active} text-right` : (order.status === 'Complated' ? `${styles.active}` : '')}`} id={styles.step3}>In-Progress</li>
+              <li className={`${styles.step0} ${order.status === 'COMPLETED' ? `${styles.active} text-right` : ''}`} id={styles.step4}>Completed</li> */}
+
+
+                  <MyOrderComponent status={status} />
+
+
+          </ul>
+      </div>
+      <div className={styles.footer}>
+          <div className="row">
+              <div className="col-2"><img className="img-fluid" src="https://i.imgur.com/YBWc55P.png"/></div>
+              <div className="col-10">Want any help? Please &nbsp;<a> contact us</a></div>
+              <button className="btn btn-primary mt-3" onClick={onClose}>Close</button>
+          </div> 
+      </div>
+   </div>
+          )
+}
+
 const MyBookings = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [userD, setUserD] = useState<User | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
+  // const status = "on the way";
+
+  const handleOrderClick = (order: any) => {
+    setSelectedOrder(order);
+  };
+
+  const handleCloseOrderDetails = () => {
+    setSelectedOrder(null);
+  };
   // console.log(userD)
 
   useEffect(() => {
@@ -54,75 +207,113 @@ const MyBookings = () => {
     fetchUser();
   }, []);
 
+  const statusStyle = {
+    // color: orders..status === 'pending' ? 'orange' : 'green', // Set color based on status
+    fontWeight: 'bold',
+    marginBottom: '10px' // Add margin below the status
+};
+
+  const dividerStyle = {
+    width: '100%',
+    height: '1px',
+    backgroundColor: '#ccc',
+    margin: '10px 0'
+};
+
+const infoStyle = {
+    marginBottom: '5px'
+};
+
+const renderOrderFullDetails = () => {
+  if (selectedOrder) {
+    return <OrderFullDetails order={selectedOrder} onClose={function (): void {
+      throw new Error("Function not implemented.");
+    } } />;
+  }
+  return null;
+};
+
   const getOrderCards = (order: Order) => {
     return (
-      // <Grid item xs={12} sm={12} md={12} lg={12} key={order._id}>
-      //   <Card variant="outlined" className="service_card">
-      //     <CardContent>
-      //       <h1>Your Order Request is {order.status}</h1>
-      //       <hr />
-      //       <h4>Car : {order.carName}</h4>
-      //       <h4>Vehicle Number: {order.carNumber}</h4>
-      //       <h4>Address: {order.custAddress}</h4>
-      //       <h4>Service Name: {order.serviceName}</h4>
-      //       <h4>Service Price: {order.servicePrice}</h4>
-      //     </CardContent>
-      //   </Card>
-      // </Grid>
-      <Grid item xs={12} sm={6} md={4} lg={3} key={order._id}>
-      <Card variant="outlined" className="service_card">
-        <CardContent>
-          <Typography variant="h5" component="h2" className="status">
-            {order.status === 'pending' ? 'Awaiting Confirmation' : 'Confirmed'}
-          </Typography>
-          <hr className="divider" />
-          <Typography variant="subtitle1" className="info">
-            <strong>Car:</strong> {order.carName}
-          </Typography>
-          <Typography variant="subtitle1" className="info">
-            <strong>Vehicle Number:</strong> {order.carNumber}
-          </Typography>
-          <Typography variant="subtitle1" className="info">
-            <strong>Address:</strong> {order.custAddress}
-          </Typography>
-          <Typography variant="subtitle1" className="info">
-            <strong>Service Name:</strong> {order.serviceName}
-          </Typography>
-          <Typography variant="subtitle1" className="info">
-            <strong>Service Price:</strong> ${order.servicePrice.toFixed(2)}
-          </Typography>
-        </CardContent>
-      </Card>
-    </Grid>
+      <>
+        <Grid item xs={12} sm={6} md={4} lg={3} key={order._id}>
+         <div onClick={()=>handleOrderClick(order)}>
+            <Card variant="outlined" style={{ padding: '10px', boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)' }}>
+                <CardContent>
+                    <Typography variant="h5" component="h2" style={statusStyle}>
+                    {order.status}
+                    </Typography>
+                    <hr style={dividerStyle} />
+                    <Typography variant="subtitle1" style={infoStyle}>
+                        <strong>Car:</strong> {order.carName}
+                    </Typography>
+                    <Typography variant="subtitle1" style={infoStyle}>
+                        <strong>Vehicle Number:</strong> {order.carNumber}
+                    </Typography>
+                    <Typography variant="subtitle1" style={infoStyle}>
+                        <strong>Address:</strong> {order.custAddress}
+                    </Typography>
+                    <Typography variant="subtitle1" style={infoStyle}>
+                        <strong>Service Name:</strong> {order.serviceName}
+                    </Typography>
+                    <Typography variant="subtitle1" style={infoStyle}>
+                        <strong>Service Price:</strong> ${order.servicePrice}
+                    </Typography>
+                </CardContent>
+            </Card>
+        </div>
+        </Grid>
+    </>
     );
   };
 
   return (
-    // <div className="container">
-    //   <h1 className="summary_title">MY BOOKINGS</h1>
-    //   {orders.length ? (
-    //     <Grid container spacing={4} className="">
-    //       {orders.map((order) => getOrderCards(order))}
-    //     </Grid>
-    //   ) : (
-    //     <div>
-    //       <br />
-    //       <h1>NO BOOKINGS</h1>
-    //     </div>
-    //   )}
-    // </div>
-    <div className="container">
-    <h1 className="summary_title">MY BOOKINGS</h1>
-    {orders.length ? (
-      <Grid container spacing={3} className="cards_container">
-        {orders.map((order) => getOrderCards(order))}
-      </Grid>
-    ) : (
-      <div className="no_bookings">
-        <h1>NO BOOKINGS</h1>
-      </div>
-    )}
-  </div>
+  <div className="container" style={{ marginTop: '80px' }}>
+      <h1 className="summary_title">MY BOOKINGS</h1>
+      {selectedOrder ? (
+        // Display only the selected order details
+        <OrderFullDetails order={selectedOrder} onClose={handleCloseOrderDetails} />
+      ) : (
+        // Display the list of orders as cards
+        <Grid container spacing={3} className="cards_container">
+          {orders.map((order) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={order._id}>
+              <Card
+                variant="outlined"
+                style={{
+                  padding: '10px',
+                  boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)',
+                  cursor: 'pointer',
+                }}
+                onClick={() => handleOrderClick(order)}
+              >
+                <CardContent>
+                  <Typography variant="h5" component="h2">
+                    {order.status}
+                  </Typography>
+                  <hr />
+                  <Typography variant="subtitle1">
+                    <strong>Car:</strong> {order.carName}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Vehicle Number:</strong> {order.carNumber}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Address:</strong> {order.custAddress}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Service Name:</strong> {order.serviceName}
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    <strong>Service Price:</strong> ${order.servicePrice}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      )}
+    </div>
   );
 };
 

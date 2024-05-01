@@ -380,7 +380,7 @@ const getPackage = () => {
 <>
 
       <h1 className={styles.summaryTitle} style={{marginTop:"150px", display:"flex", justifyContent:"center"}}>ORDER SUMMARY</h1>
-<div className={`${styles.container} animated fadeIn`} style={{ display:"flex", justifyContent:"center"}}>
+         <div className={`${styles.container} animated fadeIn`} style={{ display:"flex", justifyContent:"center"}}>
       <Card className={`${styles.bookingCard} ${styles.fadeInUp}`}>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={12} md={6} lg={6}>
@@ -392,21 +392,21 @@ const getPackage = () => {
             <form id="orderForm" onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={2}>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
-                  <TextField
-                    color="primary"
-                    variant="outlined"
-                    label="Vehicle Number"
-                    margin="normal"
-                    {...register('carNumber', { 
-                      required: 'Vehicle Number is required', 
-                      pattern: {
-                        value: /^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/, 
-                        message: 'Please enter a valid Indian vehicle number'
-                      }
-                    })}
-                    error={Boolean(errors.carNumber)}
-                    helperText={errors.carNumber ? errors.carNumber.message : ''} 
-                  />
+                <TextField
+                   color="primary"
+                   variant="outlined"
+                   label="Vehicle Number"
+                  margin="normal"
+                 {...register('carNumber', { 
+                   required: 'Vehicle Number is required', 
+                   pattern: {
+                     value: /^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$/, 
+                     message: 'Please enter a valid Indian vehicle number'
+                   }
+                   })}
+                 error={Boolean(errors.carNumber)}
+                 helperText={errors.carNumber ? errors.carNumber.message as React.ReactNode : ''}
+               />
                 </Grid>
                 <Grid item xs={6} sm={6} md={6} lg={6}>
                   <TextField
@@ -420,7 +420,7 @@ const getPackage = () => {
                       minLength: { value: 5, message: 'Address must be at least 5 characters long' }
                     })}
                     error={Boolean(errors.custAddress)}
-                    helperText={errors.custAddress ? errors.custAddress.message : ''} 
+                    helperText={errors.custAddress ? errors.custAddress.message as React.ReactNode : ''} 
                   />
                 </Grid>
               </Grid>

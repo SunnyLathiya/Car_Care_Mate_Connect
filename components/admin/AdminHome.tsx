@@ -9,7 +9,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { Drawer, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import { green } from "@mui/material/colors";
 // import AdminOrders from "../../../services/member/orders.js/admin_orders";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 interface AdminHomeProps {
   // Define your props here
@@ -17,38 +17,72 @@ interface AdminHomeProps {
 
 const AdminHome: React.FC<AdminHomeProps> = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const [orders, setOrders] = useState<any[]>([]);
+
+  // const itemList = [
+  //   {
+  //     text: "HOME",
+  //     icon: <HomeIcon />,
+  //     onClick: () => router.push("/admin/home"),
+  //   },
+  //   {
+  //     text: "CARS",
+  //     icon: <DriveEtaIcon />,
+  //     onClick: () => router.push("/admin/cars"),
+  //   },
+  //   {
+  //     text: "Services",
+  //     icon: <BallotIcon />,
+  //     onClick: () => router.push("/admin/services"),
+  //   },
+  //   {
+  //     text: "Mechanics",
+  //     icon: <SupervisorAccountIcon />,
+  //     onClick: () => router.push("/admin/mechanics"),
+  //   },
+  //   {
+  //     text: "Orders",
+  //     icon: <MonetizationOnIcon />,
+  //     onClick: () => router.push("/admin/orders"),
+  //   },
+  //   {
+  //     text: "Log Out",
+  //     icon: <ExitToAppIcon />,
+  //     onClick: () => router.push("/signin"),
+  //   },
+  // ];
 
   const itemList = [
     {
       text: "HOME",
       icon: <HomeIcon />,
-      onClick: () => router.push("/admin/home"),
+      path: "/admin/home",
     },
     {
       text: "CARS",
       icon: <DriveEtaIcon />,
-      onClick: () => router.push("/admin/cars"),
+      path: "/admin/cars",
     },
     {
-      text: "Services",
+      text: "SERVICES",
       icon: <BallotIcon />,
-      onClick: () => router.push("/admin/services"),
+      path: "/admin/services",
     },
     {
-      text: "Mechanics",
+      text: "MECHANICS",
       icon: <SupervisorAccountIcon />,
-      onClick: () => router.push("/admin/mechanics"),
+      path: "/admin/mechanics",
     },
     {
-      text: "Orders",
+      text: "ORDERS",
       icon: <MonetizationOnIcon />,
-      onClick: () => router.push("/admin/orders"),
+      path: "/admin/orders",
     },
     {
-      text: "Log Out",
+      text: "LOG OUT",
       icon: <ExitToAppIcon />,
-      onClick: () => router.push("/signin"),
+      path: "/signin",
     },
   ];
 
@@ -67,16 +101,45 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
   // }, []);
 
   return (
-    <div style={{marginTop:"80px", marginBottom:"20px"}}>
+    // <div style={{marginTop:"80px", marginBottom:"20px"}}>
+
+    //   <Drawer variant="permanent" style={{marginTop:"50px"}}>
+    //     <div style={{backgroundColor:"grey", height:"700px"}}>
+    //     <List style={{marginTop:"100px"}}>
+    //       {itemList.map((item, index) => {
+    //         return (
+    //           <ListItem button key={item.text}
+    //            onClick={item.onClick}
+    //           >
+    //             {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+    //             <ListItemText primary={item.text} />
+    //           </ListItem>
+    //         );
+    //       })}
+    //     </List>
+    //     </div>
+    //     <div style={{backgroundColor:"gray"}}></div>
+    //   </Drawer>
+    // </div>
 
 
-      <Drawer variant="permanent" style={{marginTop:"50px"}}>
-        <div style={{backgroundColor:"grey", height:"700px"}}>
-        <List style={{marginTop:"100px"}}>
+    <div style={{ marginTop: "80px", marginBottom: "20px" }}>
+    <Drawer variant="permanent" style={{ marginTop: "50px" }}>
+      <div style={{ backgroundColor: "grey", height: "700px" }}>
+        <List style={{ marginTop: "100px" }}>
           {itemList.map((item, index) => {
+            const isActive = pathname === item.path;
+
             return (
-              <ListItem button key={item.text}
-               onClick={item.onClick}
+              <ListItem
+                button
+                key={item.text}
+                onClick={() => router.push(item.path)}
+                style={{
+                  color: isActive ? "white" : "black",
+                  borderRadius: "5px",
+                  transition: "background-color 0.3s ease",
+                }}
               >
                 {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
                 <ListItemText primary={item.text} />
@@ -84,10 +147,10 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
             );
           })}
         </List>
-        </div>
-        <div style={{backgroundColor:"gray"}}></div>
-      </Drawer>
-    </div>
+      </div>
+      <div style={{ backgroundColor: "gray" }}></div>
+    </Drawer>
+  </div>
 
 
 

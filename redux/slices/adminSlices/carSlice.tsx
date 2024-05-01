@@ -137,7 +137,6 @@ const carSlice = createSlice({
                 state.loading = false;
                 state.error = null;
                 // Find the index of the updated car and replace it with the updated data
-
                 console.log(state.cars)
                 console.log(action.payload)
                 const index = state.cars.findIndex((car) => car._id === action.payload.newcar._id);

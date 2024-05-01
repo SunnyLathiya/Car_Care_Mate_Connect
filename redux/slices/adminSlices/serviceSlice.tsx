@@ -20,7 +20,6 @@ export const addService = createAsyncThunk(
     'cars/add',
     async (newService: any) => {
         try {
-
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/addservice`, newService, { headers: {
                 Authorization: `Bearer ${token}`,
@@ -134,7 +133,6 @@ const serviceSlice = createSlice({
             .addCase(updateService.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-
                 console.log(state.services)
                 console.log(action.payload)
                 const index = state.services.findIndex((service) => service._id === action.payload.newservice._id);
