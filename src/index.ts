@@ -2,9 +2,9 @@
 import express, {Request, Response} from "express";
 import cors from "cors";
 import authRoutes from "./Auth/routes/userRoutes";
+import profileRoutes from "./Auth/routes/profileRoutes";
 
 import CustomerOrderRoutes from "./Customer/routes/orderRoutes";
-import profileRoutes from "./Customer/routes/profileRoutes";
 
 import authAdminRoutes from "./Admin/routes/authAdminRoutes";
 import carRoutes from "./Admin/routes/carRoutes";
@@ -38,7 +38,7 @@ cloudinaryConnect();
 const PORT = 4000;
 app.use(cors());
 
-app.use('/api/v1', authRoutes);
+app.use('/api/v1', authRoutes, profileRoutes);
 app.use('/api/v1/customer',  CustomerOrderRoutes, profileRoutes)
 app.use('/api/v1/admin', mechCreateRouters, authAdminRoutes, carRoutes, serverRoutes, orderAdminRoutes);
 app.use('/api/v1/mechanic', mechOrderRoutes);
