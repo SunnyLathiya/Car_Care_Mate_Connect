@@ -8,7 +8,10 @@ export const getAllServices = createAsyncThunk(
     'services/findallservices',
     async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/api/v1/admin/findallservices`);
+            const token = Cookies.get('token');
+            const response = await axios.get(`http://localhost:4000/api/v1/admin/findallservices`, { headers: {
+                Authorization: `Bearer ${token}`,
+              },});
             return response.data;
         } catch (error: any) {
             throw (error as AxiosError).response?.data || error.message;
@@ -45,7 +48,7 @@ export const deleteService = createAsyncThunk(
                 },
             });
             ToastSuccess("Service Delete Successfully!");
-            return serviceId; // Return the ID of the deleted car upon successful deletion
+            return serviceId;
         } catch (error: any) {
             ToastError("Error in Delete New Service!")
             throw (error as AxiosError).response?.data || error.message;

@@ -179,7 +179,7 @@ if (!formData.confirmPassword) {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square style={{backgroundColor:"#E7E8D1"}}>
           <Box
             sx={{
               my: 8,
@@ -188,14 +188,19 @@ if (!formData.confirmPassword) {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              backgroundColor:'#E7E8D1'
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <LockOutlinedIcon />
-            </Avatar>
+            </Avatar> */}
+
+<Avatar sx={{ m: 1, bgcolor: '#B85042', color: '#E7E8D1' }}>
+  <LockOutlinedIcon />
+</Avatar>
 
 
-            <Typography component="h1" variant="h5">
+            <Typography component="h1" variant="h5" style={{color:"#B85042"}}>
               Sign up
             </Typography>
               <Box component="form" noValidate sx={{ mt: 3 }} onSubmit={handleSubmit}>
@@ -214,6 +219,27 @@ if (!formData.confirmPassword) {
                       error={!!formErrors.firstName}
                       helperText={formErrors.firstName}
                       autoFocus
+                      sx={{
+                        '& .MuiInputLabel-root': {
+                          color: '#A7BEAE', // Default label color
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: '#B85042', // Default border color
+                          },
+                          '&:hover fieldset': {
+                            borderColor: '#B85042', // Border color on hover
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#B85042', // Border color when focused
+                          },
+                          '&.Mui-focused .MuiInputLabel-root': {
+                            color: '#B85042', // Label color when focused
+                          },
+                        },
+                      }} 
+                      
+                      
                     />
 
 
@@ -230,7 +256,25 @@ if (!formData.confirmPassword) {
                       onChange={handleChange}
                       error={!!formErrors.lastName}
                       helperText={formErrors.lastName}
-
+                      sx={{
+                        '& .MuiInputLabel-root': {
+                          color: '#A7BEAE', // Default label color
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: '#B85042', // Default border color
+                          },
+                          '&:hover fieldset': {
+                            borderColor: '#B85042', // Border color on hover
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#B85042', // Border color when focused
+                          },
+                          '&.Mui-focused .MuiInputLabel-root': {
+                            color: '#B85042', // Label color when focused
+                          },
+                        },
+                      }} 
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -244,7 +288,26 @@ if (!formData.confirmPassword) {
                       value={formData.email}
                       onChange={handleChange}
                       error={!!formErrors.email}
-                      helperText={formErrors.email}         
+                      helperText={formErrors.email}  
+                      sx={{
+                        '& .MuiInputLabel-root': {
+                          color: '#A7BEAE', // Default label color
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: '#B85042', // Default border color
+                          },
+                          '&:hover fieldset': {
+                            borderColor: '#B85042', // Border color on hover
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#B85042', // Border color when focused
+                          },
+                          '&.Mui-focused .MuiInputLabel-root': {
+                            color: '#B85042', // Label color when focused
+                          },
+                        },
+                      }}       
                     />            
                   </Grid>
 
@@ -260,7 +323,26 @@ if (!formData.confirmPassword) {
                       value={formData.password}
                       onChange={handleChange}
                       error={!!formErrors.password}
-                      helperText={formErrors.password}                
+                      helperText={formErrors.password}  
+                      sx={{
+                        '& .MuiInputLabel-root': {
+                          color: '#A7BEAE', // Default label color
+                        },
+                        '& .MuiOutlinedInput-root': {
+                          '& fieldset': {
+                            borderColor: '#B85042', // Default border color
+                          },
+                          '&:hover fieldset': {
+                            borderColor: '#B85042', // Border color on hover
+                          },
+                          '&.Mui-focused fieldset': {
+                            borderColor: '#B85042', // Border color when focused
+                          },
+                          '&.Mui-focused .MuiInputLabel-root': {
+                            color: '#B85042', // Label color when focused
+                          },
+                        },
+                      }}               
                     />
                     
                   </Grid>
@@ -276,7 +358,26 @@ if (!formData.confirmPassword) {
                       value={formData.confirmPassword}
                     onChange={handleChange}
                     error={!!formErrors.confirmPassword}
-                    helperText={formErrors.confirmPassword}                                             
+                    helperText={formErrors.confirmPassword} 
+                    sx={{
+                      '& .MuiInputLabel-root': {
+                        color: '#A7BEAE', // Default label color
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          borderColor: '#B85042', // Default border color
+                        },
+                        '&:hover fieldset': {
+                          borderColor: '#B85042', // Border color on hover
+                        },
+                        '&.Mui-focused fieldset': {
+                          borderColor: '#B85042', // Border color when focused
+                        },
+                        '&.Mui-focused .MuiInputLabel-root': {
+                          color: '#B85042', // Label color when focused
+                        },
+                      },
+                    }}                                             
                     />                               
                   </Grid>
                   <Grid item xs={12}>
@@ -295,7 +396,7 @@ if (!formData.confirmPassword) {
                 />
                   </Grid>
                 </Grid>
-                <Button
+                {/* <Button
                   type="submit"
                   fullWidth
                   variant="contained"
@@ -303,10 +404,28 @@ if (!formData.confirmPassword) {
                   disabled={!isChecked}
                 >
                   Sign Up
-                </Button>
+                </Button> */}
+
+<Button
+  type="submit"
+  fullWidth
+  variant="contained"
+  sx={{
+    mt: 3,
+    mb: 2,
+    backgroundColor: '#B85042', // Set background color
+    color: 'white', // Set text color to white
+    '&:hover': {
+      backgroundColor: '#974038', // Adjust hover background color
+    },
+  }}
+  disabled={!isChecked}
+>
+  Sign Up
+</Button>
                 <Grid container justifyContent="flex-end">
                   <Grid item>
-                    <Link href="/signin" variant="body2">
+                    <Link href="/signin" variant="body2" style={{color:'#B85042'}}>
                       Already have an account? Sign in
                     </Link>
                   </Grid>

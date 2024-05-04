@@ -65,6 +65,7 @@ interface Order {
   custAddress: string;
   serviceName: string;
   servicePrice: string;
+  requestedOn: string;
 }
 
 // Pending, In-Progress, Complated
@@ -72,11 +73,27 @@ const isValidStatus = (status: string): status is MyOrderComponentProps['status'
   return ['PLACED', 'PENDING', 'IN-PROCESS', 'COMPLETED'].includes(status);
 };
 
+
+// const formatDate = (dateString: any): any => {
+//   const day = {order.requestedOn}.getUTCDate().toString().padStart(2, '0');
+//   const month = (ddd.getUTCMonth() + 1).toString().padStart(2, '0');
+//   const year = ddd.getUTCFullYear().toString().slice(-2);
+
+//   console.log("1", day);
+//   console.log("2", month);
+//   console.log("3", year)
+
+//   return `${day}-${month}-${year}`;
+// };
+
 const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => void })  => {
 
   const status = isValidStatus(order.status) ? order.status : 'PLACED';
+
+
+
   return(
-      <div className={styles.card} style={{marginTop:"150px", width:"70%"}}>
+      <div className={styles.card} style={{marginTop:"50px", width:"70%"}}>
 
 <div className="row">
 <div className={`col ${styles.title}`} style={{ marginLeft: '50px' }}> Purchase Reciept </div>
@@ -86,7 +103,7 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
           <div className="row">
               <div className="col-7">
                   <span id={styles.heading}> <b>Date</b></span><br/>
-                  <span id={styles.details}>10 October 2018</span>
+                  <span id={styles.details}>{order.requestedOn}</span>
              </div>
               <div className="col-5 pull-right">
                   <span id={styles.heading}> <b>Order No.</b></span><br/>
@@ -128,6 +145,8 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
               </div>
           </div>
       </div>
+
+      <hr style={{marginLeft:"30px", marginRight:"30px"}} />
       <div className={styles.total}>
           <div className="row">
               <div className="col-9"></div>
@@ -157,8 +176,7 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
       </div>
       <div className={styles.footer}>
           <div className="row">
-              <div className="col-2"><img className="img-fluid" src="https://i.imgur.com/YBWc55P.png"/></div>
-              <div className="col-10">Want any help? Please &nbsp;<a> contact us</a></div>
+
               <button className="btn btn-primary mt-3" onClick={onClose}>Close</button>
           </div> 
       </div>
@@ -210,7 +228,8 @@ const MyBookings = () => {
   const statusStyle = {
     // color: orders..status === 'pending' ? 'orange' : 'green', // Set color based on status
     fontWeight: 'bold',
-    marginBottom: '10px' // Add margin below the status
+    marginBottom: '10px',
+    
 };
 
   const dividerStyle = {
@@ -238,7 +257,7 @@ const renderOrderFullDetails = () => {
       <>
         <Grid item xs={12} sm={6} md={4} lg={3} key={order._id}>
          <div onClick={()=>handleOrderClick(order)}>
-            <Card variant="outlined" style={{ padding: '10px', boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)' }}>
+            <Card variant="outlined" style={{ padding: '10px', boxShadow: '0 3px 6px rgba(0, 0, 0, 0.1)', backgroundColor: 'yellow' }}>
                 <CardContent>
                     <Typography variant="h5" component="h2" style={statusStyle}>
                     {order.status}
@@ -268,8 +287,8 @@ const renderOrderFullDetails = () => {
   };
 
   return (
-  <div className="container" style={{ marginTop: '80px' }}>
-      <h1 className="summary_title">MY BOOKINGS</h1>
+  <div  style={{ backgroundColor: ' #E7E8D1', minHeight: '100vh', padding: '100px' }}>
+      <h1 className="summary_title" style={{color:"#B85042"}}>MY BOOKINGS</h1>
       {selectedOrder ? (
         // Display only the selected order details
         <OrderFullDetails order={selectedOrder} onClose={handleCloseOrderDetails} />
@@ -288,7 +307,7 @@ const renderOrderFullDetails = () => {
                 onClick={() => handleOrderClick(order)}
               >
                 <CardContent>
-                  <Typography variant="h5" component="h2">
+                  <Typography variant="h5" component="h2" style={{color:"#B85042"}}>
                     {order.status}
                   </Typography>
                   <hr />

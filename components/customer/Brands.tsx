@@ -52,7 +52,11 @@ const Brands: React.FC = () => {
 
       <div className={`${styles.search}`}>
         <SearchIcon className={`${styles.searchIcon}`} />
-        <TextField className={`${styles.searchInput}`} label="Search for Brands" onChange={handleSearchChange} />
+        <TextField className={`${styles.searchInput}`} label="Search for Brands" onChange={handleSearchChange} InputLabelProps={{
+    sx: {
+      color: '#B85042', // Red color for label text
+    },
+  }}  />
       </div>
 
       {brands ? (

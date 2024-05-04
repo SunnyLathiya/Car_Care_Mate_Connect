@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import MaterialTable, { Column } from "material-table";
-// import  MechanicData  from "../../../../server/src/Auth/models/userModel"; 
 import { getAllMechanics, getAllAvailableMechanics, deleteMechanic } from "@/redux/slices/adminSlices/adminMechSlice";
 import { RootState, AppDispatch } from '@/redux/store';
 import { useDispatch } from "react-redux";
@@ -36,6 +35,7 @@ const Mechanic: React.FC<Props> = () => {
   const [mechName, setMechName] = useState("");
   const [password, setPassword] = useState("");
   const [number, setNumber] = useState("");
+  const [display, setdisplay] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault(); 
@@ -53,6 +53,7 @@ const Mechanic: React.FC<Props> = () => {
       console.log(response);
       if(response.data.status === "success"){
         router.push('/admin/mechanics');
+        setdisplay(false)
       }
       if (response.data.success) {
         toast.success(response.data.message);
@@ -79,7 +80,7 @@ const Mechanic: React.FC<Props> = () => {
     { title: "Status", field: "status" },
   ];
 
-  const [display, setdisplay] = useState<boolean>(false);
+  
 
   const handleRowDelete = async (oldRow: MechanicData) => {
     try {
@@ -126,41 +127,52 @@ const Mechanic: React.FC<Props> = () => {
 
   return (
 
-    <div style={{marginTop:"70px", marginBottom:"20px", marginLeft:"180px"}}>
-      <h3>Mechanic Operations</h3>
+  <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column"}}>
+
+    <div style={{marginTop:"75px", marginBottom:"20px", marginLeft:"190px"}}>
+      <h3 style={{zIndex:"0"}}>Mechanic Operations</h3>
       <br />
-      <button onClick={openForm}>Add Mechanic</button>
+      <button onClick={openForm} style={{backgroundColor:"#B85042", color:"white"}}>Add Mechanic</button>
       <br />
       <MaterialTable
         title="MECHANIC DATA"
         columns={columns}
+        style={{backgroundColor:"#E7E8D1"}}
         data={enhancedMechanics}
         editable={{
            onRowDelete: handleRowDelete,
           //  onRowUpdate: handleRowUpdate
         }}
         icons={{
-        Check: Check,
-        Clear: Clear,
-        Delete: Delete,
-        DetailPanel: ChevronRight,
-        Edit: Edit,
-        Export: ArrowUpward,
-        Filter: Search,
-        FirstPage: FirstPage,
-        LastPage: LastPage,
-        NextPage: ChevronRight,
-        PreviousPage: ChevronLeft,
-        ResetSearch: Clear,
-        Search: Search,
-        SortArrow: ArrowUpward,
+          Add: () => <Add style={{ color: '#B85042' }} />,
+          Check: () => <Check style={{ color: '#B85042' }} />,
+          Clear: () => <Clear style={{ color: '#B85042' }} />,
+          Delete: () => <Delete style={{ color: '#B85042' }} />,
+          DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
+          Edit: () => <Edit style={{ color: '#B85042' }} />,
+          Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
+          Filter: () => <Search />,
+          FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
+          LastPage: () => <LastPage style={{ color: '#B85042' }} />,
+          NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
+          PreviousPage: () => <ChevronLeft style={{ color: '#B85042' }} />,
+          ResetSearch: () => <Clear style={{ color: '#B85042' }} />,
+          Search: () => <Search style={{ color: '#B85042' }} />,
+          SortArrow: () => <ArrowUpward style={{ color: '#B85042' }}/>,
         }}
         options={{
           headerStyle: {
-            backgroundColor: "#01579b",
+            backgroundColor: "#B85042",
             color: "#FFF",
             zIndex:"0",
           },
+          actionsCellStyle: {
+            backgroundColor: "#E7E8D1",
+          },
+          rowStyle: {
+            backgroundColor: "#E7E8D1", // Set row background color to red
+            border: '1px solid #A7BEAE'
+          }
         }}
         components={{
           // Override the DeleteAction component to customize the delete confirmation dialog
@@ -190,7 +202,7 @@ const Mechanic: React.FC<Props> = () => {
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)'
         }}>
           <div style={{ marginBottom: '20px' }}>
-            <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', color: '#333' }}>Create Mechanic Account</h4>
+            <h4 style={{ marginBottom: '15px', fontSize: '1.2rem', color: '#333', fontWeight:"bold" }}>Create Mechanic Account</h4>
             <form
              onSubmit={handleSubmit} 
              style={{ width: '100%' }}>
@@ -244,7 +256,7 @@ const Mechanic: React.FC<Props> = () => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                style={{ marginTop: '25px' }}
+                style={{ marginTop: '25px', backgroundColor:"#B85042" }}
               >
                 CREATE ACCOUNT
               </Button>
@@ -256,6 +268,8 @@ const Mechanic: React.FC<Props> = () => {
         </Container>
         
       ) : null}
+    </div>
+
     </div>
   );
 };

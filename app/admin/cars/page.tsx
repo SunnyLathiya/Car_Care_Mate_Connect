@@ -254,6 +254,21 @@ function Cars() {
   const dispatch: AppDispatch = useDispatch();
   const [formData, setFormData] = useState<CarData>({ name: '', brand: '' });
 
+  // const customIconStyles = {
+  //   Add: {
+  //     color: 'yellow', // Set Add icon color to red
+  //   },
+  //   Clear: {
+  //     color: 'pink', // Set Clear icon color to red
+  //   },
+  //   Search: {
+  //     color: 'blue', // Set Search icon color to red
+  //   },
+  //   ResetSearch: {
+  //     color: 'red', // Set ResetSearch icon color to red
+  //   },
+  // };
+
 
   useEffect(() => {
     if (success) {
@@ -307,8 +322,16 @@ function Cars() {
 
 const enhancedCars = cars.map((car: CarData, index: number) => ({ ...car, tableData: { id: index } }));
 
+const customIconStyles = {
+  root: {
+    color: 'red', // Set color of all icons to red
+  },
+};
+
 return (
-  <div style={{marginTop:"100px", marginLeft:"12%"}}>
+
+  <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column"}}>
+  <div style={{marginTop:"100px", marginLeft:"180px"}}>
     <MaterialTable
       title="Cars Data"
       columns={columns}
@@ -319,32 +342,39 @@ return (
         onRowDelete: handleRowDelete,
       }}
       icons={{
-        Add: Add,
-        Check: Check,
-        Clear: Clear,
-        Delete: Delete,
-        DetailPanel: ChevronRight,
-        Edit: Edit,
-        Export: ArrowUpward,
-        Filter: Search,
-        FirstPage: FirstPage,
-        LastPage: LastPage,
-        NextPage: ChevronRight,
-        PreviousPage: ChevronLeft,
-        ResetSearch: Clear,
-        Search: Search,
-        SortArrow: ArrowUpward,
+        Add: () => <Add style={{ color: '#B85042' }} />,
+        Check: () => <Check style={{ color: '#B85042' }} />,
+        Clear: () => <Clear style={{ color: '#B85042' }} />,
+        Delete: () => <Delete style={{ color: '#B85042' }} />,
+        DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
+        Edit: () => <Edit style={{ color: '#B85042' }} />,
+        Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
+        Filter: () => <Search style={{ color: '#B85042' }} />,
+        FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
+        LastPage: () => <LastPage style={{ color: '#B85042' }} />,
+        NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
+        PreviousPage: () => <ChevronLeft style={{ color: '#B85042' }} />,
+        ResetSearch: () => <Clear style={{ color: '#B85042' }} />,
+        Search: () => <Search style={{ color: '#B85042' }} />,
+        SortArrow: () => <ArrowUpward/>,
       }}
       options={{
         headerStyle: {
-          backgroundColor: "#01579b",
+          backgroundColor: "#B85042",
           color: "#FFF",
+          zIndex:"0",
         },
         actionsCellStyle: {
-          backgroundColor: "#FFF",
+          backgroundColor: "#E7E8D1",
         },
+        rowStyle: {
+          backgroundColor: "#E7E8D1", 
+          border: '1px solid #A7BEAE'
+        }
       }}
     />
+  </div>
+
   </div>
 );
 

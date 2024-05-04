@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Roboto+Slab:wght@300&family=Roboto:wght@300&family=Sevillana&display=swap');   
+   
    .nav {
     position: fixed;
     top: 0;
@@ -39,6 +41,7 @@
     z-index: 0;
     cursor: pointer;
     background-color: white;
+    font-family: 'Roboto', sans-serif;
   }
   
   .nav__borderXwidth a:before,
@@ -60,11 +63,10 @@
   .active {
     /* Your active link styles */
     font-weight: bold;
-    color: #007bff; /* Blue color for active link */
-    border-bottom: 2px solid #007bff; /* Underline effect */
+    border-bottom: 2px solid #B85042; /* Underline effect */
     transition: all 0.3s ease;
+    /* color: #B85042; */
 
-    /* Add any other styles */
 }
   
   .nav__borderXwidth a:after {
@@ -79,16 +81,16 @@
   }
   
   .nav__scroll {
-    background-color: gray;
+    background-color: #A7BEAE;
   }
   
   .nav__container .nav__linkscroll {
-    color: white;
-    background-color: grey;
+    color: #E7E8D1;
+    background-color: #A7BEAE;
   }
   
   .nav__containerscroll {
-    background-color: grey;
+    background-color: #A7BEAE;
   }
   
   .nav__borderXwidthscroll a:before,

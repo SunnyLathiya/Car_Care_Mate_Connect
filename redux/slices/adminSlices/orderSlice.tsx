@@ -22,6 +22,23 @@ export const findPlacedOrders = createAsyncThunk(
     }
 );
 
+export const allorders = createAsyncThunk(
+    'order/allorders',
+    async () => {
+        try {
+            const token = Cookies.get('token');
+            const response = await axios.get(`http://localhost:4000/api/v1/admin/allorders`, {
+                     headers: {
+                       Authorization: `Bearer ${token}`,
+                   }});
+            return response.data;
+        } catch (error: any) {
+            toast.error(' Error in Order page!');
+            throw (error as AxiosError).response?.data || error.message;
+        }
+    }
+);
+
 
 export const findCompletedOrders = createAsyncThunk(
     'order/findcompletedorders',
@@ -51,9 +68,12 @@ export const updateOrder = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
+
+            console.log("h1", response)
             ToastSuccess("Mechanic Assign Successfully!");
             return response.data; 
         } catch (error: any) {
+            console.log("h2", error)
             ToastError("Problem in Assign Mechanic!");
             throw (error as AxiosError).response?.data || error.message;
         }
@@ -100,7 +120,7 @@ const orderSlice = createSlice({
                 state.loading = false;
                 state.error = null;
                 state.orders = action.payload;
-                // console.log(state.orders)
+                console.log(state.orders)
                 // console.log("2")
             })
             .addCase(findPlacedOrders.rejected, (state, action) => {
@@ -155,6 +175,7 @@ const orderSlice = createSlice({
                 state.loading = false;
                 state.error = action.error.message || 'Failed to fetch cars';
             })
+            
         },
 });
 

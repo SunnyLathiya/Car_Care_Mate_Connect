@@ -162,6 +162,8 @@ export default function SignInSide() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isChecked, setIsChecked] = useState(false);
+
   const [formData, setFormData] = useState<LoginFormValues>({
     email: '',
     password: '',
@@ -170,6 +172,11 @@ export default function SignInSide() {
     email: '',
     password: '',
   });
+
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(e.target.checked);
+  };
   
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -193,6 +200,12 @@ export default function SignInSide() {
       email: '',
       password: '',
     };
+
+    if (!isChecked) {
+      // Show error message or prevent form submission
+      console.log('Please agree to the terms and conditions');
+      return;
+    }
 
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
@@ -269,7 +282,7 @@ export default function SignInSide() {
             backgroundPosition: 'center',
           }}
         />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square style={{backgroundColor:"#E7E8D1"}}>
           <Box
             sx={{
               my: 8,
@@ -278,9 +291,10 @@ export default function SignInSide() {
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
+              backgroundColor:'#E7E8D1'
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: '#B85042', color: '#E7E8D1' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -303,6 +317,25 @@ export default function SignInSide() {
                 onChange={handleChange}
                 error={!!errors.email}
                 helperText={errors.email}
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: '#A7BEAE', // Default label color
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#B85042', // Default border color
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#B85042', // Border color on hover
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#B85042', // Border color when focused
+                    },
+                    '&.Mui-focused .MuiInputLabel-root': {
+                      color: '#B85042', // Label color when focused
+                    },
+                  },
+                }} 
               />
               <TextField
                 margin="normal"
@@ -317,28 +350,57 @@ export default function SignInSide() {
                 onChange={handleChange}
                 error={!!errors.password}
                 helperText={errors.password}
+                sx={{
+                  '& .MuiInputLabel-root': {
+                    color: '#A7BEAE', // Default label color
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: '#B85042', // Default border color
+                    },
+                    '&:hover fieldset': {
+                      borderColor: '#B85042', // Border color on hover
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: '#B85042', // Border color when focused
+                    },
+                    '&.Mui-focused .MuiInputLabel-root': {
+                      color: '#B85042', // Label color when focused
+                    },
+                  },
+                }} 
               />
               <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
+                control={<Checkbox value="remember" color="primary"  checked={isChecked}
+                onChange={handleCheckboxChange} />}
                 label="Remember me"
+                
               />
               <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                disabled={loading}
-              >
-                Sign In
-              </Button>
+  type="submit"
+  fullWidth
+  variant="contained"
+  sx={{
+    mt: 3,
+    mb: 2,
+    backgroundColor: '#B85042', // Set background color
+    color: 'white', // Set text color to white
+    '&:hover': {
+      backgroundColor: '#974038', // Adjust hover background color
+    },
+  }}
+  disabled={!isChecked}
+>
+  Sign In
+</Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="/forgotpassword" variant="body2">
+                  <Link href="/forgotpassword" variant="body2" style={{color:'#B85042'}}>
                     Forgot password?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="/signup" variant="body2">
+                  <Link href="/signup" variant="body2" style={{color:'#B85042'}}>
                     {"Don't have an account? Sign Up"}
                   </Link>
                 </Grid>

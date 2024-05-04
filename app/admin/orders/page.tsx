@@ -5,6 +5,9 @@ import MaterialTable, { Column } from "material-table";
 import { AppDispatch, RootState } from "@/redux/store";
 import { findCompletedOrders, findPlacedOrders, updateOrder } from "@/redux/slices/adminSlices/orderSlice";
 import { Check, Clear, Delete, ChevronRight, Edit, ArrowUpward, Search, FirstPage, LastPage, ChevronLeft } from "@mui/icons-material";
+import axios from "axios";
+import Cookies from 'js-cookie';
+// import { lookup } from "dns";
 
 interface Order {
   tableData: any;
@@ -35,13 +38,60 @@ const Orders: React.FC<Props> = () => {
   const [isError, setIsError] = useState<boolean>(false);
   const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const [display, setDisplay] = useState<boolean>(false);
+  const [mechanicsLookUp, setMechanicsLookUp] = useState<{ [key: string]: string }>({});
 
-
+  const authToken = Cookies.get('token');
 
   // useEffect(() => {
-  //   dispatch(findPlacedOrders());
-  //   dispatch(findCompletedOrders());
-  // }, [dispatch]);
+  //   // Fetch mechanic IDs from the API endpoint
+  //   axios.get('http://localhost:4000/api/v1/admin/availablemechanics', { headers: { Authorization: `Bearer ${authToken}` } })
+  //     .then(response => {
+  //       const availableMechanics = response.data.data;
+
+  //       console.log("6", response.data._id)
+  //       console.log("7", availableMechanics);
+
+  //       const xyz = availableMechanics.map((item: { _id: any; }) => item._id)
+
+  //       // const updatedMechanicsLookUp = {};
+
+  //       console.log(xyz)
+       
+  //       setMechanicsLookUp(xyz);
+
+  //     })
+  //     .catch(error => {
+
+  //       console.log("9", error)
+  //       console.error('Error fetching available mechanics:', error);
+  //     });
+  // }, []);
+
+  
+useEffect(() => {
+
+  axios.get('http://localhost:4000/api/v1/admin/availablemechanics', { 
+    headers: { Authorization: `Bearer ${authToken}` } 
+  })
+  .then(response => {
+    const availableMechanics = response.data.data;
+
+    console.log(response.data.data)
+
+    const updatedMechanicsLookUp = availableMechanics.reduce((lookup: { [key: string]: string }, mechanic: { _id: string; id: string }) => {
+      lookup[mechanic._id] = mechanic.id;
+      return lookup;
+    }, {});
+
+    // console.log("lookup", lookup)
+
+    setMechanicsLookUp(updatedMechanicsLookUp);
+  })
+  .catch(error => {
+    console.error('Error fetching available mechanics:', error);
+  });
+}, []);
+
 
   useEffect(() => {
     dispatch(findPlacedOrders());
@@ -63,7 +113,6 @@ const Orders: React.FC<Props> = () => {
   const openTable = () => {
     setDisplay(true);
   };
-
   const closeTable = () => {
     setDisplay(false);
   };
@@ -79,7 +128,8 @@ const Orders: React.FC<Props> = () => {
     {
       title: "Assign Mechanic",
       field: "mechanicId",
-      lookup: dynamicMechanicsLookUp,
+      // lookup: dynamicMechanicsLookUp,
+      lookup:mechanicsLookUp
     },
   ];
 
@@ -101,7 +151,8 @@ const Orders: React.FC<Props> = () => {
         await dispatch(updateOrder(newRow));
         setIsError(false);
         setErrorMessages([]);
-      } catch (error) {
+      } catch (error: any) {
+        
         console.error('Error occurred while updating order:', error);
       }
     }
@@ -110,11 +161,11 @@ const Orders: React.FC<Props> = () => {
 
   const enhancedOrders = response?.map((order: Order, index: number) => ({ ...order, tableData: { id: index } })) || [];
   const completedenhancedOrders = completedResponse?.map((order: Order, index: number) => ({ ...order, tableData: { id: index } })) || [];
-  console.log(enhancedOrders)
-  console.log(completedenhancedOrders)
+  // console.log(enhancedOrders)
+  // console.log(completedenhancedOrders)
 
   return (
-    <div style={{marginTop:"70px", marginBottom:"20px", "marginLeft":"180px"}}>
+    <div style={{marginTop:"70px", marginBottom:"20px", "marginLeft":"190px"}}>
       <br />
       <button onClick={openTable}>See Completed Orders</button>
       <br />
@@ -128,28 +179,36 @@ const Orders: React.FC<Props> = () => {
             onRowUpdate: handleRowUpdate
           }}
           icons={{
-            Check: Check,
-            Clear: Clear,
-            Delete: Delete,
-            DetailPanel: ChevronRight,
-            Edit: Edit,
-            Export: ArrowUpward,
-            Filter: Search,
-            FirstPage: FirstPage,
-            LastPage: LastPage,
-            NextPage: ChevronRight,
-            PreviousPage: ChevronLeft,
-            ResetSearch: Clear,
-            Search: Search,
-            SortArrow: ArrowUpward,
+            Check: () => <Check style={{ color: '#B85042' }} />,
+            Clear: () => <Clear style={{ color: '#B85042' }} />,
+            Delete: () => <Delete style={{ color: '#B85042' }} />,
+            DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
+            Edit: () => <Edit style={{ color: '#B85042' }} />,
+            Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
+            Filter: () => <Search style={{ color: '#B85042' }} />,
+            FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
+            LastPage: () => <LastPage style={{ color: '#B85042' }} />,
+            NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
+            PreviousPage: () => <ChevronLeft style={{ color: '#B85042' }} />,
+            ResetSearch: () => <Clear style={{ color: '#B85042' }} />,
+            Search: () => <Search style={{ color: '#B85042' }} />,
+            SortArrow: () => <ArrowUpward/>,
             }}
           options={{
             headerStyle: {
-              backgroundColor: "#01579b",
+              backgroundColor: "#B85042",
               color: "#FFF",
               zIndex:"0",
             },
+            actionsCellStyle: {
+              backgroundColor: "#E7E8D1",
+            },
+            rowStyle: {
+              backgroundColor: "#E7E8D1",
+              border: '1px solid #A7BEAE'
+            },
             exportButton: true,
+
           }}
         />) :
         ( <div>

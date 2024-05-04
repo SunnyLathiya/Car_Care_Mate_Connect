@@ -122,6 +122,7 @@ import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import { ToastSuccess, ToastError } from '@/components/common/Toast';
 import { RootState } from '../store';
+import { toast } from 'react-toastify';
 
 export const registerUser = createAsyncThunk(
     'user/register',
@@ -266,6 +267,23 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+export const allUsers = createAsyncThunk(
+  'order/allusers',
+  async () => {
+      try {
+          const token = Cookies.get('token');
+          const response = await axios.get(`http://localhost:4000/api/v1/allusers`, {
+                   headers: {
+                     Authorization: `Bearer ${token}`,
+                 }});
+          return response.data;
+      } catch (error: any) {
+          toast.error(' Error in Order page!');
+          throw (error as AxiosError).response?.data || error.message;
+      }
+  }
+);
+
 interface UserState {
   _id: any;
   user: User | null;
@@ -321,10 +339,11 @@ const userSlice = createSlice({
         console.log(action.payload)
         state._id=action.payload.user._id
         state.user.token=action.payload.token;
-        console.log("fgsdg", state.user.token)
+
+
         Cookies.set('token', action.payload.token);
 
-        console.log(state.token)
+        console.log(action.payload.token)
 
         const decodedToken = jwtDecode(action.payload.token);
         console.log("decodedtoken", decodedToken);
@@ -364,7 +383,22 @@ const userSlice = createSlice({
     .addCase(updateProfile.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || 'Failed to update profile';
-    });
+    })
+    .addCase(allUsers.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+  })
+  .addCase(allUsers.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.user = action.payload.response;
+      console.log(state.user)
+      // console.log("2")
+  })
+  .addCase(allUsers.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || 'Failed to fetch cars';
+  })
      
   },
 });

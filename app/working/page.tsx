@@ -36,8 +36,9 @@ const Working: React.FC = () => {
   const classes = useStyles();
 
   return (
+    <div style={{backgroundColor:"#E7E8D1"}}>
     <div style={{ marginTop: 80, marginBottom:150}}>
-      <h1 style={{ textAlign: 'center'}}>How WYPE Works?</h1>
+      <h1 style={{ textAlign: 'center'}}>How CarCareMateConnect Works?</h1>
       <Timeline align="alternate">
         <TimelineItem>
           <TimelineSeparator>
@@ -132,7 +133,7 @@ const Working: React.FC = () => {
         </TimelineItem>
       </Timeline>
 
-      
+      </div>
     </div>
   );
 };

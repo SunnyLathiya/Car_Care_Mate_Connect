@@ -3,7 +3,7 @@ import { ToastError, ToastSuccess } from '@/components/common/Toast';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
-import { Bounce, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 export const getAllMechanics = createAsyncThunk(
     'admin/allmechanics',
@@ -13,10 +13,8 @@ export const getAllMechanics = createAsyncThunk(
             const response = await axios.post(`http://localhost:4000/api/v1/admin/findall`, allmechanicsDetails, { headers: {
                 Authorization: `Bearer ${token}`, // Send token in the Authorization header
               },});
-            toast.info(' All mechanics List!');
             return response.data;
         } catch (error: any) {
-            toast.error(' Error in mechanics list!');
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -35,10 +33,9 @@ export const getAllAvailableMechanics = createAsyncThunk(
                   },
                 }
               );
-            toast.info(' Now Available mechanics List!');
+            ToastSuccess(' Now Available mechanics List!');
             return response.data;
         } catch (error: any) {
-            toast.error(' Error in available mechanics list !');
             throw (error as AxiosError).response?.data || error.message;
         }
     }

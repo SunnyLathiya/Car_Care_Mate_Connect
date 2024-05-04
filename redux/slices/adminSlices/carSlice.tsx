@@ -4,11 +4,16 @@ import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 import { ToastSuccess, ToastError, ToastInfo } from '@/components/common/Toast';
 
+
 export const getAllCars = createAsyncThunk(
     'cars/getAll',
     async () => {
         try {
-            const response = await axios.get(`http://localhost:4000/api/v1/admin/findallcars`);
+            const token = Cookies.get('token');
+            const response = await axios.get(`http://localhost:4000/api/v1/admin/findallcars`, { headers: {
+                Authorization: `Bearer ${token}`, // Send token in the Authorization header
+              },});
+
             return response.data;
         } catch (error: any) {
             ToastError("Error in Car detailes page!")
@@ -21,7 +26,6 @@ export const addCar = createAsyncThunk(
     'cars/add',
     async (newCar: any) => {
         try {
-
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/addcar`, newCar, { headers: {
                 Authorization: `Bearer ${token}`, // Send token in the Authorization header
@@ -50,7 +54,7 @@ export const deleteCar = createAsyncThunk(
             });
 
             ToastSuccess("car details deleted successfully!")
-            return carId; // Return the ID of the deleted car upon successful deletion
+            return carId;
         } catch (error: any) {
             ToastError("Problem in Delete Car Details!");
             throw (error as AxiosError).response?.data || error.message;
@@ -75,7 +79,6 @@ export const updateCar = createAsyncThunk(
         }
     }
 );
-
 const initialState = {
     cars: [],
     loading: false,

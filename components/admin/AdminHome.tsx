@@ -20,38 +20,6 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
   const pathname = usePathname();
   const [orders, setOrders] = useState<any[]>([]);
 
-  // const itemList = [
-  //   {
-  //     text: "HOME",
-  //     icon: <HomeIcon />,
-  //     onClick: () => router.push("/admin/home"),
-  //   },
-  //   {
-  //     text: "CARS",
-  //     icon: <DriveEtaIcon />,
-  //     onClick: () => router.push("/admin/cars"),
-  //   },
-  //   {
-  //     text: "Services",
-  //     icon: <BallotIcon />,
-  //     onClick: () => router.push("/admin/services"),
-  //   },
-  //   {
-  //     text: "Mechanics",
-  //     icon: <SupervisorAccountIcon />,
-  //     onClick: () => router.push("/admin/mechanics"),
-  //   },
-  //   {
-  //     text: "Orders",
-  //     icon: <MonetizationOnIcon />,
-  //     onClick: () => router.push("/admin/orders"),
-  //   },
-  //   {
-  //     text: "Log Out",
-  //     icon: <ExitToAppIcon />,
-  //     onClick: () => router.push("/signin"),
-  //   },
-  // ];
 
   const itemList = [
     {
@@ -86,19 +54,6 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
     },
   ];
 
-  // const getCompletedOrders = () => {
-  //   AdminOrders.findCompletedOrders()
-  //     .then((res) => {
-  //       setOrders(res);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   getCompletedOrders();
-  // }, []);
 
   return (
     // <div style={{marginTop:"80px", marginBottom:"20px"}}>
@@ -125,7 +80,7 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
 
     <div style={{ marginTop: "80px", marginBottom: "20px" }}>
     <Drawer variant="permanent" style={{ marginTop: "50px" }}>
-      <div style={{ backgroundColor: "grey", height: "700px" }}>
+      <div style={{ backgroundColor: "#A7BEAE", height: "700px" }}>
         <List style={{ marginTop: "100px" }}>
           {itemList.map((item, index) => {
             const isActive = pathname === item.path;
@@ -136,12 +91,12 @@ const AdminHome: React.FC<AdminHomeProps> = () => {
                 key={item.text}
                 onClick={() => router.push(item.path)}
                 style={{
-                  color: isActive ? "white" : "black",
+                  color: isActive ? "#B85042" : "black",
                   borderRadius: "5px",
                   transition: "background-color 0.3s ease",
                 }}
               >
-                {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+                {item.icon && <ListItemIcon style={{ color: isActive ? "#B85042" : "black"}}>{item.icon}</ListItemIcon>}
                 <ListItemText primary={item.text} />
               </ListItem>
             );

@@ -132,4 +132,4 @@ const orderManageSlice = createSlice({
         },
 });
 
-export default orderSlice.reducer;
+export default orderManageSlice.reducer;

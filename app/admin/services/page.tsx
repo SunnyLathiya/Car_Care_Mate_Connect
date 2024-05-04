@@ -12,6 +12,7 @@ import { Bounce, toast } from 'react-toastify';
 import Loader from '@/components/loader';
 
 interface ServiceData {
+  _id: string;
   name: string;
   price: string;
   description: string;
@@ -61,19 +62,19 @@ function Services() {
     }
   };
 
-  const handleRowUpdate = async (newRow: ServiceData, oldRow: ServiceData | undefined) => {
-    if (oldRow) {
+  const handleRowUpdate = async (oldRow: ServiceData | undefined) => {
+    // if (oldRow) {
       try {
         setLoading(true)
-        await dispatch(updateService(newRow));
+        await dispatch(updateService(oldRow));
         setLoading(false)
       } catch (error) {
         setLoading(false)
-        console.error('Error occurred while updating car:', error);
-        
+        console.error('Error occurred while updating car:', error);        
       }
-    }
+    // }
   };
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -92,6 +93,8 @@ function Services() {
   const enhancedServices = services.map((service:ServiceData, index: number) => ({ ...service, tableData: { id: index } }));
   return (
 
+    <div style={{backgroundColor:"#E7E8D1", minHeight:"100vh", display:"flex", flexDirection:"column"}}>
+
   <div style={{marginTop:"100px", marginLeft:"180px"}}>
   { loading ? (<Loader/>) : (
     <MaterialTable
@@ -104,33 +107,40 @@ function Services() {
       onRowDelete: handleRowDelete,
     }}
     icons={{
-      Add: Add,
-      Check: Check,
-      Clear: Clear,
-      Delete: Delete,
-      DetailPanel: ChevronRight,
-      Edit: Edit,
-      Export: ArrowUpward,
-      Filter: Search,
-      FirstPage: FirstPage,
-      LastPage: LastPage,
-      NextPage: ChevronRight,
-      PreviousPage: ChevronLeft,
-      ResetSearch: Clear,
-      Search: Search,
-      SortArrow: ArrowUpward,
+      Add: () => <Add style={{ color: '#B85042' }} />,
+        Check: () => <Check style={{ color: '#B85042' }} />,
+        Clear: () => <Clear style={{ color: '#B85042' }} />,
+        Delete: () => <Delete style={{ color: '#B85042' }} />,
+        DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
+        Edit: () => <Edit style={{ color: '#B85042' }} />,
+        Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
+        Filter: () => <Search />,
+        FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
+        LastPage: () => <LastPage style={{ color: '#B85042' }} />,
+        NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
+        PreviousPage: () => <ChevronLeft style={{ color: '#B85042' }} />,
+        ResetSearch: () => <Clear style={{ color: '#B85042' }} />,
+        Search: () => <Search style={{ color: '#B85042' }} />,
+        SortArrow: () => <ArrowUpward/>,
     }}
     options={{
       headerStyle: {
-        backgroundColor: "#01579b",
+        backgroundColor: "#B85042",
         color: "#FFF",
+        zIndex:"0"
       },
       actionsCellStyle: {
-        backgroundColor: "#FFF",
+        backgroundColor: "#E7E8D1",
       },
+      rowStyle: {
+        backgroundColor: "#E7E8D1", // Set row background color to red
+        border: '1px solid #A7BEAE'
+      }
     }}
   />
   )}
+</div>
+
 </div>
   
 );

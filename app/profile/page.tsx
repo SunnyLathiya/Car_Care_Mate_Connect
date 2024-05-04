@@ -111,11 +111,22 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { getProfile, updateProfile } from "@/redux/slices/userSlice";
 // import { ToastSuccess, ToastError } from "@/utils/toast"; // Assuming you have a utility for toast notifications
 import styles from "@/css/Profile.module.css";
+import axios from "axios";
+import Cookies from 'js-cookie';
+import { ToastError, ToastSuccess } from "@/components/common/Toast";
+import { useRouter } from "next/navigation";
 
 
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.user);
   const  {_id}  = useSelector((state: RootState) => state.user);
+  const router = useRouter();
+
+
+  console.log("aaaaa", user)
+
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
 
   console.log("hyy", _id)
 
@@ -168,10 +179,42 @@ const Profile = () => {
     console.log(formValues)
   };
 
+  const authToken = Cookies.get('token');
+  console.log(authToken)
+  const handleChangePassword = async () => {
+    try {
+       const abc =await axios.put(
+        `http://localhost:4000/api/v1/updatedpassword/`,
+        { currentPassword, newPassword },
+        // { withCredentials: true } // Add this if you are using cookies for authentication
+        { headers: { Authorization: `Bearer ${authToken}` } }
+      );
+
+      console.log("abc", abc)
+      // alert('Password updated successfully');
+      ToastSuccess("Password Change successfully!")
+    } catch (error) {
+      console.error(error);
+      // alert('Failed to update password');
+      ToastError("Failed to update password")
+    }
+  };
+
+  const handleDeleteAccount = async() => {
+    try{
+      await axios.delete(`http://localhost:4000/api/v1/deleteprofile`,
+      { headers: { Authorization: `Bearer ${authToken}` } }
+      )
+      ToastSuccess("Account Deleted Successfully!!")
+      Cookies.remove('token');
+      router.push('/signup');
+    }catch(error){
+      ToastError("proble in delete account!")
+    } 
+  }
 
   return (
-
-    <div className="container rounded bg-white mt-5 mb-5">
+    <div className="rounded mt-5 mb-5" style={{color:"#B85042", backgroundColor:"#E7E8D1"}}>
     <div className="row">
       <div className="col-md-3 border-right">
         <div className="d-flex flex-column align-items-center text-center p-3 py-5">
@@ -192,7 +235,7 @@ const Profile = () => {
           </div>
           <div className="row mt-2">
             <div className="col-md-6">
-              <label className="labels">FirstName:</label>
+              <label className={`${styles.labels}`}>FirstName:</label>
               <input
                   type="text"
                   className="form-control"
@@ -200,10 +243,11 @@ const Profile = () => {
                   placeholder="First Name"
                   value={formValues.firstName}
                   onChange={handleInputChange}
+                  style={{ fontWeight: 'bold' }}
                 />
             </div>
             <div className="col-md-6">
-              <label className="labels">LastName:</label>
+              <label className={`${styles.labels}`}>LastName:</label>
                 <input
                    type="text"
                    className="form-control"
@@ -211,42 +255,44 @@ const Profile = () => {
                    placeholder="Surname"
                    value={formValues.lastName}
                    onChange={handleInputChange}
+                   style={{ fontWeight: 'bold' }}
+
                  />
             </div>
           </div>
           <div className="row mt-3">
             <div className="col-md-12">
-              <label className="labels">PhoneNumber:</label>
-              <input type="text" className="form-control" placeholder="Enter Phone Number"  name="phoneNumber" value={formValues.phoneNumber} onChange={handleInputChange} />
+              <label className={`${styles.labels}`}>PhoneNumber:</label>
+              <input type="text" className="form-control" placeholder="Enter Phone Number"  name="phoneNumber" value={formValues.phoneNumber} onChange={handleInputChange} style={{ fontWeight: 'bold' }} />
             </div>
             <div className="col-md-12">
               <label className={`${styles.labels}`}>Email:</label>
-              <input type="text" className="form-control" placeholder="Enter Email ID" name="email" value={formValues.email} onChange={handleInputChange} />
+              <input type="text" className="form-control" placeholder="Enter Email ID" name="email" value={formValues.email} onChange={handleInputChange} style={{ fontWeight: 'bold' }} />
             </div>
             <div className="col-md-12">
-              <label className="labels">YourCar:</label>
-              <input type="text" className="form-control" placeholder="YourCar" name="yourCar" value={formValues.yourCar} onChange={handleInputChange}/>
+              <label className={`${styles.labels}`}>YourCar:</label>
+              <input type="text" className="form-control" placeholder="YourCar" name="yourCar" value={formValues.yourCar} onChange={handleInputChange} style={{ fontWeight: 'bold' }}/>
             </div>
             <div className="col-md-12">
-              <label className="labels">FavouruteCar:</label>
-              <input type="text" className="form-control" placeholder="FavouruteCar" name="favouriteCar" value={formValues.favouriteCar} onChange={handleInputChange} />
+              <label className={`${styles.labels}`}>FavouruteCar:</label>
+              <input type="text" className="form-control" placeholder="FavouruteCar" name="favouriteCar" value={formValues.favouriteCar} onChange={handleInputChange} style={{ fontWeight: 'bold' }}/>
             </div>
             <div className="col-md-12">
-              <label className="labels">Address:</label>
-              <input type="text" className="form-control" placeholder="Enter Address Line 1" name="address" value={formValues.address} onChange={handleInputChange}  />
+              <label className={`${styles.labels}`}>Address:</label>
+              <input type="text" className="form-control" placeholder="Enter Address Line 1" name="address" value={formValues.address} onChange={handleInputChange} style={{ fontWeight: 'bold' }}  />
             </div>
             <div className="col-md-12">
-              <label className="labels">ZipCode:</label>
-              <input type="text" className="form-control" placeholder="Enter Postcode" name="zipcode" value={formValues.zipcode} onChange={handleInputChange}  />
+              <label className={`${styles.labels}`}>ZipCode:</label>
+              <input type="text" className="form-control" placeholder="Enter Postcode" name="zipcode" value={formValues.zipcode} onChange={handleInputChange} style={{ fontWeight: 'bold' }} />
             </div>
             <div className="row mt-3">
             <div className="col-md-6">
-              <label className="labels">Country:</label>
-              <input type="text" className="form-control" placeholder="Country" name="country" value={formValues.country} onChange={handleInputChange} />
+              <label className={`${styles.labels}`}>Country:</label>
+              <input type="text" className="form-control" placeholder="Country" name="country" value={formValues.country} onChange={handleInputChange} style={{ fontWeight: 'bold' }} />
             </div>
             <div className="col-md-6">
-              <label className="labels">State:</label>
-              <input type="text" className="form-control" placeholder="State/Region" name="state" value={formValues.state} onChange={handleInputChange} />
+              <label className={`${styles.labels}`}>State:</label>
+              <input type="text" className="form-control" placeholder="State/Region" name="state" value={formValues.state} onChange={handleInputChange} style={{ fontWeight: 'bold' }} />
             </div>
           </div>
           </div>
@@ -256,11 +302,57 @@ const Profile = () => {
             </button>
           </div>
         </div>
+        
       </div>
+
+      <div className="col-md-4" style={{marginTop:"50PX"}}>
+            <div className="p-3 py-5">
+
+<div className="d-flex justify-content-between align-items-center experience">
+        <u><h4><span>Edit Password</span></h4></u>
+        <button className="btn btn-primary" style={{marginRight:"12px"}} onClick={handleChangePassword}>
+          <i className="fa fa-plus"></i>&nbsp;Change Password
+        </button>
+      </div>
+      <br />
+      <div className="col-md-12">
+        <label className={`${styles.labels}`}>Current Password</label>
+        <input
+          type="password"
+          className="form-control"
+          placeholder="Current Password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+        />
+      </div>
+      <br />
+      <div className="col-md-12">
+        <label className={`${styles.labels}`}>New Password:</label>
+        <input
+          type="password"
+          className="form-control"
+          placeholder="New Password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+        />
+      </div>
+
+      <div className="position-absolute bottom-0 end-0 mb-4 me-3">
+      {/* Button for deleting account positioned at the bottom right */}
+      <button className="btn btn-danger" style={{marginTop:"50px", marginLeft:"225px"}} onClick={handleDeleteAccount}>
+        <i className="fa fa-trash"></i>&nbsp;Delete Account
+      </button>
+    </div>
+            </div>
+        </div>
     </div>
   </div> 
   );
 };
 
 export default Profile;
+
+
+
+
 

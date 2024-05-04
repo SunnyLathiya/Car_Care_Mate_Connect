@@ -8,6 +8,11 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
+import logo1 from "../../public/logo-black.png";
+import logo2 from "../../public/logo-color.png";
+import logo3 from "../../public/logo-no-background.png";
+import logo4 from "../../public/logo-white.png";
+import logo5 from "../../public/logo-color.svg";
 
 function getToken(): string | null {
   const token = Cookies.get('token');
@@ -39,6 +44,10 @@ function getAccountTypeFromToken(): string | null {
   } else {
     return null;
   }
+}
+
+const handleLogout = () => {
+  Cookies.remove('token');
 }
 
 const Navbar: React.FC = () => {
@@ -79,19 +88,24 @@ const Navbar: React.FC = () => {
 
 
   const customerhome = pathname.startsWith('/customer/cushome');
-
+    console.log("logo", logo1.src);
   return (
     <nav className={`${styles.nav} ${show ? styles.nav__scroll : ""}`}>
 
-      <Link href="/signup" passHref>
-        <Image
+      {/* <Link href="/signup" passHref> */}
+        {/* <Image
           className={styles.nav__logo}
-          src={logo}
+          src={logo3.src}
+          width={200}
+          height={200}
+          // style={{marginTop:"-80px", marginLeft:"40px"}}         
           alt="CARCAREMATECONNECT"
-               style={ "isAdmin" ? {marginLeft:"170px"} : {margin:"auto"}}
+               style={ "isAdmin" ? {marginLeft:"170px", marginTop:"-80px"} : {margin:"auto", marginTop:"-80px",  marginLeft:"40px"}}
           
-          />
-      </Link>
+          /> */}
+
+          <span style={{fontFamily:"Sevillana", color:"#B85042", fontSize:"25px", marginLeft: accountType === "Admin" || "Mechanic" ? "200px": "20px"}}> CarCareMateConnect</span>
+      {/* </Link> */}
       <div
         className={`${styles.nav__container} ${styles.nav__borderXwidth} ${
             show
@@ -128,7 +142,7 @@ const Navbar: React.FC = () => {
         <Link href="/contactus" passHref className={`${styles.nav__link} ${pathname === '/contactus' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`}>
             CONTACT US
         </Link>
-        <Link href="/signin" passHref className={`${styles.nav__link} ${pathname === '/signin' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`}>
+        <Link href="/signin" passHref className={`${styles.nav__link} ${pathname === '/signin' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`} onClick={handleLogout}>
             LOGOUT
         </Link>
         </>
@@ -138,10 +152,10 @@ const Navbar: React.FC = () => {
   {/* <Link href="/contactus" passHref className={`${styles.nav__link} ${pathname === '/contactus' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`}>
             SUNNY LATHIYA
         </Link> */}
-        <Link href="/profile" passHref className={`${styles.nav__link} ${pathname === '/profile' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`}>
+        <Link href="/admin/profile" passHref className={`${styles.nav__link} ${pathname === '/profile' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`}>
             PROFILE
         </Link>
-        <Link href="/signin" passHref className={`${styles.nav__link} ${pathname === '/signin' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`}>
+        <Link href="/signin" passHref className={`${styles.nav__link} ${pathname === '/signin' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`} onClick={handleLogout}>
             LOGOUT
         </Link>
 </>)}
@@ -154,7 +168,7 @@ const Navbar: React.FC = () => {
         <Link href="/profile" passHref className={`${styles.nav__link} ${pathname === '/profile' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`}>
             PROFILE
         </Link>
-        <Link href="/signin" passHref className={`${styles.nav__link} ${pathname === '/signin' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`}>
+        <Link href="/signin" passHref className={`${styles.nav__link} ${pathname === '/signin' ? styles.active : ''} ${show ? styles.nav__linkscroll : ""}`} onClick={handleLogout}>
             LOGOUT
         </Link>
         </>)}

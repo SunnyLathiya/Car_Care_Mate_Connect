@@ -182,7 +182,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ToastSuccess } from "@/components/common/Toast";
 
-
 interface User {
   userId: string;
   email: string;

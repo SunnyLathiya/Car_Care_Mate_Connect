@@ -1,7 +1,7 @@
 .component {
     margin-top: 80px;
+    background-color: #E7E8D1;
   }
-  /* `${styles.nav} ${show ? styles.nav__scroll : ""}` */
   .banner {
     display: flex;
     padding: 20px;
@@ -38,7 +38,7 @@
     border-radius: 25px;
     background-color: #e1f4ea;
     padding: 3px 15px;
-    color: #6dcb99;
+    color: #B85042;
     font-family: "Poppins", sans-serif;
     font-weight: 400;
     letter-spacing: 3px;
@@ -51,15 +51,15 @@
     line-height: 30px;
     color: #525252;
     text-align: justify;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #A7BEAE;
+    border-bottom: 1px solid #A7BEAE;
     font-family: "Poppins", sans-serif;
   }
   
   .feature__heading {
     margin-top: 30px;
     font-size: 36px;
-    color: #6dcb99;
+    color: #B85042;
     line-height: 1.2;
     font-weight: 600;
     font-family: "Poppins", sans-serif;
