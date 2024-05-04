@@ -12,6 +12,7 @@ export interface Order extends Document {
   requestedOn: Date;
   deliveredOn?: Date;
   status: string;
+  value: string;
 }
 
 const orderSchema: Schema = new Schema({
@@ -26,6 +27,7 @@ const orderSchema: Schema = new Schema({
   requestedOn: { type: Date, default: Date.now, required: true },
   deliveredOn: { type: Date },
   status: { type: String, default:"PENDING" },
+  value: {type:String}
 });
 
 export default model<Order>("Order", orderSchema);

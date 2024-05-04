@@ -1,10 +1,9 @@
 import express, { Request, Response } from "express";
-import {  userSignup, userSignin, ForgotPassword, changePasswordWithToken } from "../controllers/userController";
-import {auth, Customer} from "../../middleware/authMiddleware"
+import {  userSignup, userSignin, ForgotPassword, changePasswordWithToken, allusers } from "../controllers/userController";
+import {Admin, auth, Customer} from "../../middleware/authMiddleware"
 
 const router = express.Router();
 
-// For handling GET requests
 router.get("/allAccess", (req: Request, res: Response) => {
   res.status(200).send("Public Content.");
 });
@@ -22,5 +21,8 @@ router.post("/login", userSignin);
 router.post("/forgotpassword", ForgotPassword);
 
 router.post("/changepasswordwithtoken/:token", changePasswordWithToken);
+// allusers
+
+router.get("/allusers", auth, Admin, allusers);
 
 export default router;

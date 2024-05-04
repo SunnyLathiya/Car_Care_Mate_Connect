@@ -3,6 +3,7 @@ import express, {Request, Response} from "express";
 import cors from "cors";
 import authRoutes from "./Auth/routes/userRoutes";
 import profileRoutes from "./Auth/routes/profileRoutes";
+import contactRoutes from "./Auth/routes/contactRoutes"
 
 import CustomerOrderRoutes from "./Customer/routes/orderRoutes";
 
@@ -16,12 +17,14 @@ import mechOrderRoutes from "./Mechanic/routes/orderRoutes";
 
 import connects from "./config/db";
 
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config();
+const envPath = path.join(__dirname, '..', 'config.env');
 
-console.log(process.env.MAIL_USER);
-console.log(process.env.MAIL_PASS);
+dotenv.config({ path: envPath });
+
+
 // import fileupload from 'express-fileupload';
 import { cloudinaryConnect } from "./config/cloudinary"
 
@@ -35,10 +38,10 @@ cloudinaryConnect();
 //     })
 //   );
 
-const PORT = 4000;
+const PORT = process.env.PORT || 5000;
 app.use(cors());
 
-app.use('/api/v1', authRoutes, profileRoutes);
+app.use('/api/v1', authRoutes, profileRoutes, contactRoutes);
 app.use('/api/v1/customer',  CustomerOrderRoutes, profileRoutes)
 app.use('/api/v1/admin', mechCreateRouters, authAdminRoutes, carRoutes, serverRoutes, orderAdminRoutes);
 app.use('/api/v1/mechanic', mechOrderRoutes);

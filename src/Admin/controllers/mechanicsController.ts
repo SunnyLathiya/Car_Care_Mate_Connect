@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import userModel from '../../Auth/models/userModel';
-import mechanicModel from '../models/mechanicModel';
 
 export const findAvailable = async (req: Request, res: Response): Promise<void> => {
   try {
-    const mechanicsList = await userModel.find({ status: "AVAILABLE" }).exec();
+    const mechanicsList = await userModel.find({accountType:"Mechanic", status:"AVAILABLE" }).exec();
     if (mechanicsList.length === 0) {
       res.status(200).json({
         message: "No Mechanics are Available",

@@ -326,6 +326,33 @@ export const changePasswordWithToken = async (req: Request, res: Response) => {
 
 
 
+export const allusers = (req: Request, res: Response): void => {
+  userModel.find({})
+  .exec()
+  .then((response: string | any[]) => {
+    if (response.length === 0) {
+      res.status(200).json({
+        message: "not any users!!!",
+      });
+    } else {
+      res.status(200).json({
+        message: "all users",
+        response,
+      });
+    }
+  })
+  .catch((err: any) => {
+    console.error("Find All Placed Orders Error: ", err);
+    res.status(500).json({
+      error: "Internal Server Error",
+    });
+  })
+}
+
+
+
+
+
 
 
 

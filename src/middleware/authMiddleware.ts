@@ -26,7 +26,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const token: string | undefined =  (req.headers.authorization && req.headers.authorization.replace("Bearer", "").trim());
 
-        // console.log(token)
+        console.log("token111", token)
 
         if (!token) {
             return res.status(401).json({
@@ -34,7 +34,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
                 message: 'token is missing',
             });
         }
-
         try {
             let suny = "sunny"
             const decode = jwt.verify(token, suny as string) as DecodedToken;

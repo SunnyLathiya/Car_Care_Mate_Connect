@@ -6,17 +6,16 @@ import { addService, findAll, updateService, deleteService, findByServiceId  } f
 
 import { auth, Admin } from "../../middleware/authMiddleware";
 
+//
 router.post("/addservice", auth, Admin, addService);
 
-
+//
 router.get("/findallservices", findAll);
-
+//
 router.patch("/updateservice/:serviceId", auth, Admin, updateService);
-
+//
 router.delete("/deleteservice/:serviceId", auth, Admin, deleteService);
 
-router.get("/findbyserviceid/:serviceId", 
-// auth, Admin, 
-findByServiceId);
+router.get("/findbyserviceid/:serviceId", findByServiceId);
 
 export default router;
