@@ -98,7 +98,7 @@ function Services() {
   <div style={{marginTop:"100px", marginLeft:"180px"}}>
   { loading ? (<Loader/>) : (
     <MaterialTable
-    title="Services Data"
+    title="SERVICES DATA"
     columns={columns}
     data={ enhancedServices }
     editable={{

@@ -279,8 +279,8 @@ const getPackage = () => {
       customerId: user.userId,
       // customerName: user.name,
       carName: car.name,
-      carNumber: formData.get('carNumber'),
-      custAddress: formData.get('custAddress'),
+      carNumber: data.carNumber,
+      custAddress: data.custAddress,
       serviceName: service.name,
       servicePrice: service.price
     };
@@ -378,10 +378,11 @@ const getPackage = () => {
 
 <>
 
-      <h1 className={styles.summaryTitle} style={{marginTop:"150px", display:"flex", justifyContent:"center"}}>ORDER SUMMARY</h1>
+<div style={{backgroundColor:"#E7E8D1", height:"100vh"}}>
+      <h1 className={styles.summaryTitle} style={{marginTop:"80px", display:"flex", justifyContent:"center"}}>ORDER SUMMARY</h1>
          <div className={`${styles.container} animated fadeIn`} style={{ display:"flex", justifyContent:"center"}}>
-      <Card className={`${styles.bookingCard} ${styles.fadeInUp}`}>
-        <Grid container spacing={3}>
+      <Card style={{marginTop:"30px"}}>
+        <Grid container spacing={3} style={{marginLeft:"10px"}}>
           <Grid item xs={12} sm={12} md={6} lg={6}>
             <p className={styles.titleSubHeading}>PERSONAL DETAILS</p>
             <h4>Email Id: {user?.email}</h4>
@@ -427,7 +428,7 @@ const getPackage = () => {
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
+                style={{backgroundColor:"#B85042"}}
                 className={styles.placeOrderButton}
               >
                 PLACE ORDER
@@ -445,6 +446,9 @@ const getPackage = () => {
         </Grid>
       </Card>
     </div>
+
+</div>
+
     </>
   );
 };

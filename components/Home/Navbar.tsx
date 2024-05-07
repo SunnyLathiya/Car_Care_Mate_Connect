@@ -104,7 +104,7 @@ const Navbar: React.FC = () => {
           
           /> */}
 
-          <span style={{fontFamily:"Sevillana", color:"#B85042", fontSize:"25px", marginLeft: accountType === "Admin" || "Mechanic" ? "200px": "20px"}}> CarCareMateConnect</span>
+          <span style={{fontFamily:"Sevillana", color:"#B85042", fontSize:"25px", marginLeft: `${accountType === "Admin" || accountType === "Mechanic" ? "200px": "20px"}`}}> CarCareMateConnect</span>
       {/* </Link> */}
       <div
         className={`${styles.nav__container} ${styles.nav__borderXwidth} ${

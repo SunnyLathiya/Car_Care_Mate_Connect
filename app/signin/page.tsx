@@ -134,6 +134,7 @@ import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { jwtDecode } from 'jwt-decode';
 import { useState } from 'react';
+import Loader from '@/components/loader';
 
 interface LoginFormValues {
   email: string;
@@ -221,6 +222,9 @@ export default function SignInSide() {
       setErrors(newErrors);
       return;
     }
+
+
+    setLoading(true)
     
 
     try {
@@ -233,8 +237,9 @@ export default function SignInSide() {
       const response = await dispatch(login(formData));
 
       const token = response.payload.token;
-      const decodedToken = jwtDecode(token);
-      const accountType = decodedToken.accountType;
+      const decodedToken : any = jwtDecode(token);
+      const accountType  = decodedToken.accountType;
+
 
       // Redirect based on accountType
       switch (accountType) {
@@ -264,6 +269,10 @@ export default function SignInSide() {
   };
 
   return (
+    <>
+        {loading && <Loader/>}
+
+    
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
@@ -303,6 +312,8 @@ export default function SignInSide() {
             <Box component="form" noValidate
              onSubmit={handleSubmit} 
              sx={{ mt: 1 }}>
+
+   
              
              <TextField
                 margin="normal"
@@ -411,5 +422,7 @@ export default function SignInSide() {
         </Grid>
       </Grid>
     </ThemeProvider>
+
+    </>
   );
 }

@@ -6,7 +6,8 @@ export type User = {
     // image?: string;
     password?: string;
     confirmPassword?: string;
-    token:string
+    token:string;
+    _id : string;
 
 
   username?: string;

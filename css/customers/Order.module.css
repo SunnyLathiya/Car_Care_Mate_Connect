@@ -1,10 +1,11 @@
 .container {
-    margin-top: 20px;
+
     margin-bottom: 80px;
+    margin-left: 30px;
   }
   
   .summaryTitle {
-    background-color: #0056b3;
+    background-color: #B85042;
     width: 98%;
     text-align: center;
     padding: 5px;
@@ -13,6 +14,7 @@
   }
   
   .bookingcard {
+    margin-left: 20px;
     padding: 20px;
   }
   
@@ -27,29 +29,25 @@
 
 .placeOrderButton {
   margin-top: 20px;
-  background-color: #007bff; /* Blue color for the button */
-  color: white;
   font-size: 16px;
   padding: 12px 20px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s ease; /* Smooth transition for background color */
-
-  /* Hover effect */
+  transition: background-color 0.3s ease;
   &:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #B85042; /* Darker blue on hover */
   }
 
   /* Focus effect */
   &:focus {
     outline: none; /* Remove default focus outline */
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5); /* Add focus shadow */
+    box-shadow: 0 0 0 0.2rem #B85042; /* Add focus shadow */
   }
 
   /* Disabled state */
   &:disabled {
-    background-color: #b3c7e0; /* Light blue for disabled button */
+    background-color: #B85042; /* Light blue for disabled button */
     cursor: not-allowed;
   }
 }

@@ -68,8 +68,7 @@ export const updateOrder = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
-
-            console.log("h1", response)
+            console.log("h111", response)
             ToastSuccess("Mechanic Assign Successfully!");
             return response.data; 
         } catch (error: any) {
@@ -172,6 +171,20 @@ const orderSlice = createSlice({
                 // console.log(state.orders)
             })
             .addCase(findCompletedOrdersProfit.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || 'Failed to fetch cars';
+            })
+            .addCase(allorders.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(allorders.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.orders = action.payload;
+                console.log(state.orders)
+            })
+            .addCase(allorders.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to fetch cars';
             })

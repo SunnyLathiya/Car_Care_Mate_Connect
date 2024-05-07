@@ -28,14 +28,13 @@ export const addCar = createAsyncThunk(
         try {
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/addcar`, newCar, { headers: {
-                Authorization: `Bearer ${token}`, // Send token in the Authorization header
+                Authorization: `Bearer ${token}`,
               },});
 
               ToastSuccess("Car created successfully!")
 
             return response.data;
         } catch (error: any) {
-
             ToastError("Problem in create new Car Detail")
             throw (error as AxiosError).response?.data || error.message;
         }
@@ -52,7 +51,6 @@ export const deleteCar = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
-
             ToastSuccess("car details deleted successfully!")
             return carId;
         } catch (error: any) {
@@ -110,7 +108,7 @@ const carSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addCar.fulfilled, (state, action) => {
+            .addCase(addCar.fulfilled, (state: any, action : any) => {
                 state.loading = false;
                 state.error = null;
                 state.cars.push(action.payload.car);
@@ -126,7 +124,7 @@ const carSlice = createSlice({
             .addCase(deleteCar.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.cars = state.cars.filter((car) => car._id !== action.payload);
+                state.cars = state.cars.filter((car : any) => car._id !== action.payload);
             })
             .addCase(deleteCar.rejected, (state, action) => {
                 state.loading = false;
@@ -136,13 +134,10 @@ const carSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(updateCar.fulfilled, (state, action) => {
+            .addCase(updateCar.fulfilled, (state: any, action) => {
                 state.loading = false;
                 state.error = null;
-                // Find the index of the updated car and replace it with the updated data
-                console.log(state.cars)
-                console.log(action.payload)
-                const index = state.cars.findIndex((car) => car._id === action.payload.newcar._id);
+                const index = state.cars.findIndex((car : any) => car._id === action.payload.newcar._id);
                 console.log(index)
                 if (index !== -1) {
                     state.cars[index] = action.payload.newcar;

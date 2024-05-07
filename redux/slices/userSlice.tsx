@@ -230,7 +230,7 @@ export const login = createAsyncThunk(
 //   }
 // );
 
-export const updateProfile = createAsyncThunk(
+export const updateProfile : any = createAsyncThunk(
   'user/updateProfile',
   async (updatedUser: User, { rejectWithValue, getState }) => {
     try {
@@ -332,9 +332,10 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, (state, action: PayloadAction<User>) => {
+      .addCase(login.fulfilled, (state: any, action: PayloadAction<User>) => {
         state.loading = false;
-        state.user = action.payload;    
+        console.log("337", action.payload.user)
+        state.user = action.payload.user;    
         console.log(state.user.token)
         console.log(action.payload)
         state._id=action.payload.user._id
@@ -345,7 +346,7 @@ const userSlice = createSlice({
 
         console.log(action.payload.token)
 
-        const decodedToken = jwtDecode(action.payload.token);
+        const decodedToken : any = jwtDecode(action.payload.token);
         console.log("decodedtoken", decodedToken);
         state.accountType = decodedToken.accountType;
         console.log(state.accountType);

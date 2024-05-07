@@ -19,6 +19,7 @@ const Brands: React.FC = (props: any) => {
   };
 
   const retrieveCars = () => {
+  
     axios.post('http://localhost:4000/api/v1/admin/findbybrand', { brand })
       .then((response) => {
         setCars(response.data.cars);
@@ -37,7 +38,9 @@ const Brands: React.FC = (props: any) => {
   const getCarCard = (car: any) => {
     return (
       <Grid item xs={6} sm={4} md={3} lg={2} key={car._id}>
-        <Card className={`${styles.card}`} onClick={() => router.push(`customer/cushome/services/${car._id}`)}>
+        {/* <Card className={`${styles.card}`} onClick={() => router.push(`customer/cushome/services/${car._id}`)}> */}
+        <Card className={`${styles.card}`} onClick={() => router.replace(`/customer/cushome/services/${car._id}`)}>
+
           <CardContent>
             <Typography className={`${styles.text}`}>{car.name}</Typography>
           </CardContent>

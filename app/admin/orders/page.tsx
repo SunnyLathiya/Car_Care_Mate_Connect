@@ -102,12 +102,12 @@ useEffect(() => {
 
 
 
-  const dynamicMechanicsLookUp: { [key: string]: string } = {
-    "5f4481fae2fd8a20782f6d82": "Mechanic 1",
-    "5f448212e2fd8a20782f6d83": "Mechanic 2",
-    "5f448222e2fd8a20782f6d84": "Mechanic 3",
-    "662a3883553f4d8ebfdbe2f0": "Mechanic 4",
-  };
+  // const dynamicMechanicsLookUp: { [key: string]: string } = {
+  //   "5f4481fae2fd8a20782f6d82": "Mechanic 1",
+  //   "5f448212e2fd8a20782f6d83": "Mechanic 2",
+  //   "5f448222e2fd8a20782f6d84": "Mechanic 3",
+  //   "662a3883553f4d8ebfdbe2f0": "Mechanic 4",
+  // };
 
 
   const openTable = () => {
@@ -151,7 +151,11 @@ useEffect(() => {
         await dispatch(updateOrder(newRow));
         setIsError(false);
         setErrorMessages([]);
+
+        console.log("7")
       } catch (error: any) {
+
+        console.log("77")
         
         console.error('Error occurred while updating order:', error);
       }
@@ -174,6 +178,7 @@ useEffect(() => {
         <MaterialTable
           title="CURRENT ORDERS DATA"
           columns={columns}
+          style={{backgroundColor:"#E7E8D1"}}
           data={enhancedOrders}
           editable={{
             onRowUpdate: handleRowUpdate
@@ -208,7 +213,6 @@ useEffect(() => {
               border: '1px solid #A7BEAE'
             },
             exportButton: true,
-
           }}
         />) :
         ( <div>
@@ -226,28 +230,36 @@ useEffect(() => {
           <MaterialTable
             title="COMPLETED ORDERS DATA"
             columns={column}
+            style={{backgroundColor:"#E7E8D1"}}
             data={completedenhancedOrders}
             icons={{
-              Check: Check,
-              Clear: Clear,
-              Delete: Delete,
-              DetailPanel: ChevronRight,
-              Edit: Edit,
-              Export: ArrowUpward,
-              Filter: Search,
-              FirstPage: FirstPage,
-              LastPage: LastPage,
-              NextPage: ChevronRight,
-              PreviousPage: ChevronLeft,
-              ResetSearch: Clear,
-              Search: Search,
-              SortArrow: ArrowUpward,
+              Check: () => <Check style={{ color: '#B85042' }} />,
+            Clear: () => <Clear style={{ color: '#B85042' }} />,
+            Delete: () => <Delete style={{ color: '#B85042' }} />,
+            DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
+            Edit: () => <Edit style={{ color: '#B85042' }} />,
+            Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
+            Filter: () => <Search style={{ color: '#B85042' }} />,
+            FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
+            LastPage: () => <LastPage style={{ color: '#B85042' }} />,
+            NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
+            PreviousPage: () => <ChevronLeft style={{ color: '#B85042' }} />,
+            ResetSearch: () => <Clear style={{ color: '#B85042' }} />,
+            Search: () => <Search style={{ color: '#B85042' }} />,
+            SortArrow: () => <ArrowUpward/>,
               }}
             options={{
               headerStyle: {
-                backgroundColor: "#01579b",
+                backgroundColor: "#B85042",
                 color: "#FFF",
                 zIndex:"0",
+              },
+              actionsCellStyle: {
+                backgroundColor: "#E7E8D1",
+              },
+              rowStyle: {
+                backgroundColor: "#E7E8D1",
+                border: '1px solid #A7BEAE'
               },
               exportButton: true,
             }}

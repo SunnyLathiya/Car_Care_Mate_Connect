@@ -6,15 +6,11 @@ import styles from "@/css/customers/Brands.module.css"
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-
 const Brands: React.FC = () => {
-
   const [brands, setBrands] = useState<any[]>([]);
   const [filter, setFilter] = useState<string>("");
   const router = useRouter();
   
-  
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
   };
@@ -29,7 +25,6 @@ const Brands: React.FC = () => {
       });
   };
   
-
   useEffect(() => {
     retrieveBrands();
   }, []);
@@ -37,7 +32,7 @@ const Brands: React.FC = () => {
   const getCarCard = (brand: any) => {
     return (
       <Grid item xs={6} sm={4} md={3} lg={2} key={brand}>
-        <Card className={`${styles.card}`} onClick={() => router.push(`/customer/cushome/cars/${encodeURIComponent(brands[brand])}`)}>
+        <Card className={`${styles.card}`} onClick={() => router.replace(`/customer/cushome/cars/${encodeURIComponent(brands[brand])}`)}>
           <CardContent>
             <Typography style={{fontSize:"xx-large"}}>{brands[brand]}</Typography>
           </CardContent>
@@ -49,7 +44,6 @@ const Brands: React.FC = () => {
   return (
     <div className={`${styles.brand}`}>
       <h1 className={`${styles.title}`}>Available Brands</h1>
-
       <div className={`${styles.search}`}>
         <SearchIcon className={`${styles.searchIcon}`} />
         <TextField className={`${styles.searchInput}`} label="Search for Brands" onChange={handleSearchChange} InputLabelProps={{

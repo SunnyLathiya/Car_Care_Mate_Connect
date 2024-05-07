@@ -125,12 +125,16 @@ const Profile = () => {
 
   console.log("aaaaa", user)
 
+  // const [currentPassword, setCurrentPassword] = useState('');
+  // const [newPassword, setNewPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+  const [newPasswordError, setNewPasswordError] = useState('');
+  const [currentPasswordError, setCurrentPasswordError] = useState('');
 
   console.log("hyy", _id)
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch<any>();
 
   // Local state to manage form input values
   const [formValues, setFormValues] = useState({
@@ -181,22 +185,41 @@ const Profile = () => {
 
   const authToken = Cookies.get('token');
   console.log(authToken)
+
+  const validateNewPassword = () => {
+    if (newPassword.length < 8) {
+      setNewPasswordError('Password must be at least 8 characters long.');
+      return false;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      setNewPasswordError('Password must contain at least one uppercase letter, one lowercase letter, and one digit.');
+      return false;
+    }
+
+    setNewPasswordError('');
+    return true;
+  };
+
   const handleChangePassword = async () => {
+    if (!validateNewPassword()) {
+      return;
+    }
+
     try {
-       const abc =await axios.put(
+      const authToken = Cookies.get('token');
+      const response = await axios.put(
         `http://localhost:4000/api/v1/updatedpassword/`,
         { currentPassword, newPassword },
-        // { withCredentials: true } // Add this if you are using cookies for authentication
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
 
-      console.log("abc", abc)
-      // alert('Password updated successfully');
-      ToastSuccess("Password Change successfully!")
+      console.log("Password change response:", response.data);
+      ToastSuccess("Password Changed Successfully!");
     } catch (error) {
-      console.error(error);
-      // alert('Failed to update password');
-      ToastError("Failed to update password")
+      console.error('Failed to update password:', error);
+      ToastError("Failed to update password. Please try again.");
     }
   };
 
@@ -335,6 +358,11 @@ const Profile = () => {
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
+        {newPasswordError && (
+                <div style={{ color: 'red', marginTop: '5px' }}>
+                  {newPasswordError}
+                </div>
+              )}
       </div>
 
       <div className="position-absolute bottom-0 end-0 mb-4 me-3">

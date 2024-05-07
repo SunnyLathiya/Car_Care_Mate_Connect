@@ -241,40 +241,34 @@ import MaterialTable, { Column } from 'material-table';
 import { Add, AddBox, ArrowUpward, Cancel, Check, ChevronLeft, ChevronRight, Clear, Delete, DeleteOutline, Edit, FirstPage, LastPage, SaveAlt, Search } from '@mui/icons-material';
 import { RootState, AppDispatch } from '@/redux/store';
 import { addCar, getAllCars, deleteCar, updateCar } from '@/redux/slices/adminSlices/carSlice';
-import { Bounce, toast } from 'react-toastify';
 import { ToastInfo } from '@/components/common/Toast';
+import Loader from '@/components/loader';
 
 interface CarData {
+  _id: string;
   name: string;
   brand: string;
 }
 
 function Cars() {
-  const { cars, success } = useSelector((state: RootState) => state.car);
-  const dispatch: AppDispatch = useDispatch();
-  const [formData, setFormData] = useState<CarData>({ name: '', brand: '' });
+  const { cars, success, loading , error} = useSelector((state: RootState) => state.car);
 
-  // const customIconStyles = {
-  //   Add: {
-  //     color: 'yellow', // Set Add icon color to red
-  //   },
-  //   Clear: {
-  //     color: 'pink', // Set Clear icon color to red
-  //   },
-  //   Search: {
-  //     color: 'blue', // Set Search icon color to red
-  //   },
-  //   ResetSearch: {
-  //     color: 'red', // Set ResetSearch icon color to red
-  //   },
-  // };
+  console.log("hyy", error)
+  const dispatch: AppDispatch = useDispatch();
+  const [formData, setFormData] = useState<CarData>({ name: '', brand: '', _id:'' });
 
 
   useEffect(() => {
     if (success) {
       ToastInfo("All Cars Page!")
+      
+      console.log("loader", loading)
     }
     dispatch(getAllCars());
+
+    
+    console.log("loader", loading)
+
   }, [dispatch, success]);
 
   const handleRowAdd = async (newRow: CarData) => {
@@ -302,7 +296,6 @@ function Cars() {
     if (oldRow) {
       try {
         await dispatch(updateCar(newRow));
-
       } catch (error) {
         console.error('Error occurred while updating car:', error);
   
@@ -330,10 +323,17 @@ const customIconStyles = {
 
 return (
 
-  <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column"}}>
+  <>
+
+{loading && <Loader/>}
+
+  
+<div style={{ minHeight:"100vh", display:"flex", flexDirection:"column"}}>
+
+
   <div style={{marginTop:"100px", marginLeft:"180px"}}>
     <MaterialTable
-      title="Cars Data"
+      title="CARS DATA"
       columns={columns}
       data={enhancedCars}
       editable={{
@@ -375,7 +375,20 @@ return (
     />
   </div>
 
+
+  {loading && <Loader/>}
+
+
+
+
   </div>
+
+  {loading && <Loader/>}
+
+  
+  
+  </>
+
 );
 
 }
