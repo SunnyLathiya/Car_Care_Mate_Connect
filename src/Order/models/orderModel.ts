@@ -26,7 +26,7 @@ const orderSchema: Schema = new Schema({
   mechanicId: { type: String },
   requestedOn: { type: Date, default: Date.now, required: true },
   deliveredOn: { type: Date },
-  status: { type: String, default:"PENDING" },
+  status: { type: String, default:"PLACED" },
   value: {type:String}
 });
 

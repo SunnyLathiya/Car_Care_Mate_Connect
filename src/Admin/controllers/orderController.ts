@@ -27,34 +27,6 @@ export const findPlacedOrders = (req: Request, res: Response): void => {
     });
 };
 
-// Send Order to Mechanic
-// export const updateOrder = async(req: Request, res: Response) => {
-//   const mechanic = await userModel.findById(req.body.mechanicId);
-//   const orderId: string = req.params.orderId;
-//    const newOrder =orderModel.updateOne(
-//     { _id: orderId },
-//     { $set: { status: "PENDING", mechanicId: req.body.mechanicId } }
-//   )
-//     .exec()
-//     .then((response) => {
-//       res.status(200).json({
-//         message: "Order Successfully Assign to Mechanic",
-//         newOrder
-//       });
-//     })
-//     .catch((err: any) => {
-//       console.error(err);
-//       res.status(500).json({
-//         error: err,
-//       });
-//     });
-
-//     mechanic?.orders.push(orderId);
-
-//     await userModel.updateOne({_id:mechanic?._id},{$set:{orders:mechanic?.orders}});
-    
-
-// };
 
 
 export const updateOrder = async(req: Request, res: Response) => {
@@ -114,7 +86,6 @@ export const updateOrder = async(req: Request, res: Response) => {
     });
   }
 };
-
 
 
 // Find Completed Orders

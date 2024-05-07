@@ -9,7 +9,6 @@ const carSchema: Schema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
     minlength: 2,
     maxlength: 100

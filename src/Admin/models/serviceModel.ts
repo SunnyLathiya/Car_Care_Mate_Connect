@@ -12,7 +12,7 @@ export interface Service extends Document {
 const serviceSchema: Schema = new Schema({
   serviceType: {
     type: String,
-    maxlength: 15,
+    maxlength: 50,
     required: true,
   },
   name: {
@@ -28,7 +28,7 @@ const serviceSchema: Schema = new Schema({
   description: {
     type: String,
     required: true,
-    maxlength: 30,
+    maxlength: 200,
   },
   timeRequired: {
     type: String,
@@ -37,7 +37,7 @@ const serviceSchema: Schema = new Schema({
   where: {
     type: String,
     required: true,
-    maxlength: 20,
+    maxlength: 50,
   },
   orderCreate: {
     type: mongoose.Schema.Types.ObjectId,

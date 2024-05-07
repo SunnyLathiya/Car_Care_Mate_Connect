@@ -3,12 +3,12 @@ import carModel, { Car } from '../models/carModel';
 
 export const addCar = async (req: Request, res: Response): Promise<void> => {
   try {
-    const existingCar = await carModel.findOne({ name: req.body.name });
-    if (existingCar) {
-       res.status(409).json({
-        message: 'Name Already Exist',
-      });
-    }
+    // const existingCar = await carModel.findOne({ name: req.body.name , brand: req.body.brand });
+    // if (existingCar) {
+    //    res.status(409).json({
+    //     message: 'Name Already Exist',
+    //   });
+    // }
 
     const car = new carModel({
       name: req.body.name,
