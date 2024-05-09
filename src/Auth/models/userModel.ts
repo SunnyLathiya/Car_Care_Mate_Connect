@@ -3,7 +3,7 @@ import mongoose, { Schema, Document } from "mongoose";
 interface User extends Document {
   firstName: string;
   lastName: string;
-         username: string;
+  username: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -17,39 +17,34 @@ interface User extends Document {
   id: string;
   carSelected: string[];
   mechName: string;
-           address: string;
-            zipcode: string;
-            state: string;
-             country: string;
-               yourCar: string[];
-              favouriteCar: string[];
+  address: string;
+  zipcode: string;
+  state: string;
+  country: string;
+  yourCar: string[];
+  favouriteCar: string[];
 }
 
 const userSchema: Schema = new Schema({
   firstName: {
     type: String,
-    // required: true,
     trim: true,
     minLength: 3,
     maxLength: 50,
   },
   lastName: {
     type: String,
-    // required: true,
     trim: true,
     minLength: 3,
     maxLength: 50,
   },
   username: {
     type: String,
-    trim: true,
-    // required: true,
     minLength: 1,
     maxLength: 70
   },
   email: {
     type: String,
-    // required: true,
     unique: true,
     trim: true,
     lowercase: true,
@@ -57,35 +52,26 @@ const userSchema: Schema = new Schema({
   },
   password: {
     type: String,
-    // required: true,
     minLength: 8,
     maxLength: 200,
   },
   confirmPassword: {
     type: String,
-    // required: true,
     minLength: 8,
     maxLength: 200,
   },
   phoneNumber: {
     type: String,
-    // required: true,
     trim: true,
     match: /^\d{10}$/
-},
+  },
   accountType: {
     type: String,
     enum: ["Admin", "Customer", "Mechanic"],
     default: "Customer",
-    // required: true,
   },
-  // additionalDetails: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "Profile",
-  // },
   profilePhoto: {
     type: String,
-    // required: true,
     trim: true,
     maxLength: 255,
   },
@@ -117,7 +103,6 @@ const userSchema: Schema = new Schema({
   },
   mechName: {
     type: String,
-    // required: true,
     trim: true,
     minLength: 3,
     maxLength: 50,
@@ -127,41 +112,35 @@ const userSchema: Schema = new Schema({
   }],
   address: {
     type: String,
-    // required: true,
     trim: true,
     minLength: 1,
     maxLength: 255,
 },
 zipcode: {
     type: String,
-    // required: true,
     trim: true,
     match: /^\d{6}$/
 },
 state: {
     type: String,
-    // required: true,
     trim: true,
     minLength: 1,
     maxLength: 30
 },
 country: {
     type: String,
-    // required: true,
     trim: true,
     minLength: 1,
     maxLength: 30
 },
 yourCars: [{
     type: String,
-    // required: true,
     trim: true,
     minLength: 1,
     maxLength: 100,
 }],
 favouriteCar: [{
     type: String,
-    // required: true,
     trim: true,
     minLength: 1,
     maxLength: 100,
@@ -169,5 +148,4 @@ favouriteCar: [{
 });
 
 export default mongoose.model<User>("User", userSchema);
-
 export {User};

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import {  userSignup, userSignin, ForgotPassword, changePasswordWithToken, allusers } from "../controllers/userController";
+import {  userSignup, userSignin, ForgotPassword, changePasswordWithToken, allUsers } from "../controllers/userController";
 import {Admin, auth, Customer} from "../../middleware/authMiddleware"
 
 const router = express.Router();
@@ -23,6 +23,6 @@ router.post("/forgotpassword", ForgotPassword);
 router.post("/changepasswordwithtoken/:token", changePasswordWithToken);
 // allusers
 
-router.get("/allusers", auth, Admin, allusers);
+router.get("/allusers", auth, Admin, allUsers);
 
 export default router;

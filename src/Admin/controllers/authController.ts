@@ -1,16 +1,8 @@
 import { Request, Response} from 'express';
-// import customerModel from '../models/customerModel';
-import mongoose from 'mongoose';
-
 import bcrypt from 'bcrypt';
-// import mechanicModel from '../models/mechanicModel';
 import userModel from '../../Auth/models/userModel';
-
 import dotenv from 'dotenv';
 dotenv.config();
-// import jwt from "jsonwebtoken";
-
-
 
 
 export const signup = async (req: Request, res: Response) => {
@@ -20,13 +12,13 @@ export const signup = async (req: Request, res: Response) => {
         email,
         password,
         accountType,
-        number
+        phoneNumber
       }: {
         mechName: string;
         email: string;
         password: string;
         accountType: string;
-        number: string;
+        phoneNumber: string;
       } = req.body;
 
 
@@ -38,7 +30,7 @@ export const signup = async (req: Request, res: Response) => {
         !mechName ||
         !email ||
         !password || 
-        !number )
+        !phoneNumber )
        {
         return res.status(400).json({
           success: false,
@@ -81,14 +73,15 @@ export const signup = async (req: Request, res: Response) => {
       }
   
       const user = await userModel.create({
-        // _id: new mongoose.Types.ObjectId(),
         mechName,
         email,
         password: hashedPassword,
-        number: req.body.number,
+        phoneNumber,
         accountType: userType,
         id,
       });
+
+      console.log("user", user)
   
       return res.status(200).json({
         success: true,
@@ -103,74 +96,3 @@ export const signup = async (req: Request, res: Response) => {
       });
     }
   };
-
-  
-//   export const signin = async (req: Request, res: Response)=> {
-//       try {
-//           const { email, password }: { email: string; password: string } = req.body;
-          
-//           if (!email || !password) {
-//               return res.status(400).json({
-//                   success: false,
-//                   message: "please fill all the details carefully",
-//                 });
-//             }
-            
-//             let user = await userModel.findOne({ email }).populate("additionalDetails");
-            
-//             if (!user) {
-//                 return res.status(401).json({
-//           success: false,
-//           message: "Mechanic not regestered",
-//         });
-//     }
-    
-//       const payload = {
-//           email: user.email,
-//           id: user._id,
-//           name: user.name,
-//           accountType: user.accountType,
-//         };
-        
-//         const sss = "sunny"
-        
-//         if (await bcrypt.compare(password, user.password)) {
-//             // Password matches
-//             let token = jwt.sign(payload, sss, {
-//                 expiresIn: "2h",
-//         });
-        
-//         user.token = token;
-//         // user.password = undefined;
-        
-//         user = user.toObject();
-
-//         const { password: _, ...userWithoutPassword } = user;
-        
-//         const options = {
-//             expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-//             httpOnly: true,
-//         };
-        
-//         res.cookie("token", token, options).status(200).json({
-//             success: true,
-//             token,
-//             user: userWithoutPassword,
-//             message: "login successfully",
-//         });
-//     } else {
-//         res.status(400).json({
-//             success: false,
-//             message: "password incorrect",
-//         });
-//     }
-// } catch (error) {
-//     console.log(error);
-//       res.status(500).json({
-//         success: false,
-//         message: "login failure, please try again",
-//     });
-// }
-//   };
-  
-  

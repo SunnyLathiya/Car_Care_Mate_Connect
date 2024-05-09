@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import userModel from "../models/userModel";
 import bcrypt from 'bcrypt';
 
-
 export const getProfile = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
@@ -22,7 +21,6 @@ export const getProfile = async (req: Request, res: Response) => {
       });
     }
 
-    // const profileId = customerDetails.additionalDetails;
     const profileDetails = await userModel.findById(userId);
 
     if (!profileDetails) {
@@ -54,14 +52,7 @@ export const updatedProfile = async (req: Request, res: Response) => {
        } = req.body;
     const id =  req.user?.id;
 
-    // const customerDetails = await userModel.findById(id);
     const profileDetails = await userModel.findById(id);
-    console.log("1")
-    // console.log(customerDetails);
-    console.log("2")
-    // console.log(profileId)
-    console.log("3")
-    console.log(profileDetails)
 
     if (!profileDetails) {
       return res.status(400).json({
@@ -83,10 +74,7 @@ export const updatedProfile = async (req: Request, res: Response) => {
     profileDetails.yourCar = yourCar || profileDetails.yourCar;
     profileDetails.favouriteCar = favouriteCar || profileDetails.favouriteCar;
 
-    // const latestProfile =await profileDetails.save();
-
     const updatedProfile = await profileDetails.save();
-
 
     const latestProfile = await userModel.findById(id);
 
@@ -96,8 +84,6 @@ export const updatedProfile = async (req: Request, res: Response) => {
       profile: latestProfile,
     });
   } catch (error: any) {
-
-    console.error(error);
     return res.status(500).json({
       success: false,
       message: "Problem in profile updating",
@@ -113,31 +99,24 @@ export const updatedPassword = async (req: Request, res: Response) => {
   const userId = req.user?.id
 
   try {
-   
     const user = await userModel.findById(userId);
-
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    // Compare the currentPassword with the stored password using bcrypt
     const isMatch = await bcrypt.compare(currentPassword, user.password);
 
-    // If passwords don't match
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid current password' });
     }
 
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    // Update the user's password
     user.password = hashedPassword;
     await user.save();
 
     res.status(200).json({ message: 'Password updated successfully' });
   } catch (error) {
-    console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
 };

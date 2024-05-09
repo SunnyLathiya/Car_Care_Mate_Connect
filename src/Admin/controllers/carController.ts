@@ -44,6 +44,7 @@ export const findAllCars = async (req: Request, res: Response): Promise<void> =>
     } else {
       res.send(cars);
     }
+
   } catch (error: any) {
     console.log('Find All Cars Method Error: ' + error);
     res.status(500).json({
