@@ -42,31 +42,6 @@ const Orders: React.FC<Props> = () => {
 
   const authToken = Cookies.get('token');
 
-  // useEffect(() => {
-  //   // Fetch mechanic IDs from the API endpoint
-  //   axios.get('http://localhost:4000/api/v1/admin/availablemechanics', { headers: { Authorization: `Bearer ${authToken}` } })
-  //     .then(response => {
-  //       const availableMechanics = response.data.data;
-
-  //       console.log("6", response.data._id)
-  //       console.log("7", availableMechanics);
-
-  //       const xyz = availableMechanics.map((item: { _id: any; }) => item._id)
-
-  //       // const updatedMechanicsLookUp = {};
-
-  //       console.log(xyz)
-       
-  //       setMechanicsLookUp(xyz);
-
-  //     })
-  //     .catch(error => {
-
-  //       console.log("9", error)
-  //       console.error('Error fetching available mechanics:', error);
-  //     });
-  // }, []);
-
   
 useEffect(() => {
 
@@ -83,7 +58,6 @@ useEffect(() => {
       return lookup;
     }, {});
 
-    // console.log("lookup", lookup)
 
     setMechanicsLookUp(updatedMechanicsLookUp);
   })
@@ -99,15 +73,6 @@ useEffect(() => {
       dispatch(findCompletedOrders());
     }
   }, [display, dispatch]);
-
-
-
-  // const dynamicMechanicsLookUp: { [key: string]: string } = {
-  //   "5f4481fae2fd8a20782f6d82": "Mechanic 1",
-  //   "5f448212e2fd8a20782f6d83": "Mechanic 2",
-  //   "5f448222e2fd8a20782f6d84": "Mechanic 3",
-  //   "662a3883553f4d8ebfdbe2f0": "Mechanic 4",
-  // };
 
 
   const openTable = () => {
@@ -128,7 +93,6 @@ useEffect(() => {
     {
       title: "Assign Mechanic",
       field: "mechanicId",
-      // lookup: dynamicMechanicsLookUp,
       lookup:mechanicsLookUp
     },
   ];
@@ -151,12 +115,7 @@ useEffect(() => {
         await dispatch(updateOrder(newRow));
         setIsError(false);
         setErrorMessages([]);
-
-        console.log("7")
       } catch (error: any) {
-
-        console.log("77")
-        
         console.error('Error occurred while updating order:', error);
       }
     }
@@ -165,8 +124,6 @@ useEffect(() => {
 
   const enhancedOrders = response?.map((order: Order, index: number) => ({ ...order, tableData: { id: index } })) || [];
   const completedenhancedOrders = completedResponse?.map((order: Order, index: number) => ({ ...order, tableData: { id: index } })) || [];
-  // console.log(enhancedOrders)
-  // console.log(completedenhancedOrders)
 
   return (
     <div style={{marginTop:"70px", marginBottom:"20px", "marginLeft":"190px"}}>

@@ -12,29 +12,29 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { AddBox, Cancel, DeleteOutline, SaveAlt, Add, Edit, Delete, Search, Check, Clear, ArrowUpward, FirstPage, LastPage, ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { ToastError, ToastSuccess } from "@/components/common/Toast";
 
 interface MechanicData {
   [x: string]: string;
   name: string;
   email: string;
   password: string;
-  mobile: string;
+  phoneNumber: string;
 }
 
 interface Props {}
 
 const Mechanic: React.FC<Props> = () => {
-  const   mechanicsList  = useSelector((state: RootState) => state.adminMech.allmechanics);
+  const mechanicsList  = useSelector((state: RootState) => state.adminMech.allmechanics);
   const dispatch: AppDispatch = useDispatch();
   // const [mechanic, setMechanic] = useState<MechanicData>();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [mechName, setMechName] = useState("");
   const [password, setPassword] = useState("");
-  const [number, setNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [display, setdisplay] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -44,24 +44,25 @@ const Mechanic: React.FC<Props> = () => {
       const response = await axios.post("http://localhost:4000/api/v1/admin/register", {
         email,
         mechName,
-        number,
+        phoneNumber,
         password
       }, { headers: {
         Authorization: `Bearer ${token}`,
       },});
+      setdisplay(false)
+      dispatch(getAllAvailableMechanics(undefined));
 
       console.log(response);
       if(response.data.status === "success"){
         router.push('/admin/mechanics');
-        setdisplay(false)
       }
       if (response.data.success) {
-        toast.success(response.data.message);
+        ToastSuccess(response.data.message)
       } else {
         throw new Error(response.data.message);
       }
     } catch (error: any) {
-        toast.error(error.message);
+        ToastError(error.message)
     }
   };
 
@@ -69,6 +70,7 @@ const Mechanic: React.FC<Props> = () => {
   console.log(mechanicsList)
   useEffect(() => {
     dispatch(getAllAvailableMechanics(undefined));
+    // return () => {dispatch(getAllAvailableMechanics(undefined));}
   }, [dispatch]);
 
 
@@ -76,44 +78,17 @@ const Mechanic: React.FC<Props> = () => {
     { title: "ID", field: "id" },
     { title: "Name", field: "mechName" },
     { title: "Email", field: "email" },
-    { title: "Mobile", field: "number" },
-    { title: "Status", field: "status" },
+    { title: "Mobile", field: "phoneNumber" },
+    { title: "Status", field: "status"},
   ];
-
-  
 
   const handleRowDelete = async (oldRow: MechanicData) => {
     try {
-      await dispatch(deleteMechanic(oldRow._id)); // Pass the carId to deleteCar action
-      
+      await dispatch(deleteMechanic(oldRow._id));
     } catch (error) {
       console.error('Error occurred while deleting car:', error);
     }
   };
-
-
-
-  // const handleRowUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault(); // Prevent default form submission behavior
-  //   try {
-  //     const response = await axios.patch("http://localhost:4000/api/v1/admin/updatemechanic/:mechId", { 
-  //       email,
-  //       mechName,
-  //       number,
-  //       status
-  //     });
-  //     if(response.data.message === "Mechanic Details Updated Successfully"){
-  //       router.push('/');
-  //     }
-  //     if (response.data.success) {
-  //       response.data.message
-  //     } else {
-  //       throw new Error(response.data.message);
-  //     }
-  //   } catch (error: any) {
-  //        error(error.message);
-  //   }
-  // };
 
   const openForm = () => {
     setdisplay(true);
@@ -141,7 +116,6 @@ const Mechanic: React.FC<Props> = () => {
         data={enhancedMechanics}
         editable={{
            onRowDelete: handleRowDelete,
-          //  onRowUpdate: handleRowUpdate
         }}
         icons={{
           Add: () => <Add style={{ color: '#B85042' }} />,
@@ -170,12 +144,11 @@ const Mechanic: React.FC<Props> = () => {
             backgroundColor: "#E7E8D1",
           },
           rowStyle: {
-            backgroundColor: "#E7E8D1", // Set row background color to red
+            backgroundColor: "#E7E8D1",
             border: '1px solid #A7BEAE'
           }
         }}
         components={{
-          // Override the DeleteAction component to customize the delete confirmation dialog
           DeleteAction: (props: any) => (
             <props.action.component {...props.action}>
               <props.action.icon
@@ -223,9 +196,9 @@ const Mechanic: React.FC<Props> = () => {
                     variant="outlined"
                     fullWidth
                     label="Number"
-                    name="number"
-                    value={number}
-                    onChange={(e) => setNumber(e.target.value)}
+                    name="phoneNumber"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>

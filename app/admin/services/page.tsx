@@ -5,11 +5,10 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MaterialTable, { Column } from 'material-table';
-import { Add, AddBox, ArrowUpward, Cancel, Check, ChevronLeft, ChevronRight, Clear, Delete, DeleteOutline, Edit, FirstPage, LastPage, SaveAlt, Search } from '@mui/icons-material';
+import { Add, ArrowUpward, Cancel, Check, ChevronLeft, ChevronRight, Clear, Delete, DeleteOutline, Edit, FirstPage, LastPage, SaveAlt, Search } from '@mui/icons-material';
 import { RootState, AppDispatch } from '@/redux/store';
 import { addService, getAllServices, deleteService, updateService } from '@/redux/slices/adminSlices/serviceSlice';
-import { Bounce, toast } from 'react-toastify';
-import Loader from '@/components/loader';
+import Loader from '@/components/common/loader';
 
 interface ServiceData {
   _id: string;
@@ -22,20 +21,17 @@ interface ServiceData {
 }
 
 function Services() {
-  // const { services } = useSelector((state: RootState) => state.service);
   const {services} = useSelector((state: RootState) => state.service);
-  // console.log(loading);
-  // const data = [...servicese]
-  // console.log(data);
   
-  // console.log(services).
   const dispatch: AppDispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<ServiceData>({ name: '', price: '', description:'', timeRequired:'', where:'', serviceType: '' });
+  const [formData, setFormData] = useState<ServiceData>({_id:'', name: '', price: '', description:'', timeRequired:'', where:'', serviceType: '' });
 
   useEffect(() => {
     dispatch(getAllServices());
   }, [dispatch]);
+
+  console.log("object",services)
 
   const handleRowAdd = async (newRow: ServiceData) => {
     try {
@@ -62,17 +58,17 @@ function Services() {
     }
   };
 
-  const handleRowUpdate = async (oldRow: ServiceData | undefined) => {
-    // if (oldRow) {
+  const handleRowUpdate = async (newRow: ServiceData, oldRow: ServiceData | undefined) => {
+    if (oldRow) {
       try {
         setLoading(true)
-        await dispatch(updateService(oldRow));
+        await dispatch(updateService(newRow));
         setLoading(false)
       } catch (error) {
         setLoading(false)
         console.error('Error occurred while updating car:', error);        
       }
-    // }
+    }
   };
 
 
@@ -93,13 +89,14 @@ function Services() {
   const enhancedServices = services.map((service:ServiceData, index: number) => ({ ...service, tableData: { id: index } }));
   return (
 
-    <div style={{backgroundColor:"#E7E8D1", minHeight:"100vh", display:"flex", flexDirection:"column"}}>
+    <div style={{ minHeight:"100vh", display:"flex", flexDirection:"column"}}>
 
   <div style={{marginTop:"100px", marginLeft:"180px"}}>
   { loading ? (<Loader/>) : (
     <MaterialTable
     title="SERVICES DATA"
     columns={columns}
+    style={{backgroundColor:"#E7E8D1"}}
     data={ enhancedServices }
     editable={{
       onRowAdd: handleRowAdd,
@@ -107,7 +104,7 @@ function Services() {
       onRowDelete: handleRowDelete,
     }}
     icons={{
-      Add: () => <Add style={{ color: '#B85042' }} />,
+        Add: () => <Add style={{ color: '#B85042' }} />,
         Check: () => <Check style={{ color: '#B85042' }} />,
         Clear: () => <Clear style={{ color: '#B85042' }} />,
         Delete: () => <Delete style={{ color: '#B85042' }} />,
@@ -133,7 +130,7 @@ function Services() {
         backgroundColor: "#E7E8D1",
       },
       rowStyle: {
-        backgroundColor: "#E7E8D1", // Set row background color to red
+        backgroundColor: "#E7E8D1", 
         border: '1px solid #A7BEAE'
       }
     }}

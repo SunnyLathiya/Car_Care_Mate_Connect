@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import load from './../public/loaderCar.gif';
+import load from '../../public/loaderCar.gif'
 
 const LoaderContainer = styled.div`
   display: flex;

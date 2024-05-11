@@ -37,7 +37,7 @@ import carSlice from './slices/adminSlices/carSlice';
 import serviceSlice from './slices/adminSlices/serviceSlice';
 import adminMechSlice from './slices/adminSlices/adminMechSlice';
 import orderSlice from './slices/adminSlices/orderSlice';
-import orderManageSlice from './slices/mechanicSlices/orderManageSlice';
+// import orderManageSlice from './slices/mechanicSlices/orderManageSlice';
 
 export const store = configureStore({
   reducer: {
@@ -46,7 +46,7 @@ export const store = configureStore({
     service: serviceSlice,
     adminMech: adminMechSlice,
     order: orderSlice,
-    ordermanage: orderManageSlice
+    // ordermanage: orderManageSlice
   },
 });
 

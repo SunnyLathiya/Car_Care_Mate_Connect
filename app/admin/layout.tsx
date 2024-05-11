@@ -1,30 +1,44 @@
 "use client"
-import { Inter } from "next/font/google";
+import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import {jwtDecode} from 'jwt-decode';
+import AdminHome from '@/components/admin/AdminHome';
+import Loader from '@/components/common/loader';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import AdminHome from "@/components/admin/AdminHome";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-
-const inter = Inter({ subsets: ["latin"] });
-
-
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface Props {
   children: React.ReactNode;
-}>)
-
-
-{   
-  return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-      <AdminHome/>
-      
-    </html>
-  );
 }
 
+export default function Layout({ children }: Props) {
+  const [accountType, setAccountType] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchAccountType = async () => {
+      const token = Cookies.get('token');
+      if (token) {
+        try {
+          const decodedToken: any = jwtDecode(token);
+          const type = decodedToken.accountType;
+          setAccountType(type);
+          console.log("Account Type:", type);
+        } catch (error) {
+          console.error('Error decoding token:', error);
+        }
+      }
+    };
 
+    fetchAccountType();
+  }, []);
+
+  if (accountType !== 'Admin') {
+    return <Loader />; 
+  }
+
+  return (
+    <>
+
+      {children}
+      {accountType === 'Admin' && <AdminHome />}
+    
+    </>
+  );
+}

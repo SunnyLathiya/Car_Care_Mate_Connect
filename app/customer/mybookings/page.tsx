@@ -6,20 +6,21 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { Typography } from "@material-ui/core";
 import styles from "../../../css/customers/Myorder.module.css";
+import moment from "moment"
 
 
 interface MyOrderComponentProps {
-  status: 'PLACED' | 'PENDING' | 'IN-PROCESS' | 'COMPLETED';
+  status: 'PLACED' | 'PENDING' | 'ACCEPTED' | 'COMPLETED';
 }
 const MyOrderComponent: React.FC<MyOrderComponentProps> = ({ status }) => {
-  // Determine which steps should be active based on the status
+
   const getActiveSteps = (status: MyOrderComponentProps['status']) => {
     switch (status) {
       case 'PLACED':
         return [styles.step1]; // Only the first step is active
       case 'PENDING':
         return [styles.step1, styles.step2]; // First two steps are active
-      case 'IN-PROCESS':
+      case 'ACCEPTED':
         return [styles.step1, styles.step2, styles.step3]; // First three steps are active
       case 'COMPLETED':
         return [styles.step1, styles.step2, styles.step3, styles.step4]; // All steps are active
@@ -40,7 +41,7 @@ const MyOrderComponent: React.FC<MyOrderComponentProps> = ({ status }) => {
           Pending
         </li>
         <li className={`${styles.step0} ${activeSteps.includes(styles.step3) ? styles.active : ''} text-right`} id={styles.step3}>
-          In-Process
+          Accepted
         </li>
         <li className={`${styles.step0} ${activeSteps.includes(styles.step4) ? styles.active : ''} text-right`} id={styles.step4}>
           Completed
@@ -70,27 +71,70 @@ interface Order {
 
 // Pending, In-Progress, Complated
 const isValidStatus = (status: string): status is MyOrderComponentProps['status'] => {
-  return ['PLACED', 'PENDING', 'IN-PROCESS', 'COMPLETED'].includes(status);
+  return ['PLACED', 'PENDING', 'ACCEPTED', 'COMPLETED'].includes(status);
 };
 
-
-// const formatDate = (dateString: any): any => {
-//   const day = {order.requestedOn}.getUTCDate().toString().padStart(2, '0');
-//   const month = (ddd.getUTCMonth() + 1).toString().padStart(2, '0');
-//   const year = ddd.getUTCFullYear().toString().slice(-2);
-
-//   console.log("1", day);
-//   console.log("2", month);
-//   console.log("3", year)
-
-//   return `${day}-${month}-${year}`;
-// };
-
 const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => void })  => {
-
   const status = isValidStatus(order.status) ? order.status : 'PLACED';
 
+  const date: any = moment(order.requestedOn);
+  const formattedDate = date.format('DD-MM-YYYY');
+  const formattedTime = date.format('HH:mm:ss');
 
+  const handleDownload = () => {
+    const htmlContent = document.documentElement.outerHTML;
+  
+    // Extract CSS styles from all stylesheets
+    const cssStyles = Array.from(document.styleSheets)
+      .map((styleSheet) => {
+        try {
+          const cssRules = styleSheet.cssRules || []; // Handle potential null or undefined cssRules
+          return Array.from(cssRules)
+            .map((rule) => rule.cssText) // Extract cssText from each rule
+            .join('\n'); // Join all cssText into a single string
+        } catch (error) {
+          console.warn('Failed to extract CSS rules:', error);
+          return ''; // Return empty string in case of error
+        }
+      })
+      .join('\n'); // Join all extracted CSS styles into a single string
+  
+    // Combine HTML content with extracted CSS styles
+    const combinedContent = `
+      <html>
+        <head>
+          <title>Downloaded Page</title>
+          <style>
+            ${cssStyles}
+          </style>
+        </head>
+        <body>
+          ${htmlContent}
+        </body>
+      </html>
+    `;
+  
+    // Create a Blob with the combined HTML and CSS content
+    const blob = new Blob([combinedContent], { type: 'text/html' });
+  
+    // Create a URL for the Blob
+    const url = URL.createObjectURL(blob);
+  
+    // Create a temporary <a> element to trigger the download
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'invoice.html';
+  
+    // Append the <a> element to the document body and trigger the download
+    document.body.appendChild(link);
+    link.click();
+  
+    // Clean up by removing the <a> element and revoking the URL
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+  
+  
 
   return(
       <div className={styles.card} style={{marginTop:"50px", width:"70%"}}>
@@ -102,8 +146,8 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
       <div className={styles.info}>
           <div className="row">
               <div className="col-7">
-                  <span id={styles.heading}> <b>Date</b></span><br/>
-                  <span id={styles.details}>{order.requestedOn}</span>
+                  <span id={styles.heading}> <b>Date:- </b>{formattedDate}</span><br/>
+                  <span id={styles.heading}> <b>Time:- </b>{formattedTime}</span><br/>
              </div>
               <div className="col-5 pull-right">
                   <span id={styles.heading}> <b>Order No.</b></span><br/>
@@ -158,29 +202,17 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
       </div>
       <div className={styles.progressTrack}>
           <ul id={styles.progressbar}>
-              {/* <li className={`${styles.step0}  ${styles.active}`} id={styles.step1}>Placed</li>
-              <li className={`${styles.step0}  ${styles.active}`} id={styles.step2}>Pending</li>
-              <li className={`${styles.step0}  ${styles.active}`} id={styles.step3}>In-Process</li>
-              <li className={`${styles.step0}  ${styles.active}`} id={styles.step4}>Complated</li> */}
-
-              {/* <li className={`${styles.step0} ${order.status === 'PLACED' ? `${styles.active}` : ''}`} id={styles.step1}>Placed</li>
-              <li className={`${styles.step0} ${order.status === 'PENDING' ? `${styles.active} text-center` : (order.status !== 'Complated' ? '' : `${styles.active}`)}`} id={styles.step2}>Pending</li>
-              <li className={`${styles.step0} ${order.status === 'IN-PROCESS' ? `${styles.active} text-right` : (order.status === 'Complated' ? `${styles.active}` : '')}`} id={styles.step3}>In-Progress</li>
-              <li className={`${styles.step0} ${order.status === 'COMPLETED' ? `${styles.active} text-right` : ''}`} id={styles.step4}>Completed</li> */}
-
-
-                  <MyOrderComponent status={status} />
-
-
+              <MyOrderComponent status={status} />
           </ul>
       </div>
       <div className={styles.footer}>
           <div className="row">
 
-              <button className="btn btn-primary mt-3" onClick={onClose}>Close</button>
+              <button className="btn mt-3" style={{backgroundColor:"#B85042"}} onClick={onClose}>Close</button>
+              <button className="btn mt-3" style={{ backgroundColor: '#4CAF50' }} onClick={handleDownload}>Download Invoice </button>
           </div> 
       </div>
-   </div>
+      </div>
           )
 }
 
@@ -337,3 +369,4 @@ const renderOrderFullDetails = () => {
 };
 
 export default MyBookings;
+

@@ -204,6 +204,7 @@ const Services: React.FC = () => {
             >
               {where}
             </Typography>
+            
             <hr />
             <div className={`${styles.action_buttons}`}>
               <span className="timeline">

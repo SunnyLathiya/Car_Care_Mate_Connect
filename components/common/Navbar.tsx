@@ -2,17 +2,10 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "@/css/Navbar.module.css";
-import Image from "next/image";
-import logo from "../../public/next.svg"
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-import { useRouter } from "next/router";
 import { usePathname } from "next/navigation";
 import logo1 from "../../public/logo-black.png";
-import logo2 from "../../public/logo-color.png";
-import logo3 from "../../public/logo-no-background.png";
-import logo4 from "../../public/logo-white.png";
-import logo5 from "../../public/logo-color.svg";
 
 function getToken(): string | null {
   const token = Cookies.get('token');
@@ -33,12 +26,9 @@ function getAccountTypeFromToken(): string | null {
   if (token) {
     try {
       const decodedToken: any = jwtDecode(token);
-      console.log("2", decodedToken);
       const accountType = decodedToken.accountType;
-      // console.log("3", accountType)
       return accountType as string;
     } catch (error) {
-      console.error("Error decoding token:", error);
       return null; 
     }
   } else {
@@ -54,7 +44,7 @@ const Navbar: React.FC = () => {
   // const router = useRouter();
   const pathname = usePathname();
   const [show, setShow] = useState(true);
-    const [accountType, setAccountType] = useState<string | undefined>("Customer");
+    const [accountType, setAccountType] = useState<string | null>(null);
   // const accountType = getAccountTypeFromToken();
 
   const fetchAccountType = async () => {

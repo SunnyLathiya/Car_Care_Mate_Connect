@@ -31,10 +31,10 @@ const Brands: React.FC = () => {
 
   const getCarCard = (brand: any) => {
     return (
-      <Grid item xs={6} sm={4} md={3} lg={2} key={brand}>
+      <Grid item xs={5} sm={4} md={3} lg={2} key={brand}>
         <Card className={`${styles.card}`} onClick={() => router.replace(`/customer/cushome/cars/${encodeURIComponent(brands[brand])}`)}>
           <CardContent>
-            <Typography style={{fontSize:"xx-large"}}>{brands[brand]}</Typography>
+            <Typography style={{fontSize:"large"}}>{brands[brand]}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -47,15 +47,15 @@ const Brands: React.FC = () => {
       <div className={`${styles.search}`}>
         <SearchIcon className={`${styles.searchIcon}`} />
         <TextField className={`${styles.searchInput}`} label="Search for Brands" onChange={handleSearchChange} InputLabelProps={{
-    sx: {
-      color: '#B85042', // Red color for label text
+    sx: { 
+      color: '#B85042',
     },
   }}  />
       </div>
 
       {brands ? (
         <Grid container spacing={3} item className={`${styles.grid_container}`}>
-          {Object.keys(brands).map((brand) => brands[brand].includes(filter) && getCarCard(brand))}
+          {Object.keys(brands).map((brand: any) => brands[brand].includes(filter) && getCarCard(brand))}
         </Grid>
       ) : (
         <CircularProgress />

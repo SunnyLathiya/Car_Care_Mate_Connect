@@ -4,14 +4,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
+import { User } from '@/app/types';
 
-export const getAllMechanics = createAsyncThunk(
+export const getAllMechanics = createAsyncThunk<User>(
     'admin/allmechanics',
     async (allmechanicsDetails: any) => {
         try {
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/findall`, allmechanicsDetails, { headers: {
-                Authorization: `Bearer ${token}`, // Send token in the Authorization header
+                Authorization: `Bearer ${token}`,
               },});
             return response.data;
         } catch (error: any) {
@@ -33,7 +34,6 @@ export const getAllAvailableMechanics = createAsyncThunk(
                   },
                 }
               );
-            ToastSuccess(' Now Available mechanics List!');
             return response.data;
         } catch (error: any) {
             throw (error as AxiosError).response?.data || error.message;
@@ -43,7 +43,7 @@ export const getAllAvailableMechanics = createAsyncThunk(
 
 export const deleteMechanic = createAsyncThunk(
     'mechanic/delete',
-    async (mechId: string) => {
+    async (mechId: any) => {
         try {
             const token = Cookies.get('token');
             await axios.delete(`http://localhost:4000/api/v1/admin/deletemechanic/${mechId}`, {
@@ -51,7 +51,6 @@ export const deleteMechanic = createAsyncThunk(
                     Authorization: `Bearer ${token}`,
                 },
             });
-
             ToastSuccess("Mechanic account deleted successfully!")
             return mechId; 
         } catch (error: any) {
@@ -61,9 +60,7 @@ export const deleteMechanic = createAsyncThunk(
     }
 );
 
-
-
-const initialState = {
+const initialState: any = {
     allmechanics: [],
     loading: false,
     error: null as string | null,
@@ -94,7 +91,7 @@ const AdminMecSlice = createSlice({
                 state.error = null;
                 console.log("hello1")
             })
-            .addCase(getAllAvailableMechanics.fulfilled, (state, action) => {
+            .addCase(getAllAvailableMechanics.fulfilled, (state, action: any) => {
                 state.loading = false;
                 state.error = null;
                 state.allmechanics = action.payload.mechanicsList;
@@ -112,7 +109,7 @@ const AdminMecSlice = createSlice({
             .addCase(deleteMechanic.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.allmechanics = state.allmechanics.filter((mechanic) => mechanic._id !== action.payload);
+                state.allmechanics = state.allmechanics.filter((mechanic: any) => mechanic._id !== action.payload);
             })
             .addCase(deleteMechanic.rejected, (state, action) => {
                 state.loading = false;

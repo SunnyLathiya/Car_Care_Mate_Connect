@@ -3,6 +3,7 @@ import { ToastError, ToastInfo, ToastSuccess } from '@/components/common/Toast';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
+import { Service } from '@/app/types';
 
 export const getAllServices = createAsyncThunk(
     'services/findallservices',
@@ -19,9 +20,9 @@ export const getAllServices = createAsyncThunk(
     }
 );
 
-export const addService = createAsyncThunk(
+export const addService = createAsyncThunk<Service, any>(
     'cars/add',
-    async (newService: any) => {
+    async (newService) => {
         try {
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/addservice`, newService, { headers: {
@@ -58,16 +59,21 @@ export const deleteService = createAsyncThunk(
 
 export const updateService = createAsyncThunk(
     'services/update',
-    async (updatedService: any) => {
+    async (updatedService: any,{getState}) => {
         try {
+            const currentState: any = getState();
             const token = Cookies.get('token');
             const response = await axios.patch(`http://localhost:4000/api/v1/admin/updateservice/${updatedService._id}`, updatedService, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
             });
+                const service : any= currentState.service.services
+                const index = service.findIndex((ser: { _id: any; }) => {
+                    return ser._id === response.data.data._id;
+                        });
             ToastSuccess("Service Updated Successfully!");
-            return response.data; 
+            return {data:response.data.data,index}; 
         } catch (error: any) {
             ToastError("Problem in Service Update!")
             throw (error as AxiosError).response?.data || error.message;
@@ -95,9 +101,7 @@ const serviceSlice = createSlice({
             .addCase(getAllServices.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                // console.log(action.payload.service)
                 state.services = action.payload.service;
-                // console.log(state.services)
             })
             .addCase(getAllServices.rejected, (state, action) => {
                 state.loading = false;
@@ -107,7 +111,7 @@ const serviceSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addService.fulfilled, (state, action) => {
+            .addCase(addService.fulfilled, (state: any, action) => {
                 state.loading = false;
                 state.error = null;
                 state.services.push(action.payload.service);
@@ -120,10 +124,10 @@ const serviceSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(deleteService.fulfilled, (state, action) => {
+            .addCase(deleteService.fulfilled, (state: any, action) => {
                 state.loading = false;
                 state.error = null;
-                state.services = state.services.filter((service) => service._id !== action.payload);
+                state.services = state.services.filter((service: { _id: any; }) => service._id !== action.payload);
             })
             .addCase(deleteService.rejected, (state, action) => {
                 state.loading = false;
@@ -133,16 +137,10 @@ const serviceSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(updateService.fulfilled, (state, action) => {
+            .addCase(updateService.fulfilled, (state: any, action) => {
                 state.loading = false;
                 state.error = null;
-                console.log(state.services)
-                console.log(action.payload)
-                const index = state.services.findIndex((service) => service._id === action.payload.newservice._id);
-                console.log(index)
-                if (index !== -1) {
-                    state.services[index] = action.payload.newservice;
-                }
+                state.services[action.payload.index]=action.payload.data
             })
             .addCase(updateService.rejected, (state, action) => {
                 state.loading = false;

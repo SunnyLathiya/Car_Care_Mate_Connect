@@ -26,6 +26,7 @@
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "file-server": "^2.2.1",
+    "firebase": "^10.11.1",
     "formik": "^2.4.5",
     "js-cookie": "^3.0.5",
     "jspdf": "^2.5.1",

@@ -12,8 +12,8 @@
     max-width:600px;
     padding: 4vh 0;
     box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-top: 3px solid rgb(252, 103, 49);
-    border-bottom: 3px solid rgb(252, 103, 49);
+    border-top: 3px solid #B85042;
+    border-bottom: 3px solid #B85042;
     border-left: none;
     border-right: none;
 }
@@ -23,7 +23,7 @@
     }
 }
 .title{
-    color: rgb(252, 103, 49);
+    color: #B85042;
     font-weight: 600;
     margin-bottom: 2vh;
     padding: 0 8%;
@@ -53,7 +53,7 @@
 }
 .total{
     padding: 2vh 8%;
-    color: rgb(252, 103, 49);
+    color: #B85042;
     font-weight: bold;
 }
 .total .col-3{
@@ -69,7 +69,7 @@
     opacity: 0.2;
 }
 .footer a{
-    color: rgb(252, 103, 49);
+    color: #B85042;
 }
 .footer .col-10, .col-2{
     display: flex;
@@ -82,7 +82,7 @@
 #progressbar {
     margin-bottom: 3vh;
     overflow: hidden;
-    color: rgb(252, 103, 49);
+    color: #B85042;
     padding-left: 0px;
     margin-top: 3vh
 }
@@ -99,11 +99,10 @@
 
 #progressbar #step1:before {
     content: "";
-    color: rgb(252, 103, 49);
+    color: #B85042;
     width: 5px;
     height: 5px;
     margin-left: 0px !important;
-    /* padding-left: 11px !important */
 }
 
 #progressbar #step2:before {
@@ -180,5 +179,5 @@
 
 #progressbar li.active:before,
 #progressbar li.active:after {
-    background: rgb(252, 103, 49);
+    background: #B85042;
 }

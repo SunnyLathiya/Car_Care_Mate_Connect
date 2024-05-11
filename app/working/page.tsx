@@ -37,7 +37,7 @@ const Working: React.FC = () => {
 
   return (
     <div style={{backgroundColor:"#E7E8D1"}}>
-    <div style={{ marginTop: 80, marginBottom:150}}>
+    <div style={{ marginTop: 80, marginBottom:-20}}>
       <h1 style={{ textAlign: 'center'}}>How CarCareMateConnect Works?</h1>
       <Timeline align="alternate">
         <TimelineItem>
@@ -52,8 +52,9 @@ const Working: React.FC = () => {
               <Typography variant="h6" component="h1">
                 Select Your Car
               </Typography>
-              <br />
+              
               <Typography>We Service most makes and models</Typography>
+              <Typography>Users that their car's make and model can likely be serviced by the platform.</Typography>
             </Paper>
           </TimelineContent>
         </TimelineItem>
@@ -69,8 +70,9 @@ const Working: React.FC = () => {
               <Typography variant="h6" component="h1">
                 Select The Perfect Car Service
               </Typography>
-              <br />
-              <Typography>From Wype's broad portfolio of Services</Typography>
+              
+              <Typography>From CarCareMateConnect's broad portfolio of Services.</Typography>
+              <Typography>Users can select services from a diverse range offered by CarCareMateConnect.</Typography>
             </Paper>
           </TimelineContent>
         </TimelineItem>
@@ -84,11 +86,11 @@ const Working: React.FC = () => {
           <TimelineContent>
             <Paper elevation={3} className={classes.paper}>
               <Typography variant="h6" component="h1">
-                Get A Reasonable Quote
+              Any Inquiry
               </Typography>
-              <br />
+              
               <Typography>
-                Get a fair and reasonable quote from our website
+              Informs users about available support options: a chatbot, email, or direct contact with the office for problem resolution.
               </Typography>
             </Paper>
           </TimelineContent>
@@ -105,9 +107,12 @@ const Working: React.FC = () => {
               <Typography variant="h6" component="h1">
                 Book An Appointment
               </Typography>
-              <br />
+              
               <Typography>
-                We offer Free pickup and drop for all services booked
+                Users can schedule an appointment for car service.
+              </Typography>
+              <Typography>
+                A service benefit, indicating that specific booked services include free pickup and drop-off in reasonable price.
               </Typography>
             </Paper>
           </TimelineContent>
@@ -124,10 +129,10 @@ const Working: React.FC = () => {
               <Typography variant="h6" component="h1">
                 Relax
               </Typography>
-              <br />
               <Typography>
-                Relax and spent time on other things that matter
+              A simple directive to suggest that users can relax.
               </Typography>
+              <Typography>Encourages users to utilize saved time from the appointment booking process for other important tasks or relaxation.</Typography>
             </Paper>
           </TimelineContent>
         </TimelineItem>

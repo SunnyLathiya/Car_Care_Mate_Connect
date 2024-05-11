@@ -4,7 +4,7 @@ import CarSlides from "@/components/customer/CarSlides";
 
 const Demo: React.FC = () => {
   return (
-    <div>
+    <div style={{backgroundColor:"white"}}>
     <CarSlides/>
       <Brands />
     </div>

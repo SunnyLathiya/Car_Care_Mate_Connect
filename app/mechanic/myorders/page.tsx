@@ -9,16 +9,16 @@ import { Add, Check, Clear, Delete, ChevronRight, Edit, ArrowUpward, Search, Fir
 const MyOrders: React.FC = () => {
   const [orders, setOrders] = useState<any[]>([]);
 
+  
   useEffect(() => {
     const fetchOrders = async () => {
       const token: string | undefined = Cookies.get("token");
       if (token) {
         try {
           const user: any = jwtDecode(token);
-          console.log(user)
           const response = await axios.get(`http://localhost:4000/api/v1/mechanic/findmyorders/${user.id}`);
-          // console.log(response.data.orders);
           setOrders(response.data.orders);
+
         } catch (error) {
           console.log(error);
         }
@@ -29,6 +29,8 @@ const MyOrders: React.FC = () => {
 
     fetchOrders();
   }, []);
+
+
 
   const columns = [
     { title: "OrderId", field: "_id" },
@@ -48,27 +50,34 @@ const MyOrders: React.FC = () => {
         columns={columns}
         data={orders}
         icons={{
-          Add: Add,
-          Check: Check,
-          Clear: Clear,
-          Delete: Delete,
-          DetailPanel: ChevronRight,
-          Edit: Edit,
-          Export: ArrowUpward,
-          Filter: Search,
-          FirstPage: FirstPage,
-          LastPage: LastPage,
-          NextPage: ChevronRight,
-          PreviousPage: ChevronLeft,
-          ResetSearch: Clear,
-          Search: Search,
-          SortArrow: ArrowUpward,
+          Add: () => <Add style={{ color: '#B85042' }} />,
+          Check: () => <Check style={{ color: '#B85042' }} />,
+          Clear: () => <Clear style={{ color: '#B85042' }} />,
+          Delete: () => <Delete style={{ color: '#B85042' }} />,
+          DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
+          Edit: () => <Edit style={{ color: '#B85042' }} />,
+          Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
+          Filter: () => <Search />,
+          FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
+          LastPage: () => <LastPage style={{ color: '#B85042' }} />,
+          NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
+          PreviousPage: () => <ChevronLeft style={{ color: '#B85042' }} />,
+          ResetSearch: () => <Clear style={{ color: '#B85042' }} />,
+          Search: () => <Search style={{ color: '#B85042' }} />,
+          SortArrow: () => <ArrowUpward/>,
         }}
         options={{
           headerStyle: {
-            backgroundColor: "#01579b",
+            backgroundColor: "#B85042",
             color: "#FFF",
             zIndex:"0",
+          },
+          actionsCellStyle: {
+            backgroundColor: "#E7E8D1",
+          },
+          rowStyle: {
+            backgroundColor: "#E7E8D1",
+            border: '1px solid #A7BEAE'
           },
           exportButton: true,
         }}

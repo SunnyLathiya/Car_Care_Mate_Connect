@@ -11,54 +11,66 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 interface MechanicHomeProps  {}
 
 const MechanicHome: React.FC<MechanicHomeProps> = () => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const itemList = [
     {
       text: "HOME",
       icon: <HomeIcon />,
-      onClick: () => router.push("/mechanic/home"),
+      path:"/mechanic/home",
     },
     {
       text: "FIND ORDERS",
       icon: <DriveEtaIcon />,
-      onClick: () => router.push("/mechanic/findorders"),
+      path:"/mechanic/findorders",
     },
     {
       text: "MY ORDERS",
       icon: <MonetizationOnIcon />,
-      onClick: () => router.push("/mechanic/myorders"),
+      path:"/mechanic/myorders",
     },
     {
       text: "Log Out",
       icon: <ExitToAppIcon />,
-      onClick: () => router.push("/login"),
+      path:"/login",
     },
   ];
 
   return (
-    <div style={{marginTop:"80px", marginBottom:"20px"}}>
+    <div style={{ marginTop: "80px", marginBottom: "20px" }}>
+    <Drawer variant="permanent" style={{ marginTop: "50px" }}>
+      <div style={{ backgroundColor: "#A7BEAE", height: "100%" }}>
+        <List style={{ marginTop: "100px" }}>
+          {itemList.map((item, index) => {
+            const isActive = pathname === item.path;
 
-      <Drawer variant="permanent" style={{marginTop:"50px"}}>
-      <div style={{backgroundColor:"grey", height:"700px"}}>
-
-        <List style={{marginTop:"100px"}}>
-          {itemList.map((item, index) => (
-            <ListItem button key={item.text} onClick={item.onClick}>
-              {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-              <ListItemText primary={item.text} />
-            </ListItem>
-          ))}
+            return (
+              <ListItem
+                button
+                key={item.text}
+                onClick={() => router.push(item.path)}
+                style={{
+                  color: isActive ? "#B85042" : "black",
+                  borderRadius: "5px",
+                  transition: "background-color 0.3s ease",
+                }}
+              >
+                {item.icon && <ListItemIcon style={{ color: isActive ? "#B85042" : "black"}}>{item.icon}</ListItemIcon>}
+                <ListItemText primary={item.text} />
+              </ListItem>
+            );
+          })}
         </List>
-        </div>
-      </Drawer>
-    </div>
+      </div>
+    </Drawer>
+  </div>
   );
 };
 

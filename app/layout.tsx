@@ -1,12 +1,13 @@
+import "./globals.css";
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from "@/components/Home/Navbar";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Navbar from "@/components/common/Navbar";
 import { StoreProvider } from "@/redux/provider";
-import {ToastContainer} from "../components/common/Toast";
-import 'react-toastify/dist/ReactToastify.css';
-
+import { ToastContainer } from "../components/common/Toast";
+import "react-toastify/dist/ReactToastify.css";
+import Footer from "@/components/common/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,35 +23,58 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" />
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" />
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+        />
+        <link
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+        />
+        <link
+          rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        />
 
-         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js" />
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"
+        />
 
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"/>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+        />
 
-        <link rel="stylesheet" href="https://s.pageclip.co/v1/pageclip.css" media="screen"></link>
-
-
+        <link
+          rel="stylesheet"
+          href="https://s.pageclip.co/v1/pageclip.css"
+          media="screen"
+        ></link>
       </head>
-      <body className={inter.className} >
+      <body className={inter.className}>
         <StoreProvider>
-         <ToastContainer/>
-         <Navbar/>
-        {children}
+          <ToastContainer />
+          <Navbar />
+          {children}
+          <Footer />
         </StoreProvider>
-      <script src="https://s.pageclip.co/v1/pageclip.js" charSet="utf-8"></script>
-        </body>
-      
+        <script
+          src="https://s.pageclip.co/v1/pageclip.js"
+          charSet="utf-8"
+        ></script>
+      </body>
     </html>
   );
 }
-
-
-
 
 // :root {
 //   --max-width: 1100px;
@@ -139,7 +163,6 @@ export default function RootLayout({
 //   overflow-x: hidden;
 // }
 
-
 // a {
 //   color: inherit;
 //   text-decoration: none;
@@ -151,7 +174,6 @@ export default function RootLayout({
 //   }
 // }
 
-
 // body {
 //   color: rgb(var(--foreground-rgb));
 //   background: linear-gradient(
@@ -160,4 +182,4 @@ export default function RootLayout({
 //       rgb(var(--background-end-rgb))
 //     )
 //     rgb(var(--background-start-rgb));
-// } 
+// }

@@ -1,13 +1,15 @@
 // import styles from "./page.module.css";
 
-import WhyUs from "./home/page";
+import Footer from "@/components/common/Footer";
+import WhyUs from "./whyus/page";
+
+
 
 export default function Home() {
   return (
    <>
    <div>
     <WhyUs/>
-
    </div>
    </>
   );

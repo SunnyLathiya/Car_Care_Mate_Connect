@@ -13,47 +13,14 @@ import {
 } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { ToastSuccess } from '@/components/common/Toast';
+import Router, { useRouter } from 'next/navigation';
 
 const ChangePassword = () => {
-//   const [newPassword, setNewPassword] = useState('');
-//   const [confirmPassword, setConfirmPassword] = useState('');
-//   const [error, setError] = useState('');
-
-//   const handleSubmit = (e: { preventDefault: () => void; }) => {
-//     e.preventDefault();
-
-//     if (!newPassword || !confirmPassword) {
-//       setError('Please enter a new password and confirm password.');
-//       return;
-//     }
-
-//     if (newPassword !== confirmPassword) {
-//       setError('Passwords do not match.');
-//       return;
-//     }
-
-//     // Add logic to handle password change process
-//     console.log('Changing password:', newPassword);
-//     setError('Password changed successfully.');
-    
-//     // Clear fields after submission
-//     setNewPassword('');
-//     setConfirmPassword('');
-//   };
-
-//   const handleNewPasswordChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-//     setNewPassword(e.target.value);
-//     setError('');
-//   };
-
-//   const handleConfirmPasswordChange = (e: { target: { value: React.SetStateAction<string>; }; }) => {
-//     setConfirmPassword(e.target.value);
-//     setError('');
-//   };
 
 const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,7 +35,7 @@ const [newPassword, setNewPassword] = useState('');
       return;
     }
 
-    const token = new URLSearchParams(window.location.search).get('token'); // Extract token from URL query
+    const token = new URLSearchParams(window.location.search).get('token');
 
     try {
       const response = await fetch(`http://localhost:4000/api/v1/changepasswordwithtoken/${token}`, {
@@ -86,7 +53,7 @@ const [newPassword, setNewPassword] = useState('');
         setError(data.error || 'Failed to update password.');
       } else {
         ToastSuccess("Password Change Successfully!")
-        // Optionally, redirect to sign in page or display success message
+        router.push("/signin")
       }
     } catch (error) {
       console.error('Error updating password:', error);

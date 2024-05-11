@@ -1,130 +1,13 @@
-
-// import { createSlice, current, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
-// import axios from "axios";
-
-// interface User {
-//     firstName: string;
-//     lastName: string;
-//     email: string;
-//     password: string;
-//     confirmPassword: string;
-//     accountType: "Admin" | "Customer" | "Mechanic";
-//     additionalDetails?: string | null;
-//     profilePhoto: string;
-//     orders: string[];
-//     token?: string | null;
-//     resetPasswordExpires?: Date | null;
-// }
-
-// interface UserState {
-//   users: User[];
-// }
-
-// // Handle null case for localStorage.getItem()
-// const initialState = {
-//     firstName: '',
-//     lastName: '',
-//     email: '',
-//     password: '',
-//     confirmPassword: ''
-// }
-
-// interface RegisterResponse {
-//     message: string;
-//   }
-
-// export const userRegister = createAsyncThunk(
-//     'userRegister',
-//     async (val: User) => {
-//         try {
-//             const createUser = await axios.post(`http://localhost:4000/api/v1/register`, val)
-//             // ToastSuccess(createUser.data.message)
-//             return createUser.data as  RegisterResponse;
-//         } catch (error: any) {
-//             console.log(error.response.data?.email[0]);
-//             // ToastError(error.response.data.message)
-//             // ToastError(error.response.data?.email[0])
-//             throw error.response.data?.email[0]
-//         }
-//     }
-// )
-
-// // export const userLogin = createAsyncThunk('userLogin', async (val: object) => {
-// //     try {
-// //         const existingUser = await axios.post(``, val)
-// //         const data = await existingUser.data
-// //         // ToastSuccess(data.message)
-// //         return data
-// //     } catch (error: any) {
-
-// //         console.log(error.response.data.errors);
-
-// //         // ToastError(error.response.data.message)
-// //         throw error.response.data.errors
-// //     }
-// // })
-
-// const userSlice: any = createSlice({
-//   name: "user",
-//   initialState,
-//   reducers: {
-//     addUser: (state, action: PayloadAction<User>) => {
-
-//         console.log(action)
-//     //   state.users.push(action.payload);
-//     //   let userData = JSON.stringify(current(state.users));
-//     //   localStorage.setItem("users", userData);
-//     }
-//   },
-//   extraReducers: (builder: any) => {
-//     builder
-//         .addCase(userRegister.pending, (state: any) => {
-//             state.status = 'loading'
-//         })
-//         .addCase(userRegister.fulfilled, (state: any, action: any) => {
-//             state.status = 'succeeded'
-//             state.token = action.payload.tokens?.access
-//         })
-//         .addCase(userRegister.rejected, (state: any, action: any) => {
-//             state.status = 'failed'
-//             // console.log(action);
-//         })
-//         // .addCase(userLogin.pending, (state: any) => {
-//         //     state.status = 'loading'
-//         // })
-//         // .addCase(userLogin.fulfilled, (state: any, action: any) => {
-//         //     state.status = 'succeeded'
-//         //     // console.log(action.payload.message)
-//         //     state.token = action.payload.tokens?.access
-//         // })
-//         // .addCase(userLogin.rejected, (state: any, action: any) => {
-//         //     state.status = 'failed'
-//         //     console.log(action.error.errors);
-//         //     state.error = action.error
-//         // })
-
-
-
-
-// },
-// });
-
-// export const { addUser } = userSlice.actions;
-// export default userSlice.reducer;
-
-
-
 import { createAsyncThunk, createSlice, PayloadAction , AsyncThunkAction} from '@reduxjs/toolkit';
 import { User } from '../../app/types';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie'; 
-import { useRouter } from 'next/navigation';
 import { jwtDecode } from 'jwt-decode';
 import { ToastSuccess, ToastError } from '@/components/common/Toast';
 import { RootState } from '../store';
 import { toast } from 'react-toastify';
-
-export const registerUser = createAsyncThunk(
+ 
+export const registerUser = createAsyncThunk<User>(
     'user/register',
     async (userData: any) => {
       console.log("1")
@@ -144,14 +27,12 @@ export const registerUser = createAsyncThunk(
         return error;
       }
     }
-  ) ;
+);
 
-
-export const login = createAsyncThunk(
+export const login = createAsyncThunk<User>(
     'user/login',
     async (userData: any, { rejectWithValue }) => {
       try {
-        console.log(userData)
         const createUser = await axios.post(`http://localhost:4000/api/v1/login`, userData)
         //ToastSuccess(createUser.data.message)
          return createUser.data
@@ -162,7 +43,7 @@ export const login = createAsyncThunk(
     }
   );
 
-  export const getProfile = createAsyncThunk(
+export const getProfile = createAsyncThunk<User>(
     'profile/',
     async () => {
         try {
@@ -203,10 +84,7 @@ export const login = createAsyncThunk(
 //   'user/updateProfile',
 //   async (updatedUser: User, { rejectWithValue, getState }) => {
 //     try {
-//       const token = Cookies.get('token');
-
-
-      
+//       const token = Cookies.get('token'); 
 //       const state: RootState = getState() as RootState; // Type assertion to RootState
 //       // const { token, user } = state.user;
 
@@ -230,17 +108,17 @@ export const login = createAsyncThunk(
 //   }
 // );
 
-export const updateProfile : any = createAsyncThunk(
+export const updateProfile : any = createAsyncThunk<User>(
   'user/updateProfile',
-  async (updatedUser: User, { rejectWithValue, getState }) => {
+  async (updatedUser: any, { rejectWithValue, getState }) => {
     try {
-      const token = Cookies.get('token'); // Retrieve token from cookies
+      const token = Cookies.get('token');
 
       if (!token) {
         throw new Error('Authentication token not found');
       }
 
-      const state = getState() as RootState; // Type assertion to RootState
+      const state = getState() as RootState;
       const userId = state.user.user?._id;
 
       if (!userId) {
@@ -267,7 +145,7 @@ export const updateProfile : any = createAsyncThunk(
   }
 );
 
-export const allUsers = createAsyncThunk(
+export const allUsers = createAsyncThunk<User>(
   'order/allusers',
   async () => {
       try {
@@ -277,7 +155,9 @@ export const allUsers = createAsyncThunk(
                      Authorization: `Bearer ${token}`,
                  }});
           return response.data;
+
       } catch (error: any) {
+        console.log("state.user212")
           toast.error(' Error in Order page!');
           throw (error as AxiosError).response?.data || error.message;
       }
@@ -334,38 +214,26 @@ const userSlice = createSlice({
       })
       .addCase(login.fulfilled, (state: any, action: PayloadAction<User>) => {
         state.loading = false;
-        console.log("337", action.payload.user)
         state.user = action.payload.user;    
-        console.log(state.user.token)
-        console.log(action.payload)
         state._id=action.payload.user._id
         state.user.token=action.payload.token;
-
-
         Cookies.set('token', action.payload.token);
-
-        console.log(action.payload.token)
-
         const decodedToken : any = jwtDecode(action.payload.token);
-        console.log("decodedtoken", decodedToken);
         state.accountType = decodedToken.accountType;
-        console.log(state.accountType);
       })
-      .addCase(login.rejected, (state, action) => {
+      .addCase(login.rejected, (state: any, action) => {
         state.loading = false;
-        // state.error = action.payload;
+        state.error = action.payload;
       })
 
       .addCase(getProfile.pending, (state) => {
         state.loading = true;
         state.error = null;
     })
-    .addCase(getProfile.fulfilled, (state, action) => {
+      .addCase(getProfile.fulfilled, (state: any, action) => {
         state.loading = false;
         state.error = null;
-        // state.profile = action.payload;
         state.user = action.payload.data;
-        // console.log("hello.................", action.payload.data)
     })
     .addCase(getProfile.rejected, (state, action) => {
         state.loading = false;
@@ -379,33 +247,29 @@ const userSlice = createSlice({
     .addCase(updateProfile.fulfilled, (state, action) => {
       state.loading = false;
       state.error = null;
-      state.user = action.payload; // Assuming the response contains updated user data
+      state.user = action.payload;
     })
     .addCase(updateProfile.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || 'Failed to update profile';
     })
-    .addCase(allUsers.pending, (state) => {
+    .addCase(allUsers.pending, (state, action) => {
       state.loading = true;
       state.error = null;
   })
-  .addCase(allUsers.fulfilled, (state, action) => {
+  .addCase(allUsers.fulfilled, (state, action: any) => {
       state.loading = false;
       state.error = null;
-      state.user = action.payload.response;
-      console.log(state.user)
-      // console.log("2")
+      state.user = action.payload.users;
   })
   .addCase(allUsers.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message || 'Failed to fetch cars';
   })
-     
-  },
+  }
 });
 
 
 export const { setCarSelected } = userSlice.actions;
-
 export default userSlice.reducer;
 

@@ -4,7 +4,7 @@
     padding: 6px 31px;
     border-radius: 5px;
     border: 1px solid #ddd;
-    margin: 6px 5px 100px 5px;
+    /* margin: 6px 5px 100px 5px; */
     /* margin-top: 10px; */
 /* margin-right: 100px;  */
 /* margin-bottom: 100px; */
@@ -67,7 +67,6 @@
     width: 98%;
     padding: 31px;
     border-radius: 5px;
-    border: 1px solid #B85042;
     margin-right: 20px;
     vertical-align: baseline;
     overflow: visible;
