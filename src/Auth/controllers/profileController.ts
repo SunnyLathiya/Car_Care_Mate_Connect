@@ -23,6 +23,8 @@ export const getProfile = async (req: Request, res: Response) => {
 
     const profileDetails = await userModel.findById(userId);
 
+
+
     if (!profileDetails) {
       return res.status(404).json({
         success: false,
@@ -32,10 +34,10 @@ export const getProfile = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      message: "Profile retrieved successfully",
+      message: "Profile retrieved Successfully",
       data: profileDetails,
     });
-  } catch (error: any) {
+    } catch (error: any) {
     console.error(error);
     return res.status(500).json({
       success: false,
@@ -45,12 +47,14 @@ export const getProfile = async (req: Request, res: Response) => {
   }
 };
 
-
 export const updatedProfile = async (req: Request, res: Response) => {
   try {
     const { profilePhoto, username, firstName, lastName, email, phoneNumber, address, zipcode, state, country, yourCar, favouriteCar
        } = req.body;
     const id =  req.user?.id;
+
+    
+    console.log("profileDetails", profilePhoto)
 
     const profileDetails = await userModel.findById(id);
 
@@ -76,8 +80,10 @@ export const updatedProfile = async (req: Request, res: Response) => {
 
     const updatedProfile = await profileDetails.save();
 
+    
     const latestProfile = await userModel.findById(id);
-
+    
+    console.log("object", latestProfile)
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
@@ -91,7 +97,6 @@ export const updatedProfile = async (req: Request, res: Response) => {
     });
   }
 };
-
 
 
 export const updatedPassword = async (req: Request, res: Response) => {

@@ -14,7 +14,7 @@ interface OrderRequestBody {
   servicePrice: number;
 }
 
-// TO place an Order
+
 export const addOrder = async (req: Request<any, any, OrderRequestBody>, res: Response) => {
 
   const customer:  User  | null = await userModel.findById(req.params.customerId);

@@ -30,60 +30,87 @@ export const findInProcessOrders = (req: Request, res: Response): void => {
     });
 };
 
+// export const updateOrder = (req: Request, res: Response): void => {
+//   const orderId = req.params.orderId;
+//   const newStatus = req.body.status;
 
-// ACCEPTED / COMPLETED  / REJECTED
-export const updateOrder = (req: Request, res: Response): void => {
-  orderModel.updateOne(
-    { _id: req.params.orderId },
-    { $set: { status: req.body.status } }
-  )
-    .exec()
-    .then((response: any) => {
-      orderModel.findOne({ _id: req.params.orderId })
-        .exec()
-        .then((obj: any) => {
-          const mechId: string = obj.mechanicId;
-          console.log("Mechanic Id: " + mechId);
-          if (req.body.status === "ACCEPTED") {
-            userModel.updateOne(
-              { _id: obj.mechanicId },
-              {
-                $set: { status: "NOT AVAILABLE" },
-              }
-            )
-              .then((response: any) => {
-                console.log("Member Status: NOT AVAILABLE");
-              })
-              .catch((err: any) => {
-                console.log("Member Status Error: " + err);
-              });
-          } else {
-            userModel.updateOne(
-              { _id: obj.mechanicId },
-              {
-                $set: { status: "AVAILABLE" },
-              }
-            )
-              .then((response: any) => {
-                console.log("Member Status: AVAILABLE");
-              })
-              .catch((err: any) => {
-                console.log("Member Status Error: " + err);
-              });
-          }
-        })
-        .catch((err: any) => {
-          console.log("Find Order Error: " + err);
-        });
-      console.log("Order Updated Successfully");
-      res.status(200).json({
-        message: "Request Updated Successfully",
-      });
-    })
-    .catch((err: any) => {
-      console.log("Order Update error: " + err);
-      res.status(500).json({ "Order Update error ": err });
-    });
+//   orderModel.updateOne(
+//     { _id: orderId },
+//     { $set: { status: newStatus } }
+//   )
+//     .exec()
+//     .then(() => {
+//       orderModel.findOne({ _id: orderId })
+//         .exec()
+//         .then((order: any) => {
+//           const mechId: string = order.mechanicId;
+//           console.log("Mechanic Id: " + mechId);
+//         console.log("===>",mechId);
+//           const updateUserStatus = (status: string) => {
+//             userModel.updateOne(
+//               { _id: mechId },
+//               { $set: { status } }
+//             )
+//               .then(() => {
+//                 console.log(`Member Status: ${status}`);
+//               })
+//               .catch((err: any) => {
+//                 console.log(`Member Status Error: ${err}`);
+//               });
+//           };
+
+//           if (newStatus === "ACCEPTED") {
+//             updateUserStatus("NOT-AVAILABLE");
+//           } else if (newStatus === "COMPLETED" || newStatus === "REJECT") {
+//             updateUserStatus("AVAILABLE");
+//           }
+
+//           res.status(200).json({ message: "Request Updated Successfully" });
+//         })
+//         .catch((err: any) => {
+//           console.log("Find Order Error: " + err);
+//           res.status(500).json({ error: "Internal Server Error" });
+//         });
+//     })
+//     .catch((err: any) => {
+//       console.log("Order Update Error: " + err);
+//       res.status(500).json({ error: "Internal Server Error" });
+//     });
+// };
+
+export const updateOrder = async (req: Request, res: Response): Promise<void> => {
+  const orderId = req.params.orderId;
+  const newStatus = req.body.status;
+
+  try {
+    await orderModel.updateOne(
+      { _id: orderId },
+      { $set: { status: newStatus } }
+    ).exec();
+
+    const order: any = await orderModel.findOne({ _id: orderId }).exec();
+    const mechId: string = order.mechanicId;
+    console.log("Mechanic Id: " + mechId);
+
+    const updateUserStatus = async (status: string) => {
+      await userModel.updateOne(
+        { _id: mechId },
+        { $set: { status } }
+      ).exec();
+      console.log(`Member Status: ${status}`);
+    };
+
+    if (newStatus === "ACCEPTED") {
+      await updateUserStatus("NOT-AVAILABLE");
+    } else if (newStatus === "COMPLETED" || newStatus === "REJECTED") {
+      await updateUserStatus("AVAILABLE");
+    }
+
+    res.status(200).json({ message: "Request Updated Successfully" });
+  } catch (err) {
+    console.error("Error updating order:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 };
 
 export const findMyOrders = (req: Request, res: Response): void => {

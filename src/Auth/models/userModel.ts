@@ -73,7 +73,7 @@ const userSchema: Schema = new Schema({
   profilePhoto: {
     type: String,
     trim: true,
-    maxLength: 255,
+    // maxLength: 255,
   },
   carselect: {
     type: mongoose.Schema.Types.ObjectId,
