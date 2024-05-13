@@ -67,6 +67,7 @@ interface Order {
   serviceName: string;
   servicePrice: string;
   requestedOn: string;
+  mechName: string;
 }
 
 // Pending, In-Progress, Complated
@@ -80,6 +81,8 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
   const date: any = moment(order.requestedOn);
   const formattedDate = date.format('DD-MM-YYYY');
   const formattedTime = date.format('HH:mm:ss');
+  const orderId = order._id.toString();
+  const finalOrderId = orderId.substr(-7);
 
   const handleDownload = () => {
     const htmlContent = document.documentElement.outerHTML;
@@ -150,8 +153,8 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
                   <span id={styles.heading}> <b>Time:- </b>{formattedTime}</span><br/>
              </div>
               <div className="col-5 pull-right">
-                  <span id={styles.heading}> <b>Order No.</b></span><br/>
-                  <span id={styles.details}>{order._id}</span>
+                  <span id={styles.heading}> <b>Order No.:-</b>{finalOrderId}</span><br/>
+                  <span id={styles.details}> <b>MechanicName:-</b>{order.mechName}</span>
               </div>
           </div>      
       </div>      

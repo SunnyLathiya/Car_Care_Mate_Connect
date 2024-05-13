@@ -22,6 +22,10 @@ import { useState } from "react";
 import Loader from "@/components/common/loader";
 import { formFieldStyle } from "@/css/formstyle/formfieldstyle";
 
+import { auth, provider } from "@/components/firebase";
+import { signInWithPopup } from "firebase/auth";
+
+
 interface LoginFormValues {
   email: string;
   password: string;
@@ -44,6 +48,15 @@ export default function SignInSide() {
     email: "",
     password: "",
   });
+
+  const signINWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      console.log(result);
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    }    
+  }
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
@@ -243,6 +256,23 @@ export default function SignInSide() {
                 >
                   Sign In
                 </Button>
+
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: 3,
+                    mb: 2,
+                    backgroundColor: "#B85042", // Set background color
+                    color: "white", // Set text color to white
+                    "&:hover": {
+                      backgroundColor: "#974038", // Adjust hover background color
+                    },
+                  }}
+                  onClick={signINWithGoogle}
+                  // disabled={!isChecked}
+                >signinwithgoogle</Button>
                 <Grid container>
                   <Grid item xs>
                     <Link

@@ -9,7 +9,8 @@ import Cookies from "js-cookie";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "@/components/firebase";
+// import { storage } from "@/components/firebase";
+import { imageDb } from "@/components/firebase";
 
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.user);
@@ -81,36 +82,13 @@ const Profile = () => {
     console.log("file set" + file);
   };
 
-  //function to upload an image in firebase
-  // const uploadImage = async () => {
-  //   if (file == null) return;
-  //   const randomId: string = Math.random().toString(36).substring(2);
-  //   const fileExtension = file.name.split(".").pop();
-  //   const imagePath = `image/${randomId}.${fileExtension}`;
-  //   const imageRef = ref(storage, imagePath);
-  //   try {
-  //     await uploadBytes(imageRef, file);
-  //     console.log("imgae uploaded");
-  //     const downloadURL = await getDownloadURL(imageRef);
-  //     if (downloadURL != null) {
-  //       console.log("Image URL:", downloadURL);
-  //       formValues.profilePhoto = downloadURL;
-  //       ToastSuccess("Image Uploaded successfully.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error uploading image:", error);
-  //     ToastError("Failed to Uploaded Image.");
-  //     return null;
-  //   }
-  // };
-
   const uploadImage = async () => {
     try {
       if (!file) {
         return;
       }
 
-      const storageRef = ref(storage, `images/${file.name}`);
+      const storageRef = ref( imageDb , `images/${file.name}`);
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);
 
@@ -195,22 +173,18 @@ const Profile = () => {
       <div className="row">
         <div className="col-md-3 border-right">
           <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-            {/* <img
-            className="rounded-circle mt-5"
-            width="150px"
-            src={user?.profilePhoto}
-            alt="Profile Picture"
-          /> */}
-            <input type="file" onChange={onFileChange} />
-            <button onClick={uploadImage}>upload</button>
             <img
-              className="rounded-circle mt-5"
+              className="rounded-circle mt-5 mb-3"
               width="150px"
+              height="150px"
               src={formValues.profilePhoto || "/default-profile-photo.png"}
               alt="Profile Picture"
             />
-            <span className="font-weight-bold">
-              {user?.firstName} {user?.lastName}
+            <span className="font-weight-bold mb-3">
+            <input type="file" onChange={onFileChange} style={{ marginLeft: "100px" }} />            
+            </span>
+            <span className="mb-3">
+            <button onClick={uploadImage}>upload</button>
             </span>
             <span className="text-black-50">{user?.email}</span>
           </div>

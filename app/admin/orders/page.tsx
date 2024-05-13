@@ -83,7 +83,7 @@ useEffect(() => {
   };
 
   const columns: Column<Order>[] = [
-    { title: "OrderId", field: "_id", editable: "never" },
+    { title: "OrderId", field: "_id", render: rowData => rowData._id.slice(-7), editable: "never" },
     { title: "Customer Name", field: "customerName", editable: "never" },
     { title: "Car Name", field: "carName", editable: "never" },
     { title: "Car Number", field: "carNumber", editable: "never" },
@@ -98,7 +98,7 @@ useEffect(() => {
   ];
 
   const column: Column<Order>[] = [
-    { title: "OrderId", field: "_id" },
+    { title: "OrderId", field: "_id", render: rowData => rowData._id.slice(-7), },
     { title: "Customer Name", field: "customerName" },
     { title: "Car Name", field: "carName" },
     { title: "Car Number", field: "carNumber" },
