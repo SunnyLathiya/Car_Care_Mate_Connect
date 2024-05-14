@@ -9,6 +9,7 @@ export interface Order extends Document {
   serviceName: string;
   servicePrice: number;
   mechanicId: string;
+  mechName: string;
   requestedOn: Date;
   deliveredOn?: Date;
   status: string;
@@ -24,6 +25,7 @@ const orderSchema: Schema = new Schema({
   serviceName: { type: String },
   servicePrice: { type: Number, required: true, min: 0 },
   mechanicId: { type: String },
+  mechName: { type: String },
   requestedOn: { type: Date, default: Date.now, required: true },
   deliveredOn: { type: Date },
   status: { type: String, default:"PLACED" },

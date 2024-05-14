@@ -14,10 +14,9 @@ export const findAvailable = async (req: Request, res: Response): Promise<void> 
         mechanicsList,
       });
     }
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
     res.status(500).json({
-      error: "Internal Server Error",
+      message: error.message,
     });
   }
 };
@@ -25,7 +24,6 @@ export const findAvailable = async (req: Request, res: Response): Promise<void> 
 
 export const findAll = async (req: Request, res: Response): Promise<void> => {
   try {
-    // const mechanics = await userModel.find().select("name email mobile status").exec();
     const allmechanicsDetails = await userModel.find({accountType: "Mechanic"}).select("username email status").exec();
 
     if (allmechanicsDetails.length === 0) {
@@ -38,10 +36,10 @@ export const findAll = async (req: Request, res: Response): Promise<void> => {
         allmechanicsDetails,
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     res.status(500).json({
-      error: "Internal Server Error",
+      message: error.message,
     });
   }
 };
@@ -53,9 +51,8 @@ export const deleteMechanic = async (req: Request, res: Response): Promise<void>
       message: 'Mechanic deleted Successfully',
     });
   } catch (error: any) {
-    console.log('Delete Mechanic: ' + error);
     res.status(500).json({
-      error: error.message,
+      message: error.message,
     });
   }
 };
@@ -63,10 +60,6 @@ export const deleteMechanic = async (req: Request, res: Response): Promise<void>
 export const updateMechanic = async (req: Request, res: Response): Promise<void> => {
   try {
     const id = req.params.mechId;
-  //   console.log(req.body)
-  //  const updatedMechanic= await userModel.findByIdAndUpdate(id , { $set: { name: req.body.name, email: req.body.email, mobile: req.body.mobile, status: req.body.status } },{new:true});
-    //  console.log(updatedMechanic)
-
     const updateFields: any = {};
 
     if (req.body.mechName) {
@@ -86,17 +79,14 @@ export const updateMechanic = async (req: Request, res: Response): Promise<void>
     }
 
     const updatedMechanic = await userModel.findByIdAndUpdate(id, { $set: updateFields }, { new: true });
-
-
-    console.log('Updated Successfully');
+    
     res.status(200).json({
       message: 'Mechanic Details Updated Successfully',
       updatedMechanic: updatedMechanic
     });
   } catch (error: any) {
-    console.log('Update Mechanic Error: ' + error);
     res.status(500).json({
-      error: error.message,
+      message: error.message,
     });
   }
 };

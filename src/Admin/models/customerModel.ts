@@ -5,7 +5,6 @@ interface Customer extends Document {
   email: string;
   password: string;
   confirmPassword: string;
-  accountType: "Admin" | "Customer" | "Mechanic";
   additionalDetails?: mongoose.Schema.Types.ObjectId | null;
   profilePhoto: string;
   token?: string | null;
@@ -44,15 +43,9 @@ const customerSchema: Schema = new Schema({
     type: String,
     enum: ["Admin", "Customer", "Mechanic"],
     default: "Customer",
-    // required: true,
-  },
-  additionalDetails: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Profile",
   },
   profilePhoto: {
     type: String,
-    // required: true,
     trim: true,
     maxLength: 255,
   },

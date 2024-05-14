@@ -3,28 +3,26 @@ import orderModel, { Order } from '../../Order/models/orderModel'
 import userModel from '../../Auth/models/userModel';
 import mailSender from '../../utils/mailSender';
 
+export const findPlacedOrders = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const response = await orderModel.find({ status: "PLACED" }).exec();
 
-export const findPlacedOrders = (req: Request, res: Response): void => {
-    orderModel.find({ status: "PLACED" })
-    .exec()
-    .then((response: string | any[]) => {
-      if (response.length === 0) {
-        res.status(200).json({
-          message: "No Orders are available",
-        });
-      } else {
-        res.status(200).json({
-          message: "all placed orders",
-          response,
-        });
-      }
-    })
-    .catch((err: any) => {
-      console.error("Find All Placed Orders Error: ", err);
-      res.status(500).json({
-        error: "Internal Server Error",
+    if (response.length === 0) {
+      res.status(200).json({
+        message: "No Orders are available",
       });
+    } else {
+      res.status(200).json({
+        message: "All placed orders",
+        response,
+      });
+    }
+  } catch (error: any) {
+    console.error("Find Placed Orders Error: ", error);
+    res.status(500).json({
+      message: error.message || "Internal Server Error",
     });
+  }
 };
 
 
@@ -34,7 +32,6 @@ export const updateOrder = async(req: Request, res: Response) => {
     const mechanic = await userModel.findById(req.body.mechanicId);
     const orderId = req.params.orderId;
 
-    // Update the order status and mechanicId
     const updatedOrder = await orderModel.updateOne(
       { _id: orderId },
       { $set: { status: "PENDING", mechanicId: req.body.mechanicId } }
@@ -88,33 +85,30 @@ export const updateOrder = async(req: Request, res: Response) => {
 };
 
 
-// Find Completed Orders
-export const findCompletedOrders = (req: Request, res: Response) => {
-    orderModel.find({ status: "COMPLATED" })
-      .exec()
-      .then((response) => {
-        if (response.length === 0) {
-          res.status(200).json({
-            message: "COMPLATED Orders are available",
-          });
-        } else {
-          res.status(200).json({
-            completedOrder: response,
-          });
-        }
-      })
-      .catch((err: any) => {
-        console.log("Find All Completed Orders Error: " + err);
-        res.status(500).json({
-          error: err,
-        });
+export const findCompletedOrders = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const response = await orderModel.find({ status: "COMPLETED" }).exec();
+
+    if (response.length === 0) {
+      res.status(200).json({
+        message: "No COMPLETED Orders are available",
       });
-  };
+    } else {
+      res.status(200).json({
+        completedOrders: response,
+      });
+    }
+  } catch (error: any) {
+    console.error("Find Completed Orders Error: ", error);
+    res.status(500).json({
+      message: error.message || "Internal Server Error",
+    });
+  }
+};
 
   
   export const findCompletedOrdersProfit = async (req: Request, res: Response) => {
     try {
-      // Find all completed orders
       const completedOrders: Order[] = await orderModel.find({ status: "COMPLATED" }).exec();
 
       if (completedOrders.length === 0) {
@@ -128,35 +122,55 @@ export const findCompletedOrders = (req: Request, res: Response) => {
       res.status(200).json({
         totalServicePrice,
       });
-    } catch (err) {
-      console.error("Find All Completed Orders sum Error: ", err);
+    } catch (error: any) {
       res.status(500).json({
-        error: "Internal Server Error",
+        message: error.message,
       });
     }
   };
 
-  export const allOrders = (req: Request, res: Response): void => {
-    orderModel.find({})
-    .exec()
-    .then((response: string | any[]) => {
-      if (response.length === 0) {
-        res.status(200).json({
-          message: "No Orders!!!",
-        });
-      } else {
-        res.status(200).json({
-          message: "all orders",
-          response,
-        });
-      }
-    })
-    .catch((err: any) => {
-      console.error("Find All Placed Orders Error: ", err);
-      res.status(500).json({
-        error: "Internal Server Error",
+//   export const allOrders = (req: Request, res: Response): void => {
+//     orderModel.find({})
+//     .exec()
+//     .then((response: string | any[]) => {
+//       if (response.length === 0) {
+//         res.status(200).json({
+//           message: "No Orders!!!",
+//         });
+//       } else {
+//         res.status(200).json({
+//           message: "all orders",
+//           response,
+//         });
+//       }
+//     })
+//     .catch((err: any) => {
+//       console.error("Find All Placed Orders Error: ", err);
+//       res.status(500).json({
+//         error: "Internal Server Error",
+//       });
+//     });
+// };
+
+export const allOrders = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const response = await orderModel.find({}).exec();
+
+    if (response.length === 0) {
+      res.status(200).json({
+        message: "No Orders!!!",
       });
+    } else {
+      res.status(200).json({
+        message: "All orders",
+        response,
+      });
+    }
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message,
     });
+  }
 };
 
 
