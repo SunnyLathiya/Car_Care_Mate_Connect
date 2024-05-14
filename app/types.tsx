@@ -7,7 +7,7 @@ export type User = {
   password?: string;
   confirmPassword?: string;
   token: string;
-  _id: string;
+  _id: any;
   username?: string;
   accountType?: "Admin" | "Customer" | "Mechanic";
   profilePhoto?: string;
@@ -38,16 +38,19 @@ export type Car = {
 };
 
 export type Service = {
+  _id: string;
   service(service: any): unknown;
   serviceType: string;
   name: string;
-  price: number;
+  price: string;
   description: string;
   timeRequired: string;
   where: string;
+  oldRow: string;
 };
 
 export type Order = {
+  _id: any;
   customerId: string;
   customerName: string;
   carName: string;

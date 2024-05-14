@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 // import { storage } from "@/components/firebase";
 import { imageDb } from "@/components/firebase";
+import { User } from "../types";
 
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.user);
@@ -19,8 +20,6 @@ const Profile = () => {
 
   console.log("aaaaa", user);
 
-  // const [currentPassword, setCurrentPassword] = useState('');
-  // const [newPassword, setNewPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
@@ -29,7 +28,7 @@ const Profile = () => {
 
   console.log("hyy", _id);
 
-  const dispatch = useDispatch<any>();
+  const dispatch: AppDispatch = useDispatch();
 
   const [formValues, setFormValues] = useState({
     firstName: user?.firstName || "",
@@ -73,7 +72,6 @@ const Profile = () => {
     dispatch(getProfile());
   }, [dispatch]);
 
-  // When the file is selected, set the file state
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
       return;
@@ -106,7 +104,7 @@ const Profile = () => {
     }
   };
   const handleProfileUpdate = () => {
-    dispatch(updateProfile(formValues));
+    dispatch(updateProfile(formValues as User));
     console.log("132", formValues);
   };
 
@@ -144,10 +142,8 @@ const Profile = () => {
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
 
-      console.log("Password change response:", response.data);
       ToastSuccess("Password Changed Successfully!");
     } catch (error) {
-      console.error("Failed to update password:", error);
       ToastError("Failed to update password. Please try again.");
     }
   };

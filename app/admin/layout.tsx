@@ -1,9 +1,9 @@
-"use client"
-import { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode';
-import AdminHome from '@/components/admin/AdminHome';
-import Loader from '@/components/common/loader';
+"use client";
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import AdminHome from "@/components/admin/AdminHome";
+import Loader from "@/components/common/loader";
 
 interface Props {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export default function Layout({ children }: Props) {
   const [accountType, setAccountType] = useState<string | null>(null);
   useEffect(() => {
     const fetchAccountType = async () => {
-      const token = Cookies.get('token');
+      const token = Cookies.get("token");
       if (token) {
         try {
           const decodedToken: any = jwtDecode(token);
@@ -21,7 +21,7 @@ export default function Layout({ children }: Props) {
           setAccountType(type);
           console.log("Account Type:", type);
         } catch (error) {
-          console.error('Error decoding token:', error);
+          console.error("Error decoding token:", error);
         }
       }
     };
@@ -29,16 +29,14 @@ export default function Layout({ children }: Props) {
     fetchAccountType();
   }, []);
 
-  if (accountType !== 'Admin') {
-    return <Loader />; 
+  if (accountType !== "Admin") {
+    return <Loader />;
   }
 
   return (
     <>
-
       {children}
-      {accountType === 'Admin' && <AdminHome />}
-    
+      {accountType === "Admin" && <AdminHome />}
     </>
   );
 }

@@ -7,28 +7,18 @@ import { findCompletedOrders, findPlacedOrders, updateOrder } from "@/redux/slic
 import { Check, Clear, Delete, ChevronRight, Edit, ArrowUpward, Search, FirstPage, LastPage, ChevronLeft } from "@mui/icons-material";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { Order } from "@/app/types";
 // import { lookup } from "dns";
 
-interface Order {
-  tableData: any;
-  _id: string;
-  customerName: string;
-  carName: string;
-  carNumber: string;
-  custAddress: string;
-  serviceName: string;
-  servicePrice: number;
-  mechanicId: string;
-}
 
 interface Props {}
 
 const Orders: React.FC<Props> = () => {
-  const response = useSelector((state: RootState) => state.order.orders.response);
-  const completedResponse = useSelector((state: RootState) => state.order.completedOrders.completedOrder);
+  const response = useSelector((state: RootState) => state.order.orders);
+  const completedResponse = useSelector((state: RootState) => state.order.completedOrders);
 
 
-  console.log(response)
+  console.log("response", response)
   console.log(completedResponse)
   const [orders, setOrders] = useState<Order[]>([]);
   const [completedOrders, setCompletedOrders] = useState<Order[]>([]);

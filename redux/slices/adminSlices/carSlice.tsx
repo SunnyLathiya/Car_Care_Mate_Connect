@@ -41,7 +41,7 @@ export const addCar = createAsyncThunk(
 
 export const deleteCar = createAsyncThunk(
     'cars/delete',
-    async (carId: any) => {
+    async (carId: string) => {
         try {
             const token = Cookies.get('token');
             await axios.delete(`http://localhost:4000/api/v1/admin/deletecar/${carId}`, {
@@ -59,7 +59,7 @@ export const deleteCar = createAsyncThunk(
 );
 export const updateCar = createAsyncThunk(
     'cars/update',
-    async (updatedCar: any) => {
+    async (updatedCar: Car) => {
         try {
             const token = Cookies.get('token');
             const response = await axios.patch(`http://localhost:4000/api/v1/admin/updatecar/${updatedCar._id}`, updatedCar, {
@@ -115,7 +115,7 @@ const carSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addCar.fulfilled, (state: any, action : any) => {
+            .addCase(addCar.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
                 state.cars.push(action.payload.car);
@@ -144,7 +144,7 @@ const carSlice = createSlice({
             .addCase(updateCar.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                const index = state.cars.findIndex((car : any) => car._id === action.payload.newcar._id);
+                const index = state.cars.findIndex((car : Car) => car._id === action.payload.newcar._id);
                 if (index !== -1) {
                     state.cars[index] = action.payload.newcar;
                 }

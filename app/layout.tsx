@@ -8,6 +8,7 @@ import { StoreProvider } from "@/redux/provider";
 import { ToastContainer } from "../components/common/Toast";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "@/components/common/Footer";
+import Chatbot from "@/components/chat";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -65,6 +66,7 @@ export default function RootLayout({
           <ToastContainer />
           <Navbar />
           {children}
+          <Chatbot/>
           <Footer />
         </StoreProvider>
         <script

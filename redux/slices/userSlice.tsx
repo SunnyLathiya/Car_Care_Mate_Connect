@@ -7,9 +7,9 @@ import { ToastSuccess, ToastError } from '@/components/common/Toast';
 import { RootState } from '../store';
 import { toast } from 'react-toastify';
  
-export const registerUser = createAsyncThunk<User>(
+export const registerUser = createAsyncThunk(
     'user/register',
-    async (userData: any) => {
+    async (userData: User) => {
       console.log("1")
       try {
         console.log("2")
@@ -29,9 +29,9 @@ export const registerUser = createAsyncThunk<User>(
     }
 );
 
-export const login = createAsyncThunk<User>(
+export const login = createAsyncThunk(
     'user/login',
-    async (userData: any, { rejectWithValue }) => {
+    async (userData: User, { rejectWithValue }) => {
       try {
         const createUser = await axios.post(`http://localhost:4000/api/v1/login`, userData)
         //ToastSuccess(createUser.data.message)
@@ -108,9 +108,9 @@ export const getProfile = createAsyncThunk<User>(
 //   }
 // );
 
-export const updateProfile : any = createAsyncThunk<User>(
+export const updateProfile = createAsyncThunk(
   'user/updateProfile',
-  async (updatedUser: any, { rejectWithValue, getState }) => {
+  async (updatedUser: User, { rejectWithValue, getState }) => {
     try {
       const token = Cookies.get('token');
 
@@ -136,9 +136,8 @@ export const updateProfile : any = createAsyncThunk<User>(
       );
 
       ToastSuccess('Profile Updated Successfully!');
-      return response.data; // Return updated profile data
+      return response.data;
     } catch (error: any) {
-      console.log(error);
       ToastError('Problem in updating profile!');
       return rejectWithValue(error.response?.data || error.message); // Return error message
     }

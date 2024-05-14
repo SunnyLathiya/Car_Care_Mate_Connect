@@ -120,10 +120,6 @@ interface OrderState {
   totalProfit: number;
 }
 
-// enum status {
-//   REJECTED ="rejected"
-// }
-
 const initialState: OrderState = {
   orders: [],
   completedOrders: [],
@@ -145,7 +141,7 @@ const orderSlice = createSlice({
       .addCase(findPlacedOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.orders = action.payload;
+        state.orders = action.payload.response;
         console.log(state.orders);
         // console.log("2")
       })
@@ -160,8 +156,8 @@ const orderSlice = createSlice({
       .addCase(findCompletedOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.completedOrders = action.payload;
-        console.log(action.payload);
+        state.completedOrders = action.payload.completedOrder;
+        console.log("state.completedOrders", state.completedOrders);
         // console.log(state.orders)
       })
       .addCase(findCompletedOrders.rejected, (state, action) => {
@@ -206,6 +202,7 @@ const orderSlice = createSlice({
       .addCase(allorders.pending, (state) => {
         state.loading = true;
         state.error = null;
+        console.log("hello.........")
       })
       .addCase(allorders.fulfilled, (state, action) => {
         state.loading = false;
@@ -221,3 +218,10 @@ const orderSlice = createSlice({
 });
 
 export default orderSlice.reducer;
+
+
+
+
+// enum status {
+//   REJECTED ="rejected"
+// }

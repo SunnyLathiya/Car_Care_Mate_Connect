@@ -1,14 +1,14 @@
 "use client"
 import { ToastError, ToastSuccess } from '@/components/common/Toast';
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
 import { toast } from 'react-toastify';
 import { User } from '@/app/types';
 
-export const getAllMechanics = createAsyncThunk<User>(
+export const getAllMechanics = createAsyncThunk(
     'admin/allmechanics',
-    async (allmechanicsDetails: any) => {
+    async (allmechanicsDetails: User) => {
         try {
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/findall`, allmechanicsDetails, { headers: {
@@ -23,7 +23,7 @@ export const getAllMechanics = createAsyncThunk<User>(
 
 export const getAllAvailableMechanics = createAsyncThunk(
     'admin/allavailablemechanics',
-    async (mechanicsList: any) => {
+    async () => {
         try {
             const token = Cookies.get('token');
             const response = await axios.get(
@@ -43,7 +43,7 @@ export const getAllAvailableMechanics = createAsyncThunk(
 
 export const deleteMechanic = createAsyncThunk(
     'mechanic/delete',
-    async (mechId: any) => {
+    async (mechId: User) => {
         try {
             const token = Cookies.get('token');
             await axios.delete(`http://localhost:4000/api/v1/admin/deletemechanic/${mechId}`, {
@@ -60,11 +60,19 @@ export const deleteMechanic = createAsyncThunk(
     }
 );
 
-const initialState: any = {
-    allmechanics: [],
-    loading: false,
-    error: null as string | null,
-};
+ interface MechanicsState {
+    mechanicsList: any[];
+    allmechanics: any[];
+    loading: boolean;
+    error: string | null;
+  }
+  
+  const initialState: MechanicsState = {
+      allmechanics: [],
+      loading: false,
+      error: null,
+      mechanicsList: []
+  };
 
 const AdminMecSlice = createSlice({
     name: 'adminMic',
@@ -91,12 +99,10 @@ const AdminMecSlice = createSlice({
                 state.error = null;
                 console.log("hello1")
             })
-            .addCase(getAllAvailableMechanics.fulfilled, (state, action: any) => {
+            .addCase(getAllAvailableMechanics.fulfilled, (state, action:PayloadAction<MechanicsState>) => {
                 state.loading = false;
                 state.error = null;
                 state.allmechanics = action.payload.mechanicsList;
-                // console.log("1", action.payload)
-                // console.log("2", state.allmechanics)
             })
             .addCase(getAllAvailableMechanics.rejected, (state, action) => {
                 state.loading = false;

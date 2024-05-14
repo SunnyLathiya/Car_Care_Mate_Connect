@@ -24,10 +24,27 @@ const Brands: React.FC = () => {
         console.log(err);
       });
   };
-  
+
+  const searchBrands = () => {
+    axios
+      .get(`http://localhost:4000/api/v1/brands/search?query=${filter}`)
+      .then((response) => {
+        setBrands(response.data);
+
+        console.log("response", response)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
-    retrieveBrands();
-  }, []);
+    if (filter === '') {
+      retrieveBrands();
+    } else {
+      searchBrands();
+    }
+  }, [filter]);
 
   const getCarCard = (brand: any) => {
     return (

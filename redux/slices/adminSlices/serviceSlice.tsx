@@ -20,9 +20,9 @@ export const getAllServices = createAsyncThunk(
     }
 );
 
-export const addService = createAsyncThunk<Service, any>(
+export const addService = createAsyncThunk(
     'cars/add',
-    async (newService) => {
+    async (newService: Service) => {
         try {
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/addservice`, newService, { headers: {
@@ -40,7 +40,7 @@ export const addService = createAsyncThunk<Service, any>(
 
 export const deleteService = createAsyncThunk(
     'services/delete',
-    async (serviceId: any) => {
+    async (serviceId: string) => {
         try {
             const token = Cookies.get('token');
             await axios.delete(`http://localhost:4000/api/v1/admin/deleteservice/${serviceId}`, {
@@ -59,7 +59,7 @@ export const deleteService = createAsyncThunk(
 
 export const updateService = createAsyncThunk(
     'services/update',
-    async (updatedService: any,{getState}) => {
+    async (updatedService: Service,{getState}) => {
         try {
             const currentState: any = getState();
             const token = Cookies.get('token');
@@ -69,7 +69,7 @@ export const updateService = createAsyncThunk(
                 },
             });
                 const service : any= currentState.service.services
-                const index = service.findIndex((ser: { _id: any; }) => {
+                const index = service.findIndex((ser: { _id: string; }) => {
                     return ser._id === response.data.data._id;
                         });
             ToastSuccess("Service Updated Successfully!");
@@ -82,11 +82,18 @@ export const updateService = createAsyncThunk(
 );
 
 
-const initialState = {
+interface ServiceState {
+    services: Service[];
+    loading: boolean;
+    error: string | null;
+  }
+  
+  const initialState: ServiceState = {
     services: [],
     loading: false,
-    error: null as string | null,
-};
+    error: null,
+  };
+  
 
 const serviceSlice = createSlice({
     name: 'services',
@@ -111,7 +118,7 @@ const serviceSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addService.fulfilled, (state: any, action) => {
+            .addCase(addService.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
                 state.services.push(action.payload.service);
@@ -124,10 +131,10 @@ const serviceSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(deleteService.fulfilled, (state: any, action) => {
+            .addCase(deleteService.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.services = state.services.filter((service: { _id: any; }) => service._id !== action.payload);
+                state.services = state.services.filter((service: { _id: any }) => service._id !== action.payload);
             })
             .addCase(deleteService.rejected, (state, action) => {
                 state.loading = false;
@@ -137,7 +144,7 @@ const serviceSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(updateService.fulfilled, (state: any, action) => {
+            .addCase(updateService.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
                 state.services[action.payload.index]=action.payload.data

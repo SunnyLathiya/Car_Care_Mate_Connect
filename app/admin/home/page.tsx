@@ -64,7 +64,7 @@ const page: React.FC = () => {
     dispatch(allUsers());
   }, [dispatch]);
 
-  const totalcomplatedorder = order?.completedOrders.completedOrder?.length;
+  const totalcomplatedorder = order?.completedOrders?.length;
   const totalorders = order?.orders?.length;
   const InProcessOrders = Array.isArray(peoples?.user)?
       order?.orders?.filter(

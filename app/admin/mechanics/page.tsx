@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { AddBox, Cancel, DeleteOutline, SaveAlt, Add, Edit, Delete, Search, Check, Clear, ArrowUpward, FirstPage, LastPage, ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
+import { User } from "@/app/types";
 
 interface MechanicData {
   [x: string]: string;
@@ -22,6 +23,7 @@ interface MechanicData {
   email: string;
   password: string;
   phoneNumber: string;
+  _id: string;
 }
 
 interface Props {}
@@ -50,7 +52,7 @@ const Mechanic: React.FC<Props> = () => {
         Authorization: `Bearer ${token}`,
       },});
       setdisplay(false)
-      dispatch(getAllAvailableMechanics(undefined));
+      dispatch(getAllAvailableMechanics());
 
       console.log(response);
       if(response.data.status === "success"){
@@ -69,7 +71,7 @@ const Mechanic: React.FC<Props> = () => {
 
   console.log(mechanicsList)
   useEffect(() => {
-    dispatch(getAllAvailableMechanics(undefined));
+    dispatch(getAllAvailableMechanics());
     // return () => {dispatch(getAllAvailableMechanics(undefined));}
   }, [dispatch]);
 
@@ -82,7 +84,7 @@ const Mechanic: React.FC<Props> = () => {
     { title: "Status", field: "status"},
   ];
 
-  const handleRowDelete = async (oldRow: MechanicData) => {
+  const handleRowDelete = async (oldRow: User) => {
     try {
       await dispatch(deleteMechanic(oldRow._id));
     } catch (error) {
