@@ -115,6 +115,7 @@ export const findCompletedOrdersProfit = createAsyncThunk(
 interface OrderState {
   orders: Order[];
   completedOrders: Order[];
+  placedorders: Order[];
   loading: boolean;
   error: string | null;
   totalProfit: number;
@@ -123,6 +124,7 @@ interface OrderState {
 const initialState: OrderState = {
   orders: [],
   completedOrders: [],
+  placedorders: [],
   loading: false,
   error: null as string | null,
   totalProfit: 0,
@@ -134,6 +136,21 @@ const orderSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+    .addCase(allorders.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+      console.log("hello.........")
+    })
+    .addCase(allorders.fulfilled, (state, action) => {
+      state.loading = false;
+      state.error = null;
+      state.orders = action.payload.response;
+      console.log("777", state.orders);
+    })
+    .addCase(allorders.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || "Failed to fetch cars";
+    })
       .addCase(findPlacedOrders.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -141,7 +158,7 @@ const orderSlice = createSlice({
       .addCase(findPlacedOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.orders = action.payload.response;
+        state.placedorders = action.payload.response;
         console.log(state.orders);
         // console.log("2")
       })
@@ -156,9 +173,8 @@ const orderSlice = createSlice({
       .addCase(findCompletedOrders.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.completedOrders = action.payload.completedOrder;
-        console.log("state.completedOrders", state.completedOrders);
-        // console.log(state.orders)
+        state.completedOrders = action.payload.completedOrders;
+        console.log("7", action.payload)
       })
       .addCase(findCompletedOrders.rejected, (state, action) => {
         state.loading = false;
@@ -199,21 +215,6 @@ const orderSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || "Failed to fetch cars";
       })
-      .addCase(allorders.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-        console.log("hello.........")
-      })
-      .addCase(allorders.fulfilled, (state, action) => {
-        state.loading = false;
-        state.error = null;
-        state.orders = action.payload.response;
-        console.log(state.orders);
-      })
-      .addCase(allorders.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to fetch cars";
-      });
   },
 });
 

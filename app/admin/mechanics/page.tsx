@@ -29,9 +29,11 @@ interface MechanicData {
 interface Props {}
 
 const Mechanic: React.FC<Props> = () => {
-  const mechanicsList  = useSelector((state: RootState) => state.adminMech.allmechanics);
+  const {allmechanics}  = useSelector((state: RootState) => state.adminMech);
   const dispatch: AppDispatch = useDispatch();
   // const [mechanic, setMechanic] = useState<MechanicData>();
+
+  console.log("mechanicsList", allmechanics)
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [mechName, setMechName] = useState("");
@@ -52,7 +54,7 @@ const Mechanic: React.FC<Props> = () => {
         Authorization: `Bearer ${token}`,
       },});
       setdisplay(false)
-      dispatch(getAllAvailableMechanics());
+      dispatch(getAllMechanics());
 
       console.log(response);
       if(response.data.status === "success"){
@@ -69,9 +71,9 @@ const Mechanic: React.FC<Props> = () => {
   };
 
 
-  console.log(mechanicsList)
+  // console.log(mechanicsList)
   useEffect(() => {
-    dispatch(getAllAvailableMechanics());
+    dispatch(getAllMechanics());
     // return () => {dispatch(getAllAvailableMechanics(undefined));}
   }, [dispatch]);
 
@@ -100,7 +102,7 @@ const Mechanic: React.FC<Props> = () => {
     setdisplay(false);
   };
 
-  const enhancedMechanics = mechanicsList.map((mechanic: MechanicData, index: number) => ({ ...mechanic, tableData: { id: index } }));
+  const enhancedMechanics = allmechanics.map((mechanic: MechanicData, index: number) => ({ ...mechanic, tableData: { id: index } }));
 
   return (
 
@@ -120,14 +122,13 @@ const Mechanic: React.FC<Props> = () => {
            onRowDelete: handleRowDelete,
         }}
         icons={{
-          Add: () => <Add style={{ color: '#B85042' }} />,
           Check: () => <Check style={{ color: '#B85042' }} />,
           Clear: () => <Clear style={{ color: '#B85042' }} />,
           Delete: () => <Delete style={{ color: '#B85042' }} />,
           DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
           Edit: () => <Edit style={{ color: '#B85042' }} />,
           Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
-          Filter: () => <Search />,
+          Filter: () => <Search style={{ color: '#B85042' }} />,
           FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
           LastPage: () => <LastPage style={{ color: '#B85042' }} />,
           NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
@@ -149,18 +150,6 @@ const Mechanic: React.FC<Props> = () => {
             backgroundColor: "#E7E8D1",
             border: '1px solid #A7BEAE'
           }
-        }}
-        components={{
-          DeleteAction: (props: any) => (
-            <props.action.component {...props.action}>
-              <props.action.icon
-                {...props.action.iconProps}
-                onClick={(event: any) => props.action.onClick(event, props.data)}
-                style={{ color: 'red' }}
-              />
-              <Cancel onClick={() => props.action.onCancel(props.data)} />
-            </props.action.component>
-          ),
         }}
       /> 
 

@@ -124,6 +124,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import userSlice, { setCarSelected } from "@/redux/slices/userSlice";
 import { useSelector } from "react-redux";
+import { getAllServices } from "@/redux/slices/adminSlices/serviceSlice";
 
 interface Service {
   _id: string;
@@ -146,23 +147,20 @@ const useStyles = makeStyles({
 
 const Services: React.FC = () => {
   const classes = useStyles();
-  const [services, setServices] = useState<Service[]>([]);
+  const { services} = useSelector((state: RootState) => state.service)
   const router = useRouter();
+
 
   const { id } = useParams<{ id: string }>();
   const dispatch: AppDispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(getAllServices())
+  }, [dispatch])
+
 
   useEffect(() => {
     dispatch(setCarSelected(id));
-    // Fetch services data from the backend
-    axios.get('http://localhost:4000/api/v1/admin/findallservices')
-      .then(response => {
-        setServices(response.data.service); // Set services state with fetched data
-      })
-      .catch(error => {
-        console.error('Error fetching services:', error);
-      });
   }, [id, dispatch]);
 
   const handleBuyClick = (serviceId: string) => {
@@ -171,7 +169,6 @@ const Services: React.FC = () => {
 
 
 
-  console.log(services)
   const getServiceCards = (service: Service): JSX.Element => {
     const type = service.serviceType === 1 ? "Car Care Services" : "Periodic Car Service";
     const where = service.where === 1 ? "Free Pickup & Drop" : "Service @ Doorstep";
@@ -223,7 +220,7 @@ const Services: React.FC = () => {
        <button onClick={() => router.push(`/customer/cushome`)}>Change Car</button>
        <hr />
       <Grid container spacing={5} className="grid_container">
-        {services.map((service) => getServiceCards(service))}
+        {services.map((service: any) => getServiceCards(service))}
 
       </Grid>
     </div>

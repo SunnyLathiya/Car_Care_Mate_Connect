@@ -1,10 +1,20 @@
-"use client";
-import React, { useEffect, useState } from "react";
+"use client"
+import React, { forwardRef, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MaterialTable, { Column } from "material-table";
 import {
+  addCar,
+  getAllCars,
+  deleteCar,
+  updateCar,
+} from "@/redux/slices/adminSlices/carSlice";
+import { RootState, AppDispatch } from "@/redux/store";
+import { Car } from "@/app/types";
+import Loader from "@/components/common/loader";
+import {
   Add,
   AddBox,
+  ArrowDownward,
   ArrowUpward,
   Cancel,
   Check,
@@ -19,48 +29,40 @@ import {
   SaveAlt,
   Search,
 } from "@mui/icons-material";
-import { RootState, AppDispatch } from "@/redux/store";
-import {
-  addCar,
-  getAllCars,
-  deleteCar,
-  updateCar,
-} from "@/redux/slices/adminSlices/carSlice";
-import { ToastInfo } from "@/components/common/Toast";
-import Loader from "@/components/common/loader";
-import { Car } from "@/app/types";
+import { ToastError } from "@/components/common/Toast";
 
 function Cars() {
-  const { cars, loading } = useSelector((state: RootState) => state.car);
+  const { cars, loading, error } = useSelector((state: RootState) => state.car);
   const dispatch: AppDispatch = useDispatch();
-  const [formData, setFormData] = useState({ name: "", brand: "", _id: "" });
-
+  
   useEffect(() => {
     dispatch(getAllCars());
-    console.log("loading", loading);
   }, [dispatch]);
-
   const handleRowAdd = async (newRow: Car) => {
     try {
       if (!newRow.name || !newRow.brand) {
+        ToastError("Name and brand are required.")
         throw new Error("Name and brand are required.");
       }
-
       await dispatch(addCar(newRow));
-    } catch (error) {
-      console.error("Error occurred while adding car:", error);
+      ToastSuccess("Car added successfully!");
+      console.log("error", error)
+    } catch (error: any) {
+      ToastError("An error occurred while adding the car.");
+      console.log("ijncijncijncijwn", error)
     }
   };
-
   const handleRowDelete = async (oldRow: Car) => {
     try {
-      await dispatch(deleteCar(oldRow._id)); // Pass the carId to deleteCar action
-    } catch (error) {
-      console.error("Error occurred while deleting car:", error);
+      await dispatch(deleteCar(oldRow._id));
+      ToastSuccess("Car deleted successfully!");
+    } catch (error: any) {
+        ToastError("An error occurred while deleting the car.");
+        console.log("Error deleting car:", error);
     }
   };
 
-  const handleRowUpdate = async (newRow: Car, oldRow: Car | undefined) => {
+  const handleRowUpdate = async (newRow: Car, oldRow?: Car) => {
     if (oldRow) {
       try {
         await dispatch(updateCar(newRow));
@@ -68,11 +70,6 @@ function Cars() {
         console.error("Error occurred while updating car:", error);
       }
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
   };
 
   const columns: Column<Car>[] = [
@@ -90,61 +87,49 @@ function Cars() {
       {loading ? (
         <Loader />
       ) : (
-        <div
-          style={{
-            minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <div style={{ marginTop: "100px", marginLeft: "180px" }}>
-            <MaterialTable
-              title="CARS DATA"
-              columns={columns}
-              style={{ backgroundColor: "#E7E8D1" }}
-              data={enhancedCars}
-              editable={{
-                onRowAdd: handleRowAdd,
-                onRowUpdate: handleRowUpdate,
-                onRowDelete: handleRowDelete,
-              }}
-              icons={{
-                Add: () => <Add style={{ color: "#B85042" }} />,
-                Check: () => <Check style={{ color: "#B85042" }} />,
-                Clear: () => <Clear style={{ color: "#B85042" }} />,
-                Delete: () => <Delete style={{ color: "#B85042" }} />,
-                DetailPanel: () => (
-                  <ChevronRight style={{ color: "#B85042" }} />
-                ),
-                Edit: () => <Edit style={{ color: "#B85042" }} />,
-                Export: () => <ArrowUpward style={{ color: "#B85042" }} />,
-                Filter: () => <Search style={{ color: "#B85042" }} />,
-                FirstPage: () => <FirstPage style={{ color: "#B85042" }} />,
-                LastPage: () => <LastPage style={{ color: "#B85042" }} />,
-                NextPage: () => <ChevronRight style={{ color: "#B85042" }} />,
-                PreviousPage: () => (
-                  <ChevronLeft style={{ color: "#B85042" }} />
-                ),
-                ResetSearch: () => <Clear style={{ color: "#B85042" }} />,
-                Search: () => <Search style={{ color: "#B85042" }} />,
-                SortArrow: () => <ArrowUpward />,
-              }}
-              options={{
-                headerStyle: {
-                  backgroundColor: "#B85042",
-                  color: "#FFF",
-                  zIndex: "0",
-                },
-                actionsCellStyle: {
-                  backgroundColor: "#E7E8D1",
-                },
-                rowStyle: {
-                  backgroundColor: "#E7E8D1",
-                  border: "1px solid #A7BEAE",
-                },
-              }}
-            />
-          </div>
+        <div style={{ marginTop: "100px", marginLeft: "180px" }}>
+          <MaterialTable
+            title="CARS DATA"
+            columns={columns}
+            style={{backgroundColor:"#E7E8D1"}}
+            data={enhancedCars}
+            editable={{
+              onRowAdd: handleRowAdd,
+              onRowUpdate: handleRowUpdate,
+              onRowDelete: handleRowDelete,
+            }}
+            icons={{
+              Add: forwardRef(() => <Add style={{ color: '#B85042' }} />),
+              Clear: forwardRef(() => <Clear style={{ color: '#B85042' }} />) ,
+              Check: forwardRef(() => <Check style={{ color: '#B85042' }} />) ,
+              Delete: forwardRef(() => <Delete style={{ color: '#B85042' }} />),
+              DetailPanel: forwardRef(() => <ChevronRight style={{ color: '#B85042' }} />),
+              Edit: forwardRef(() => <Edit style={{ color: '#B85042' }} />),
+              Export: forwardRef(() => <ArrowUpward style={{ color: '#B85042' }} />),
+              Filter: forwardRef(() => <Search />) ,
+              FirstPage: forwardRef(() => <FirstPage style={{ color: '#B85042' }} />),
+              LastPage: forwardRef( () => <LastPage style={{ color: '#B85042' }} />),
+              NextPage: forwardRef(() => <ChevronRight style={{ color: '#B85042' }} />),
+              PreviousPage: forwardRef(() => <ChevronLeft style={{ color: '#B85042' }} />),
+              ResetSearch: forwardRef( () => <Clear style={{ color: '#B85042' }} />),
+              Search: forwardRef(() => <Search style={{ color: '#B85042' }} />) ,
+              SortArrow: forwardRef(() => <ArrowDownward />),
+            }}
+            options={{
+              headerStyle: {
+                backgroundColor: "#B85042",
+                color: "#FFF",
+                zIndex: 0,
+              },
+              actionsCellStyle: {
+                backgroundColor: "#E7E8D1",
+              },
+              rowStyle: {
+                backgroundColor: "#E7E8D1",
+                border: "1px solid #A7BEAE",
+              },
+            }}
+          />
         </div>
       )}
     </>
@@ -152,3 +137,7 @@ function Cars() {
 }
 
 export default Cars;
+function ToastSuccess(arg0: string) {
+  throw new Error("Function not implemented.");
+}
+

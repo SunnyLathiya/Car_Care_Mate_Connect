@@ -8,10 +8,10 @@ import { User } from '@/app/types';
 
 export const getAllMechanics = createAsyncThunk(
     'admin/allmechanics',
-    async (allmechanicsDetails: User) => {
+    async () => {
         try {
             const token = Cookies.get('token');
-            const response = await axios.post(`http://localhost:4000/api/v1/admin/findall`, allmechanicsDetails, { headers: {
+            const response = await axios.get(`http://localhost:4000/api/v1/admin/findall`, { headers: {
                 Authorization: `Bearer ${token}`,
               },});
             return response.data;
@@ -83,16 +83,18 @@ const AdminMecSlice = createSlice({
             .addCase(getAllMechanics.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                console.log("1")
             })
             .addCase(getAllMechanics.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.allmechanics = action.payload;
-                console.log(action.payload)
+                state.allmechanics = action.payload.allmechanicsDetails;
+                console.log("<><><>", state.allmechanics)
             })
             .addCase(getAllMechanics.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to fetch cars';
+                console.log("3", state.error)
             })
             .addCase(getAllAvailableMechanics.pending, (state) => {
                 state.loading = true;

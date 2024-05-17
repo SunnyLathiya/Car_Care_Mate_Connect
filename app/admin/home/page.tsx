@@ -58,13 +58,31 @@ const page: React.FC = () => {
 
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
-    dispatch(findCompletedOrders());
+    // dispatch(findCompletedOrders());
     dispatch(findCompletedOrdersProfit());
     dispatch(allorders());
     dispatch(allUsers());
   }, [dispatch]);
 
-  const totalcomplatedorder = order?.completedOrders?.length;
+  // const totalcomplatedorder = order?.completedOrders;
+
+  const totalcomplatedorder = Array.isArray(peoples?.user)?
+  order?.orders?.filter(
+    (item: { status: string }) => item.status === "COMPLATED"
+  ).length
+: 0;
+
+const PENDING = Array.isArray(peoples?.user)?
+order?.orders?.filter(
+  (item: { status: string }) => item.status === "PENDING"
+).length
+: 0;
+
+  console.log("pending", PENDING)
+
+  console.log("totalcomplatedorder", totalcomplatedorder)
+
+
   const totalorders = order?.orders?.length;
   const InProcessOrders = Array.isArray(peoples?.user)?
       order?.orders?.filter(

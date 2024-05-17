@@ -1,15 +1,16 @@
-
 "use client";
 import React, { useState } from "react";
 import axios from "axios";
 import styles from "@/css/chat.module.css";
 import { TiMessage as TbMessageChatbot } from "react-icons/ti";
 import Draggable from "react-draggable";
+import { MdAutoDelete } from "react-icons/md";
+import { FiSend } from "react-icons/fi";
 
 const Chatbot = () => {
   const [question, setQuestion] = useState("");
   const [generatingAnswer, setGeneratingAnswer] = useState(false);
-  const [isChatbotOpen, setIsChatbotOpen] = useState(true);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
 
   const generateAnswer = async (e: any) => {
@@ -18,7 +19,7 @@ const Chatbot = () => {
 
     try {
       const response = await axios.post(
-        
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyBntEDV8kNuxD7UM8geZdKGbrRgcbpKgco",
         {
           contents: [{ parts: [{ text: question }] }],
         }
@@ -31,9 +32,8 @@ const Chatbot = () => {
         { type: "bot", content: answer },
       ];
       setChatHistory(updatedChatHistory);
-      setQuestion(""); // Reset question after submitting
+      setQuestion("");
 
-      // Scroll to the bottom of the chat messages
       const chatMessagesContainer = document.getElementById(
         "chatMessagesContainer"
       );
@@ -51,76 +51,11 @@ const Chatbot = () => {
     setIsChatbotOpen((prevOpen) => !prevOpen);
   };
 
+  const clearChatHistory = () => {
+    setChatHistory([]);
+  };
+
   return (
-    // <div
-    //   style={{
-    //     marginTop: "50px",
-    //     marginLeft: "250px",
-    //     height: "400px",
-    //     width: "280px",
-    //     position: "relative",
-    //   }}
-    // >
-    //   <div style={{ position: "fixed", top: "85%", right: "160px" }}>
-    //     <span
-    //       style={{
-    //         display: "inline-block",
-    //         backgroundColor: "#007bff",
-    //         padding: "8px",
-    //         borderRadius: "50%",
-    //       }}
-    //       onClick={toggleChatbot}
-    //     >
-    //       <TbMessageChatbot
-    //         style={{ fontSize: "24px", color: "red", cursor: "pointer" }}
-    //       />
-    //     </span>
-    //   </div>
-
-    //   {isChatbotOpen && (
-    //     <div
-    //       className={`${styles.chatbotContainer} ${
-    //         isChatbotOpen ? styles.open : ""
-    //       }`}
-    //     >
-    //       <div className={styles.chatbot}>
-    //         <div className={styles.chatbotContent}>
-    //           <div
-    //             id="chatMessagesContainer"
-    //             className={styles.chatMessages}
-    //             style={{ maxHeight: "300px", overflowY: "auto" }}
-    //           >
-    //             {chatHistory.map((message, index) => (
-    //               <div
-    //                 key={index}
-    //                 className={`${styles.message} ${styles[message.type]}`}
-    //               >
-    //                 <p>{message.content}</p>
-    //               </div>
-    //             ))}
-    //           </div>
-
-    //           <div className={styles.userInput}>
-    //             <form onSubmit={generateAnswer}>
-    //               <input
-    //                 type="text"
-    //                 placeholder="Type your question here..."
-    //                 value={question}
-    //                 onChange={(e) => setQuestion(e.target.value)}
-    //                 required
-    //               />
-    //               <button type="submit" disabled={generatingAnswer}>
-    //                 {generatingAnswer ? "Generating..." : "Submit"}
-    //               </button>
-    //             </form>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     </div>
-    //   )}
-    // </div>
-
-
     <div className={styles.container}>
       <div className={styles.chatbotButton}>
         <span
@@ -132,8 +67,8 @@ const Chatbot = () => {
             borderRadius: "50%",
             cursor: "pointer",
             position: "fixed",
-            bottom: "40px", 
-            right: "40px", 
+            bottom: "40px",
+            right: "40px",
             zIndex: 1000,
           }}
         >
@@ -146,17 +81,14 @@ const Chatbot = () => {
           <div
             className={`${styles.chatbotContainer} ${styles.open}`}
             style={{
-              maxHeight: "500px", 
-              width: "380px", 
+              maxHeight: "500px",
+              width: "380px",
               overflowY: "auto",
             }}
           >
             <div className={styles.chatbot}>
               <div className={styles.chatbotContent}>
-                <div
-                  id="chatMessagesContainer"
-                  className={styles.chatMessages}
-                >
+                <div id="chatMessagesContainer" className={styles.chatMessages}>
                   {chatHistory.map((message: any, index) => (
                     <div
                       key={index}
@@ -168,17 +100,32 @@ const Chatbot = () => {
                 </div>
 
                 <div className={styles.userInput}>
-                  <form onSubmit={generateAnswer}>
+                  <form onSubmit={generateAnswer} style={{ display: "flex" }}>
                     <input
                       type="text"
                       placeholder="Type your question here..."
                       value={question}
                       onChange={(e) => setQuestion(e.target.value)}
                       required
+                      style={{ flex: "1", marginRight: "8px" }}
                     />
-                    <button type="submit" disabled={generatingAnswer}>
-                      {generatingAnswer ? "Generating..." : "Submit"}
+                    <button
+                      type="submit"
+                      disabled={generatingAnswer}
+                      style={{ marginRight: "8px" }}
+                    >
+                      <FiSend />
+                      {generatingAnswer ? "Generating" : "Submit"}
                     </button>
+                    <MdAutoDelete
+                      onClick={clearChatHistory}
+                      style={{
+                        fontSize: "24px",
+                        color: "red",
+                        marginLeft: "7px",
+                        marginTop: "10px",
+                      }}
+                    />
                   </form>
                 </div>
               </div>
@@ -187,7 +134,6 @@ const Chatbot = () => {
         </Draggable>
       )}
     </div>
-    
   );
 };
 

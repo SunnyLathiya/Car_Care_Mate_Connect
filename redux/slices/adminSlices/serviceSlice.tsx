@@ -1,5 +1,4 @@
-
-import { ToastError, ToastInfo, ToastSuccess } from '@/components/common/Toast';
+import { ToastError, ToastSuccess } from '@/components/common/Toast';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import Cookies from 'js-cookie';
@@ -13,16 +12,17 @@ export const getAllServices = createAsyncThunk(
             const response = await axios.get(`http://localhost:4000/api/v1/admin/findallservices`, { headers: {
                 Authorization: `Bearer ${token}`,
               },});
-            return response.data;
+
+            return response.data.services;
         } catch (error: any) {
             throw (error as AxiosError).response?.data || error.message;
         }
     }
 );
 
-export const addService = createAsyncThunk(
+export const addService = createAsyncThunk<Service, any>(
     'cars/add',
-    async (newService: Service) => {
+    async (newService) => {
         try {
             const token = Cookies.get('token');
             const response = await axios.post(`http://localhost:4000/api/v1/admin/addservice`, newService, { headers: {
@@ -31,7 +31,6 @@ export const addService = createAsyncThunk(
               ToastSuccess("New Service added successfully");
             return response.data;
         } catch (error: any) {
-
             ToastError("Problem in new service create!")
             throw (error as AxiosError).response?.data || error.message;
         }
@@ -59,7 +58,7 @@ export const deleteService = createAsyncThunk(
 
 export const updateService = createAsyncThunk(
     'services/update',
-    async (updatedService: Service,{getState}) => {
+    async (updatedService: any,{getState}) => {
         try {
             const currentState: any = getState();
             const token = Cookies.get('token');
@@ -69,7 +68,7 @@ export const updateService = createAsyncThunk(
                 },
             });
                 const service : any= currentState.service.services
-                const index = service.findIndex((ser: { _id: string; }) => {
+                const index = service.findIndex((ser: { _id: any; }) => {
                     return ser._id === response.data.data._id;
                         });
             ToastSuccess("Service Updated Successfully!");
@@ -81,19 +80,27 @@ export const updateService = createAsyncThunk(
     }
 );
 
+interface Services {
+    _id: string;
+    name: string;
+    price: string;
+    description: string;
+    timeRequired: string;
+    where: string;
+    serviceType: string;
+  }
 
-interface ServiceState {
-    services: Service[];
+interface State {
+    services: Services[];
     loading: boolean;
     error: string | null;
-  }
-  
-  const initialState: ServiceState = {
+}
+
+const initialState: State = {
     services: [],
     loading: false,
-    error: null,
-  };
-  
+    error: null as string | null,
+};
 
 const serviceSlice = createSlice({
     name: 'services',
@@ -104,11 +111,12 @@ const serviceSlice = createSlice({
             .addCase(getAllServices.pending, (state) => {
                 state.loading = true;
                 state.error = null;
+                console.log("pending")
             })
             .addCase(getAllServices.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.services = action.payload.service;
+                state.services = action.payload;
             })
             .addCase(getAllServices.rejected, (state, action) => {
                 state.loading = false;
@@ -118,7 +126,7 @@ const serviceSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addService.fulfilled, (state, action) => {
+            .addCase(addService.fulfilled, (state: any, action) => {
                 state.loading = false;
                 state.error = null;
                 state.services.push(action.payload.service);
@@ -134,7 +142,7 @@ const serviceSlice = createSlice({
             .addCase(deleteService.fulfilled, (state, action) => {
                 state.loading = false;
                 state.error = null;
-                state.services = state.services.filter((service: { _id: any }) => service._id !== action.payload);
+                state.services = state.services.filter((service: { _id: string }) => service._id !== action.payload);
             })
             .addCase(deleteService.rejected, (state, action) => {
                 state.loading = false;
@@ -144,7 +152,7 @@ const serviceSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(updateService.fulfilled, (state, action) => {
+            .addCase(updateService.fulfilled, (state: State, action) => {
                 state.loading = false;
                 state.error = null;
                 state.services[action.payload.index]=action.payload.data

@@ -16,7 +16,6 @@ export const getAllCars = createAsyncThunk<Car[]>(
               },});
             return response.data;
         } catch (error: any) {
-            ToastError("Error in Car detailes page!")
             throw (error as AxiosError).response?.data || error.message;
         }
     }
@@ -105,7 +104,7 @@ const carSlice = createSlice({
                 state.error = null;
                 state.success = true;
                 state.cars = action.payload;
-                console.log("state.cars", state.cars)
+               
             })
             .addCase(getAllCars.rejected, (state, action) => {
                 state.loading = false;
@@ -123,6 +122,7 @@ const carSlice = createSlice({
             .addCase(addCar.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || 'Failed to add car';
+                // state.error = action.payload as string;
             })
             .addCase(deleteCar.pending, (state) => {
                 state.loading = true;

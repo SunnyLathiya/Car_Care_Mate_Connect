@@ -51,6 +51,7 @@ export type Service = {
 
 export type Order = {
   _id: any;
+  orderId: string;
   customerId: string;
   customerName: string;
   carName: string;
@@ -58,11 +59,12 @@ export type Order = {
   custAddress: string;
   serviceName: string;
   servicePrice: number;
-  mechanicId: string;
+  Id: string;
   requestedOn: Date;
   deliveredOn?: Date;
   status: string;
   value: string;
+  mechanicName: string;
 };
 
 export type Passwords = {
