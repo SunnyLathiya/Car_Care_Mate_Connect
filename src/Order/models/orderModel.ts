@@ -1,6 +1,7 @@
 import { Schema, Document, model } from "mongoose";
 
 export interface Order extends Document {
+  orderId: string;
   customerId: string;
   customerName: string;
   carName: string;
@@ -9,7 +10,7 @@ export interface Order extends Document {
   serviceName: string;
   servicePrice: number;
   mechanicId: string;
-  mechName: string;
+  mechanicName: string;
   requestedOn: Date;
   deliveredOn?: Date;
   status: string;
@@ -17,6 +18,7 @@ export interface Order extends Document {
 }
 
 const orderSchema: Schema = new Schema({
+  orderId: { type: String },
   customerId: { type: String },
   customerName: { type: String },
   carName: { type: String },
@@ -25,7 +27,7 @@ const orderSchema: Schema = new Schema({
   serviceName: { type: String },
   servicePrice: { type: Number, required: true, min: 0 },
   mechanicId: { type: String },
-  mechName: { type: String },
+  mechanicName: { type: String },
   requestedOn: { type: Date, default: Date.now, required: true },
   deliveredOn: { type: Date },
   status: { type: String, default:"PLACED" },

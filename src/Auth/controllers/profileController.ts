@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../models/userModel";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 
 export const getProfile = async (req: Request, res: Response) => {
   try {
@@ -23,8 +23,6 @@ export const getProfile = async (req: Request, res: Response) => {
 
     const profileDetails = await userModel.findById(userId);
 
-
-
     if (!profileDetails) {
       return res.status(404).json({
         success: false,
@@ -37,7 +35,7 @@ export const getProfile = async (req: Request, res: Response) => {
       message: "Profile retrieved Successfully",
       data: profileDetails,
     });
-    } catch (error: any) {
+  } catch (error: any) {
     console.error(error);
     return res.status(500).json({
       success: false,
@@ -49,12 +47,23 @@ export const getProfile = async (req: Request, res: Response) => {
 
 export const updatedProfile = async (req: Request, res: Response) => {
   try {
-    const { profilePhoto, username, firstName, lastName, email, phoneNumber, address, zipcode, state, country, yourCar, favouriteCar
-       } = req.body;
-    const id =  req.user?.id;
+    const {
+      profilePhoto,
+      username,
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      address,
+      zipcode,
+      state,
+      country,
+      yourCar,
+      favouriteCar,
+    } = req.body;
+    const id = req.user?.id;
 
-    
-    console.log("profileDetails", profilePhoto)
+    console.log("profileDetails", profilePhoto);
 
     const profileDetails = await userModel.findById(id);
 
@@ -80,10 +89,9 @@ export const updatedProfile = async (req: Request, res: Response) => {
 
     const updatedProfile = await profileDetails.save();
 
-    
     const latestProfile = await userModel.findById(id);
-    
-    console.log("object", latestProfile)
+
+    console.log("object", latestProfile);
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
@@ -98,21 +106,20 @@ export const updatedProfile = async (req: Request, res: Response) => {
   }
 };
 
-
 export const updatedPassword = async (req: Request, res: Response) => {
   const { currentPassword, newPassword } = req.body;
-  const userId = req.user?.id
+  const userId = req.user?.id;
 
   try {
     const user = await userModel.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid current password' });
+      return res.status(400).json({ message: "Invalid current password" });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
@@ -120,13 +127,11 @@ export const updatedPassword = async (req: Request, res: Response) => {
     user.password = hashedPassword;
     await user.save();
 
-    res.status(200).json({ message: 'Password updated successfully' });
+    res.status(200).json({ message: "Password updated successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: "Server error" });
   }
 };
-
-
 
 export const deleteAccount = async (req: Request, res: Response) => {
   try {
@@ -140,7 +145,7 @@ export const deleteAccount = async (req: Request, res: Response) => {
       });
     }
 
-    await userModel.findByIdAndDelete(id);
+    await userModel.findByIdAndUpdate(id, { isActive: false}, { new: true });
 
     return res.status(200).json({
       success: true,

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import orderModel, {Order} from '../../Order/models/orderModel';
 import userModel from '../../Auth/models/userModel';
+import mailSender from '../../utils/mailSender';
 
 export const findInProcessOrders = (req: Request, res: Response): void => {
   orderModel.find({
@@ -22,61 +23,12 @@ export const findInProcessOrders = (req: Request, res: Response): void => {
         });
       }
     })
-    .catch((err: any) => {
-      console.log("Find All Placed Orders Error: " + err);
+    .catch((error: any) => {
       res.status(500).json({
-        error: err,
+        message: error.message || "Internal Server Error"
       });
     });
 };
-
-// export const updateOrder = (req: Request, res: Response): void => {
-//   const orderId = req.params.orderId;
-//   const newStatus = req.body.status;
-
-//   orderModel.updateOne(
-//     { _id: orderId },
-//     { $set: { status: newStatus } }
-//   )
-//     .exec()
-//     .then(() => {
-//       orderModel.findOne({ _id: orderId })
-//         .exec()
-//         .then((order: any) => {
-//           const mechId: string = order.mechanicId;
-//           console.log("Mechanic Id: " + mechId);
-//         console.log("===>",mechId);
-//           const updateUserStatus = (status: string) => {
-//             userModel.updateOne(
-//               { _id: mechId },
-//               { $set: { status } }
-//             )
-//               .then(() => {
-//                 console.log(`Member Status: ${status}`);
-//               })
-//               .catch((err: any) => {
-//                 console.log(`Member Status Error: ${err}`);
-//               });
-//           };
-
-//           if (newStatus === "ACCEPTED") {
-//             updateUserStatus("NOT-AVAILABLE");
-//           } else if (newStatus === "COMPLETED" || newStatus === "REJECT") {
-//             updateUserStatus("AVAILABLE");
-//           }
-
-//           res.status(200).json({ message: "Request Updated Successfully" });
-//         })
-//         .catch((err: any) => {
-//           console.log("Find Order Error: " + err);
-//           res.status(500).json({ error: "Internal Server Error" });
-//         });
-//     })
-//     .catch((err: any) => {
-//       console.log("Order Update Error: " + err);
-//       res.status(500).json({ error: "Internal Server Error" });
-//     });
-// };
 
 export const updateOrder = async (req: Request, res: Response): Promise<void> => {
   const orderId = req.params.orderId;
@@ -90,14 +42,13 @@ export const updateOrder = async (req: Request, res: Response): Promise<void> =>
 
     const order: any = await orderModel.findOne({ _id: orderId }).exec();
     const mechId: string = order.mechanicId;
-    console.log("Mechanic Id: " + mechId);
+    const customerId: string = order.customerId;
 
     const updateUserStatus = async (status: string) => {
       await userModel.updateOne(
         { _id: mechId },
         { $set: { status } }
       ).exec();
-      console.log(`Member Status: ${status}`);
     };
 
     if (newStatus === "ACCEPTED") {
@@ -106,9 +57,15 @@ export const updateOrder = async (req: Request, res: Response): Promise<void> =>
       await updateUserStatus("AVAILABLE");
     }
 
+    const user: any = await userModel.findOne({ _id: customerId }).exec();
+    const userEmail: string = user.email;
+
+    const emailTitle = "Order Status Update";
+    const emailBody = `Your order has been updated and is currently in the ${newStatus} state.`;
+    await mailSender(userEmail, emailTitle, emailBody);
+
     res.status(200).json({ message: "Request Updated Successfully" });
-  } catch (err) {
-    console.error("Error updating order:", err);
+  } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -125,10 +82,9 @@ export const findMyOrders = (req: Request, res: Response): void => {
         res.status(200).json({ orders: response });
       }
     })
-    .catch((err: any) => {
-      console.log("Find All Orders Error: " + err);
+    .catch((error: any) => {
       res.status(500).json({
-        error: err,
+        message: error.message || "Internal Server Error"
       });
     });
 };

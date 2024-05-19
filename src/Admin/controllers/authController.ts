@@ -2,37 +2,27 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import userModel from "../../Auth/models/userModel";
 
+
 export const signup = async (req: Request, res: Response) => {
   try {
-    const {
-      mechName,
-      email,
-      password,
-      accountType,
-      phoneNumber,
-    }: {
-      mechName: string;
-      email: string;
-      password: string;
-      accountType: string;
-      phoneNumber: string;
-    } = req.body;
-
-    const isAdmin = req.user && req.user.accountType === "Admin";
-    const userType = isAdmin ? "Mechanic" : accountType;
+    const { mechName, email, password, accountType, phoneNumber } = req.body;
 
     if (!mechName || !email || !password || !phoneNumber) {
       return res.status(400).json({
         success: false,
-        message: "please add all data",
+        message: "Please add all required data",
       });
     }
 
+    const isAdmin = req.user && req.user.accountType === "Admin";
+    const userType = isAdmin ? "Mechanic" : accountType;
+
     function generateRandomID(): string {
-      return Math.floor(100 + Math.random() * 900).toString();
+      return `Mec${Math.floor(100 + Math.random() * 900).toString()}`;
     }
+
     async function isIDUnique(id: string): Promise<boolean> {
-      const existingUser = await userModel.findOne({ userID: id });
+      const existingUser = await userModel.findOne({ id: id });
       return !existingUser;
     }
 
@@ -42,11 +32,10 @@ export const signup = async (req: Request, res: Response) => {
     }
 
     const existingUser = await userModel.findOne({ email });
-
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: "user already exists",
+        message: "User already exists",
       });
     }
 
@@ -56,7 +45,7 @@ export const signup = async (req: Request, res: Response) => {
     } catch (error) {
       return res.status(500).json({
         success: false,
-        message: "error in hashing password",
+        message: "Error in hashing password",
       });
     }
 
@@ -69,17 +58,15 @@ export const signup = async (req: Request, res: Response) => {
       id,
     });
 
-    console.log("user", user);
-
     return res.status(200).json({
       success: true,
-      message: "user created account successfully",
+      message: "User created account successfully",
       user,
     });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({
       success: false,
-      message: "user can not be registered, please try again",
+      message: "User cannot be registered, please try again",
     });
   }
 };

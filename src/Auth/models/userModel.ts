@@ -10,7 +10,7 @@ interface User extends Document {
   accountType: "Admin" | "Customer" | "Mechanic";
   profilePhoto: string;
   phoneNumber: string;
-  orders:string[];
+  orders: string[];
   token?: string | null;
   resetToken?: string | null;
   resetPasswordExpires?: Date | null;
@@ -23,6 +23,7 @@ interface User extends Document {
   country: string;
   yourCar: string[];
   favouriteCar: string[];
+  isActive: boolean;
 }
 
 const userSchema: Schema = new Schema({
@@ -41,7 +42,7 @@ const userSchema: Schema = new Schema({
   username: {
     type: String,
     minLength: 1,
-    maxLength: 70
+    maxLength: 70,
   },
   email: {
     type: String,
@@ -63,7 +64,7 @@ const userSchema: Schema = new Schema({
   phoneNumber: {
     type: String,
     trim: true,
-    match: /^\d{10}$/
+    match: /^\d{10}$/,
   },
   accountType: {
     type: String,
@@ -79,27 +80,29 @@ const userSchema: Schema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Car",
   },
-  orders: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Order",
-  }],
-  status: { 
-    type: String, 
-    default: 'AVAILABLE' 
+  orders: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+    },
+  ],
+  status: {
+    type: String,
+    default: "AVAILABLE",
   },
   token: {
     type: String,
-    maxLength: 1000, 
+    maxLength: 1000,
   },
   resetToken: {
     type: String,
-    maxLength: 1000, 
+    maxLength: 1000,
   },
   resetPasswordExpires: {
     type: Date,
   },
   id: {
-    type: Number,
+    type: String,
   },
   mechName: {
     type: String,
@@ -107,45 +110,56 @@ const userSchema: Schema = new Schema({
     minLength: 3,
     maxLength: 50,
   },
-  carSelected: [{
-    type: String
-  }],
+  carSelected: [
+    {
+      type: String,
+    },
+  ],
   address: {
     type: String,
     trim: true,
     minLength: 1,
     maxLength: 255,
-},
-zipcode: {
+  },
+  zipcode: {
     type: String,
     trim: true,
-    match: /^\d{6}$/
-},
-state: {
-    type: String,
-    trim: true,
-    minLength: 1,
-    maxLength: 30
-},
-country: {
+    match: /^\d{6}$/,
+  },
+  state: {
     type: String,
     trim: true,
     minLength: 1,
-    maxLength: 30
-},
-yourCars: [{
+    maxLength: 30,
+  },
+  country: {
     type: String,
     trim: true,
     minLength: 1,
-    maxLength: 100,
-}],
-favouriteCar: [{
-    type: String,
-    trim: true,
-    minLength: 1,
-    maxLength: 100,
-}],
+    maxLength: 30,
+  },
+  yourCars: [
+    {
+      type: String,
+      trim: true,
+      minLength: 1,
+      maxLength: 100,
+    },
+  ],
+  favouriteCar: [
+    {
+      type: String,
+      trim: true,
+      minLength: 1,
+      maxLength: 100,
+    },
+  ],
+
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 export default mongoose.model<User>("User", userSchema);
-export {User};
+export { User };
