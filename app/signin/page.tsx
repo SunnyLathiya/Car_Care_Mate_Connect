@@ -21,10 +21,8 @@ import { jwtDecode } from "jwt-decode";
 import { useState } from "react";
 import Loader from "@/components/common/loader";
 import { formFieldStyle } from "@/css/formstyle/formfieldstyle";
-
-import { auth, provider } from "@/components/firebase";
-import { signInWithPopup } from "firebase/auth";
-
+import { User } from "../types";
+import imgsignup from "../../public/images/Car-Service.jpeg";
 
 interface LoginFormValues {
   email: string;
@@ -48,15 +46,6 @@ export default function SignInSide() {
     email: "",
     password: "",
   });
-
-  const signINWithGoogle = async () => {
-    try {
-      const result = await signInWithPopup(auth, provider);
-      console.log(result);
-    } catch (error) {
-      console.error("Error signing in with Google:", error);
-    }    
-  }
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
@@ -87,7 +76,7 @@ export default function SignInSide() {
     };
 
     if (!isChecked) {
-      console.log("Please agree to the terms and conditions");
+      setError("Please agree to the terms and conditions")
       return;
     }
 
@@ -107,9 +96,16 @@ export default function SignInSide() {
     }
 
     setLoading(true);
-
     try {
-      const response = await dispatch(login(formData));
+      const user: User = {
+        email: formData.email,
+        password: formData.password,
+        user: undefined,
+        token: "",
+        _id: undefined,
+        data: ""
+      };
+      const response = await dispatch(login(user));
 
       const token = response.payload.token;
       const decodedToken: any = jwtDecode(token);
@@ -147,24 +143,25 @@ export default function SignInSide() {
       <ThemeProvider theme={defaultTheme}>
         <Grid container component="main" sx={{ height: "100vh" }}>
           <CssBaseline />
-          <Grid
-            item
-            xs={false}
-            sm={4}
-            md={7}
-            sx={{
-              mt: "5rem",
-              backgroundImage:
-                "url(https://source.unsplash.com/random?wallpapers)",
-              backgroundRepeat: "no-repeat",
-              backgroundColor: (t) =>
-                t.palette.mode === "light"
-                  ? t.palette.grey[50]
-                  : t.palette.grey[900],
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          />
+          <Grid container component="main" sx={{ height: "100vh" }}>
+      <CssBaseline />
+      <Grid
+        item
+        xs={false}
+        sm={4}
+        md={7}
+        sx={{
+          mt: "5rem",
+          backgroundImage: `url(${imgsignup.src})`,
+          backgroundRepeat: "no-repeat",
+          backgroundColor: (t) =>
+            t.palette.mode === "light"
+              ? t.palette.grey[50]
+              : t.palette.grey[900],
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
           <Grid
             item
             xs={12}
@@ -256,23 +253,6 @@ export default function SignInSide() {
                 >
                   Sign In
                 </Button>
-
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{
-                    mt: 3,
-                    mb: 2,
-                    backgroundColor: "#B85042", // Set background color
-                    color: "white", // Set text color to white
-                    "&:hover": {
-                      backgroundColor: "#974038", // Adjust hover background color
-                    },
-                  }}
-                  onClick={signINWithGoogle}
-                  // disabled={!isChecked}
-                >signinwithgoogle</Button>
                 <Grid container>
                   <Grid item xs>
                     <Link

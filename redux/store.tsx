@@ -37,6 +37,7 @@ import carSlice from './slices/adminSlices/carSlice';
 import serviceSlice from './slices/adminSlices/serviceSlice';
 import adminMechSlice from './slices/adminSlices/adminMechSlice';
 import orderSlice from './slices/adminSlices/orderSlice';
+import cusFunctionsSlice from './slices/customer/cusFunctionsSlice';
 // import orderManageSlice from './slices/mechanicSlices/orderManageSlice';
 
 export const store = configureStore({
@@ -46,6 +47,7 @@ export const store = configureStore({
     service: serviceSlice,
     adminMech: adminMechSlice,
     order: orderSlice,
+    cusFunctions: cusFunctionsSlice,
     // ordermanage: orderManageSlice
   },
 });

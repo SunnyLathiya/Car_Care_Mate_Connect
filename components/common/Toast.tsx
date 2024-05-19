@@ -1,4 +1,3 @@
-"use client"
 import React from 'react'
 import { Bounce, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';

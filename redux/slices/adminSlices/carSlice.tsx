@@ -104,7 +104,8 @@ const carSlice = createSlice({
                 state.error = null;
                 state.success = true;
                 state.cars = action.payload;
-               
+                console.log("action", action);
+                console.log("gfhjkhgjh", action.payload)
             })
             .addCase(getAllCars.rejected, (state, action) => {
                 state.loading = false;

@@ -20,6 +20,7 @@ import { AppDispatch } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import {validateForm, FormErrors} from "../../components/validations/SignupValidation";
 import { formFieldStyle } from "@/css/formstyle/formfieldstyle";
+import { User } from "../types";
 
 interface RegisterFormValues {
   firstName: string;
@@ -74,10 +75,20 @@ export default function SignUpSide() {
       return;
     }
 
-    console.log("Form submitted:", formData);
     router.push("/signin");
 
-    dispatch(registerUser(formData));
+    const user: User = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      user: undefined,
+      token: "",
+      _id: undefined,
+      data: ""
+    };
+
+    dispatch(registerUser(user));
     setFormData({
       firstName: "",
       lastName: "",

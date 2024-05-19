@@ -4,6 +4,7 @@ import { TextField, Button, Typography, Box, Grid, Paper, Avatar, Link, Circular
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Loader from '@/components/common/loader';
 import { ToastError, ToastSuccess } from '@/components/common/Toast';
+import imgsignup from "../../public/images/Car-Service.jpeg";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -54,7 +55,7 @@ const ForgotPassword = () => {
         {loading && <Loader/>}
     
     <Grid container component="main" sx={{ height: '100vh' }} style={{backgroundColor:"#E7E8D1"}}>
-      {/* <Loader/> */}
+     
       <Grid
         item
         xs={false}
@@ -62,7 +63,7 @@ const ForgotPassword = () => {
         md={7}
         sx={{
           mt: '5rem',
-          backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+          backgroundImage: `url(${imgsignup.src})`,
           backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -103,20 +104,20 @@ const ForgotPassword = () => {
               helperText={error}
               sx={{
                 '& .MuiInputLabel-root': {
-                  color: '#A7BEAE', // Default label color
+                  color: '#A7BEAE',
                 },
                 '& .MuiOutlinedInput-root': {
                   '& fieldset': {
-                    borderColor: '#B85042', // Default border color
+                    borderColor: '#B85042',
                   },
                   '&:hover fieldset': {
-                    borderColor: '#B85042', // Border color on hover
+                    borderColor: '#B85042',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#B85042', // Border color when focused
+                    borderColor: '#B85042',
                   },
                   '&.Mui-focused .MuiInputLabel-root': {
-                    color: '#B85042', // Label color when focused
+                    color: '#B85042',
                   },
                 },
               }} 
@@ -127,10 +128,10 @@ const ForgotPassword = () => {
              sx={{
               mt: 3,
               mb: 2,
-              backgroundColor: '#B85042', // Set background color
-              color: 'white', // Set text color to white
+              backgroundColor: '#B85042', 
+              color: 'white', 
               '&:hover': {
-                backgroundColor: '#974038', // Adjust hover background color
+                backgroundColor: '#974038',
               },
              }}
              >
@@ -154,8 +155,6 @@ const ForgotPassword = () => {
       </Grid>
     </Grid>
     </>
-
-
   );
 };
 

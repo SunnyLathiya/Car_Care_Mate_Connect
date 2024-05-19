@@ -1,5 +1,5 @@
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -10,69 +10,77 @@ import {
   Paper,
   TextField,
   Typography,
-} from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { ToastSuccess } from '@/components/common/Toast';
-import Router, { useRouter } from 'next/navigation';
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { ToastSuccess } from "@/components/common/Toast";
+import Router, { useRouter } from "next/navigation";
+import imgsignup from "../../public/images/Car-Service.jpeg";
 
 const ChangePassword = () => {
-
-const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!newPassword || !confirmPassword) {
-      setError('Please enter a new password and confirm password.');
+      setError("Please enter a new password and confirm password.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match.');
+      setError("Passwords do not match.");
       return;
     }
 
-    const token = new URLSearchParams(window.location.search).get('token');
+    const token = new URLSearchParams(window.location.search).get("token");
 
     try {
-      const response = await fetch(`http://localhost:4000/api/v1/changepasswordwithtoken/${token}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newPassword, confirmNewPassword: confirmPassword }),
-      });
+      const response = await fetch(
+        `http://localhost:4000/api/v1/changepasswordwithtoken/${token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            newPassword,
+            confirmNewPassword: confirmPassword,
+          }),
+        }
+      );
 
-      console.log("response",response)
+      console.log("response", response);
 
       if (!response.ok) {
         const data = await response.json();
-        setError(data.error || 'Failed to update password.');
+        setError(data.error || "Failed to update password.");
       } else {
-        ToastSuccess("Password Change Successfully!")
-        router.push("/signin")
+        ToastSuccess("Password Change Successfully!");
+        router.push("/signin");
       }
     } catch (error) {
-      console.error('Error updating password:', error);
-      setError('Failed to update password. Please try again.');
+      console.error("Error updating password:", error);
+      setError("Failed to update password. Please try again.");
     }
   };
 
   const handleNewPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword(e.target.value);
-    setError('');
+    setError("");
   };
 
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setConfirmPassword(e.target.value);
-    setError('');
+    setError("");
   };
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>
+    <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
       <Grid
         item
@@ -80,13 +88,15 @@ const [newPassword, setNewPassword] = useState('');
         sm={4}
         md={7}
         sx={{
-          mt: '5rem',
-          backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
-          backgroundRepeat: 'no-repeat',
+          mt: "5rem",
+          backgroundImage: `url(${imgsignup.src})`,
+          backgroundRepeat: "no-repeat",
           backgroundColor: (t) =>
-            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+            t.palette.mode === "light"
+              ? t.palette.grey[50]
+              : t.palette.grey[900],
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -94,13 +104,13 @@ const [newPassword, setNewPassword] = useState('');
           sx={{
             my: 8,
             mx: 4,
-            mt: '5rem',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            mt: "5rem",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">

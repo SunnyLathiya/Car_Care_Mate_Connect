@@ -28,7 +28,7 @@ const Cars: NextPage<Props> = ({ match, history }) => {
 
     const retrieveCars = async () => {
         try {
-            const response = await fetch("http://localhost:4000/api/v1/admin/findbybrand", {
+            const response = await fetch("http://localhost:4000/api/v1/customer/findbybrand", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -86,8 +86,6 @@ const Cars: NextPage<Props> = ({ match, history }) => {
                     {/* {cars.map((car) =>
                         car.name.toLowerCase().includes(filter.toLowerCase()) && getCarCards(car)
                     )} */}
-                    <h1>fefsg</h1>
-                    <h1>fbdfbd</h1>
                 </Grid>
             </div>
         </div>

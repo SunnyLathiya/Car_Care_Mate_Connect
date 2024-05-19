@@ -35,7 +35,7 @@ const MyOrderComponent: React.FC<MyOrderComponentProps> = ({ status }) => {
     <div>
       <ul>
         <li className={`${styles.step0} ${activeSteps.includes(styles.step1) ? styles.active : ''}`} id={styles.step1}>
-          Placed
+          Initiated
         </li>
         <li className={`${styles.step0} ${activeSteps.includes(styles.step2) ? styles.active : ''} text-center`} id={styles.step2}>
           Pending
@@ -67,7 +67,7 @@ interface Order {
   serviceName: string;
   servicePrice: string;
   requestedOn: string;
-  mechName: string;
+  mechanicName: string;
 }
 
 // Pending, In-Progress, Complated
@@ -78,6 +78,7 @@ const isValidStatus = (status: string): status is MyOrderComponentProps['status'
 const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => void })  => {
   const status = isValidStatus(order.status) ? order.status : 'PLACED';
 
+
   const date: any = moment(order.requestedOn);
   const formattedDate = date.format('DD-MM-YYYY');
   const formattedTime = date.format('HH:mm:ss');
@@ -87,22 +88,20 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
   const handleDownload = () => {
     const htmlContent = document.documentElement.outerHTML;
   
-    // Extract CSS styles from all stylesheets
     const cssStyles = Array.from(document.styleSheets)
       .map((styleSheet) => {
         try {
-          const cssRules = styleSheet.cssRules || []; // Handle potential null or undefined cssRules
+          const cssRules = styleSheet.cssRules || [];
           return Array.from(cssRules)
-            .map((rule) => rule.cssText) // Extract cssText from each rule
-            .join('\n'); // Join all cssText into a single string
+            .map((rule) => rule.cssText) 
+            .join('\n'); 
         } catch (error) {
           console.warn('Failed to extract CSS rules:', error);
-          return ''; // Return empty string in case of error
+          return '';
         }
       })
-      .join('\n'); // Join all extracted CSS styles into a single string
+      .join('\n');
   
-    // Combine HTML content with extracted CSS styles
     const combinedContent = `
       <html>
         <head>
@@ -117,22 +116,17 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
       </html>
     `;
   
-    // Create a Blob with the combined HTML and CSS content
     const blob = new Blob([combinedContent], { type: 'text/html' });
   
-    // Create a URL for the Blob
     const url = URL.createObjectURL(blob);
   
-    // Create a temporary <a> element to trigger the download
     const link = document.createElement('a');
     link.href = url;
     link.download = 'invoice.html';
   
-    // Append the <a> element to the document body and trigger the download
     document.body.appendChild(link);
     link.click();
   
-    // Clean up by removing the <a> element and revoking the URL
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
@@ -150,11 +144,11 @@ const OrderFullDetails =  ({ order, onClose }: { order: Order; onClose: () => vo
           <div className="row">
               <div className="col-7">
                   <span id={styles.heading}> <b>Date:- </b>{formattedDate}</span><br/>
-                  <span id={styles.heading}> <b>Time:- </b>{formattedTime}</span><br/>
+                  <span id={styles.heading}> <b>Order Time:- </b>{formattedTime}</span><br/>
              </div>
               <div className="col-5 pull-right">
                   <span id={styles.heading}> <b>Order No.:-</b>{finalOrderId}</span><br/>
-                  <span id={styles.details}> <b>MechanicName:-</b>{order.mechName}</span>
+                  <span id={styles.details}> <b>MechanicName:-</b>{order?.mechanicName}</span>
               </div>
           </div>      
       </div>      
@@ -224,8 +218,6 @@ const MyBookings = () => {
   const [userD, setUserD] = useState<User | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  // const status = "on the way";
-
   const handleOrderClick = (order: any) => {
     setSelectedOrder(order);
   };
@@ -233,7 +225,6 @@ const MyBookings = () => {
   const handleCloseOrderDetails = () => {
     setSelectedOrder(null);
   };
-  // console.log(userD)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -243,12 +234,15 @@ const MyBookings = () => {
           const user: any = jwtDecode(token);
           setUserD(user);
 
-          console.log(user)
+          console.log("user", user)
 
-          const response = await axios.get(`http://localhost:4000/api/v1/customer/findOrders/${user.id}`);
-          console.log(response.data.orders)
+          const response = await axios.get(`http://localhost:4000/api/v1/customer/findOrders/${user.id}`,{
+             headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          console.log("response", response)
           setOrders(response.data.orders);
-          // console.log("orders", response.data.response);
         } catch (error) {
           console.log(error);
         }
@@ -372,4 +366,3 @@ const renderOrderFullDetails = () => {
 };
 
 export default MyBookings;
-

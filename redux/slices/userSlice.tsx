@@ -136,7 +136,7 @@ export const updateProfile = createAsyncThunk(
       );
 
       ToastSuccess('Profile Updated Successfully!');
-      return response.data;
+      return response.data.profile;
     } catch (error: any) {
       ToastError('Problem in updating profile!');
       return rejectWithValue(error.response?.data || error.message); // Return error message

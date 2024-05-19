@@ -18,15 +18,11 @@ const Profile = () => {
   const { _id } = useSelector((state: RootState) => state.user);
   const router = useRouter();
 
-  console.log("aaaaa", user);
-
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [currentPasswordError, setCurrentPasswordError] = useState("");
   const [file, setFile] = useState<File | null>(null);
-
-  console.log("hyy", _id);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -86,7 +82,7 @@ const Profile = () => {
         return;
       }
 
-      const storageRef = ref( imageDb , `images/${file.name}`);
+      const storageRef = ref(imageDb, `images/${file.name}`);
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);
 
@@ -95,21 +91,23 @@ const Profile = () => {
         profilePhoto: downloadURL,
       }));
 
-      console.log("profilephoto", downloadURL)
-
       ToastSuccess("Image Uploaded successfully.");
     } catch (error) {
       console.error("Error uploading image:", error);
       ToastError("Failed to upload Image.");
     }
   };
-  const handleProfileUpdate = () => {
-    dispatch(updateProfile(formValues as User));
-    console.log("132", formValues);
+
+  const handleProfileUpdate = async () => {
+    try {
+      await dispatch(updateProfile(formValues as User));
+      ToastSuccess("Profile updated successfully");
+    } catch (error) {
+      ToastError("Failed to update profile");
+    }
   };
 
   const authToken = Cookies.get("token");
-  console.log(authToken);
 
   const validateNewPassword = () => {
     if (newPassword.length < 8) {
@@ -150,9 +148,18 @@ const Profile = () => {
 
   const handleDeleteAccount = async () => {
     try {
-      await axios.delete(`http://localhost:4000/api/v1/deleteprofile`, {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
+      const authTokens = Cookies.get("token");
+      console.log(authTokens);
+      await axios.patch(
+        `http://localhost:4000/api/v1/deleteprofile`,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authTokens}`,
+          },
+        }
+      );
       ToastSuccess("Account Deleted Successfully!!");
       Cookies.remove("token");
       router.push("/signup");
@@ -177,10 +184,14 @@ const Profile = () => {
               alt="Profile Picture"
             />
             <span className="font-weight-bold mb-3">
-            <input type="file" onChange={onFileChange} style={{ marginLeft: "100px" }} />            
+              <input
+                type="file"
+                onChange={onFileChange}
+                style={{ marginLeft: "100px" }}
+              />
             </span>
             <span className="mb-3">
-            <button onClick={uploadImage}>upload</button>
+              <button onClick={uploadImage}>upload</button>
             </span>
             <span className="text-black-50">{user?.email}</span>
           </div>
@@ -371,7 +382,6 @@ const Profile = () => {
                 </div>
               )}
             </div>
-
             <div className="position-absolute bottom-0 end-0 mb-4 me-3">
               <button
                 className="btn btn-danger"

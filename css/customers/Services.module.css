@@ -1,4 +1,4 @@
-.container {
+  .container {
     margin-top: 120px;
   }
   
@@ -36,4 +36,51 @@
   .service_card:hover {
     transform: scale(1.1);
   }
+
+  .servicecontainer{
+    margin-top: 100px;
+    margin-bottom: 190px;
+    width: 100%;
+    padding: 30px 40px 40px 35px ;
+  }
+
+  .servicediv{
+    display: flex;
+     justify-content:space-between; 
+     align-items: center;
+  }
   
+  /* styles.module.css */
+
+/* Styles for the "Change Car" button */
+.changeCarButton {
+  background-color: #4CAF50; /* Green background */
+  border: none;
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding */
+  text-align: center; /* Center text */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Display as inline block */
+  font-size: 16px; /* Font size */
+  margin: 4px 2px; /* Margin */
+  cursor: pointer; /* Cursor pointer */
+  border-radius: 5px; /* Border radius */
+}
+
+/* styles.module.css */
+
+/* Styles for the menu button */
+.menuButton {
+  border: none;
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding */
+  margin-right: 20px; /* Right margin */
+  text-align: center; /* Center text */
+  text-decoration: none; /* Remove underline */
+  display: inline-block; /* Display as inline block */
+  font-size: 16px; /* Font size */
+  margin: 4px 2px; /* Margin */
+  cursor: pointer; /* Cursor pointer */
+  border-radius: 5px; /* Border radius */
+}
+
