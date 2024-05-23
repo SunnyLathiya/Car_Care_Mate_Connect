@@ -1,86 +1,79 @@
-  .container {
-    margin-top: 120px;
-  }
-  
-  .action_buttons {
-    margin-top: 0.6rem;
-    margin-bottom: 0.6rem;
-    width: 100%;
-    display: flex;
-    box-sizing: inherit;
-  }
-  
-  .timeline {
-    text-align: left;
-    width: 50%;
-    flex: 0 0 50%;
-    max-width: 50%;
-  }
-  
-  .buy_button {
-    border-radius: 20px;
-    box-shadow: 0px 4px 12px 0px #ddd;
-    color: #fff;
-    cursor: pointer;
-    background-color: #cd2f2a;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    border-color: #cd2f2a;
-    width: 50%;
-    right: 10px;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid transparent;
-    margin-left: 100px;
-  }
-  
-  .service_card:hover {
-    transform: scale(1.1);
-  }
-
-  .servicecontainer{
-    margin-top: 100px;
-    margin-bottom: 190px;
-    width: 100%;
-    padding: 30px 40px 40px 35px ;
-  }
-
-  .servicediv{
-    display: flex;
-     justify-content:space-between; 
-     align-items: center;
-  }
-  
-  /* styles.module.css */
-
-/* Styles for the "Change Car" button */
-.changeCarButton {
-  background-color: #4CAF50; /* Green background */
-  border: none;
-  color: white; /* White text */
-  padding: 10px 20px; /* Padding */
-  text-align: center; /* Center text */
-  text-decoration: none; /* Remove underline */
-  display: inline-block; /* Display as inline block */
-  font-size: 16px; /* Font size */
-  margin: 4px 2px; /* Margin */
-  cursor: pointer; /* Cursor pointer */
-  border-radius: 5px; /* Border radius */
+.container {
+  margin-top: 120px;
 }
 
-/* styles.module.css */
+.action_buttons {
+  margin-top: 0.6rem;
+  margin-bottom: 0.6rem;
+  width: 100%;
+  display: flex;
+  box-sizing: inherit;
+}
 
-/* Styles for the menu button */
+.timeline {
+  text-align: left;
+  width: 50%;
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.buy_button {
+  border-radius: 20px;
+  box-shadow: 0px 4px 12px 0px #ddd;
+  color: #fff;
+  cursor: pointer;
+  background-color: #cd2f2a;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-color: #cd2f2a;
+  width: 50%;
+  right: 10px;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid transparent;
+  margin-left: 100px;
+}
+
+.service_card:hover {
+  transform: scale(1.1);
+}
+
+.servicecontainer {
+  margin-top: 100px;
+  margin-bottom: 190px;
+  width: 100%;
+  padding: 30px 40px 40px 35px;
+}
+
+.servicediv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.changeCarButton {
+  background-color: #4caf50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
 .menuButton {
   border: none;
-  color: white; /* White text */
-  padding: 10px 20px; /* Padding */
-  margin-right: 20px; /* Right margin */
-  text-align: center; /* Center text */
-  text-decoration: none; /* Remove underline */
-  display: inline-block; /* Display as inline block */
-  font-size: 16px; /* Font size */
-  margin: 4px 2px; /* Margin */
-  cursor: pointer; /* Cursor pointer */
-  border-radius: 5px; /* Border radius */
+  color: white;
+  padding: 10px 20px;
+  margin-right: 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
 }
-

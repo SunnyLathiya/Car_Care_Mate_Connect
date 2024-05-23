@@ -1,25 +1,23 @@
 "use client";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import { Car, Service } from "@/app/types";
+import Axios from "@/redux/APIs/Axios";
 
 export const allBrands = createAsyncThunk("brands/allbrands", async () => {
   try {
     const token = Cookies.get("token");
-    const response = await axios.get(
-      `http://localhost:4000/api/v1/customer/findallbrands`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const response = await Axios.get(`/customer/findallbrands`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return response.data;
   } catch (error: any) {
-    toast.error(" Error in Order page!");
+    ToastError(" Error in Order page!")
     throw (error as AxiosError).response?.data || error.message;
   }
 });
@@ -28,14 +26,16 @@ export const fetchCarsByBrand = createAsyncThunk(
   "cars/fetchCarsByBrand",
   async (brand: string, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
-        'http://localhost:4000/api/v1/customer/findbybrand',
-        { brand }
-      );
+    const token = Cookies.get("token");
+      const response = await Axios.post("/customer/findbybrand", { brand }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return response.data.cars;
     } catch (error: any) {
-      toast.error("Error fetching cars!");
-      return rejectWithValue(error.response?.data || error.message);
+      ToastError("Error fetching cars!")
+      return rejectWithValue(error.response?.data.cars || error.message);
     }
   }
 );
@@ -66,37 +66,34 @@ const CusFunctionsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(allBrands.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-      console.log("hello.........")
-    })
-    .addCase(allBrands.fulfilled, (state, action) => {
-      state.loading = false;
-      state.error = null;
-      state.brands = action.payload;
-    })
-    .addCase(allBrands.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.error.message || "Failed to fetch cars";
-    })
-    .addCase(fetchCarsByBrand.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-      console.log("111")
-    })
-    .addCase(fetchCarsByBrand.fulfilled, (state, action) => {
-      state.loading = false;
-      state.cars = action.payload;
-      console.log("222")
-    })
-    .addCase(fetchCarsByBrand.rejected, (state, action) => {
-      state.loading = false;
-      state.error = action.payload as string;
-      console.log("333")
-    });
+      .addCase(allBrands.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(allBrands.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.brands = action.payload;
+      })
+      .addCase(allBrands.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch cars";
+      })
+      .addCase(fetchCarsByBrand.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCarsByBrand.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cars = action.payload;
+
+        console.log("gfchjbknm", action.payload)
+      })
+      .addCase(fetchCarsByBrand.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
 export default CusFunctionsSlice.reducer;
-

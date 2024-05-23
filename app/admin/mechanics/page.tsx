@@ -70,11 +70,8 @@ const Mechanic: React.FC<Props> = () => {
     }
   };
 
-
-  // console.log(mechanicsList)
   useEffect(() => {
     dispatch(getAllMechanics());
-    // return () => {dispatch(getAllAvailableMechanics(undefined));}
   }, [dispatch]);
 
 

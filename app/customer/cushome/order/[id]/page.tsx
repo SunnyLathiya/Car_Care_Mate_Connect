@@ -81,8 +81,19 @@ const Order: React.FC = () => {
   };
 
   const getCar = () => {
+
+    const token = Cookies.get("token");
+    if (!token) {
+      ToastError("Authentication token is missing");
+      return;
+    }
+  
     axios
-      .get(`http://localhost:4000/api/v1/customer/findbycarid/${carSelected}`)
+      .get(`http://localhost:4000/api/v1/customer/findbycarid/${carSelected}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then((response) => {
         setCar(response.data.response);
       })
@@ -90,6 +101,7 @@ const Order: React.FC = () => {
         ToastError(error.message);
       });
   };
+  
 
   const onSubmit = (data: any) => {
     if (!user || !service || !car) return;
@@ -114,8 +126,8 @@ const Order: React.FC = () => {
         orderData
       )
       .then((response) => {
-        ToastSuccess("New Order Created Successfully");
-        router.push("/customer/mybookings");
+        console.log(response.data)
+        window.location.href = response.data.url;
         setLoading(false);
       })
       .catch((error: any) => {

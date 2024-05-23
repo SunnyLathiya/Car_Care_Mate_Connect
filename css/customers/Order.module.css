@@ -1,31 +1,28 @@
 .container {
+  margin-bottom: 80px;
+  margin-left: 30px;
+}
 
-    margin-bottom: 80px;
-    margin-left: 30px;
-  }
-  
-  .summaryTitle {
-    background-color: #B85042;
-    width: 98%;
-    text-align: center;
-    padding: 5px;
-    border-radius: 10px;
-    color: white;
-  }
-  
-  .bookingcard {
-    margin-left: 20px;
-    padding: 20px;
-  }
-  
-  .titleSubHeading {
-    font-size: 24px;
-    text-align: center;
-    text-decoration-line: underline;
-  }
-  
+.summaryTitle {
+  background-color: #b85042;
+  width: 98%;
+  text-align: center;
+  padding: 5px;
+  border-radius: 10px;
+  color: white;
+}
 
-  /* YourComponent.module.css */
+.bookingcard {
+  margin-left: 20px;
+  padding: 20px;
+}
+
+.titleSubHeading {
+  font-size: 24px;
+  text-align: center;
+  text-decoration-line: underline;
+}
+
 
 .placeOrderButton {
   margin-top: 20px;
@@ -36,18 +33,16 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: #B85042; /* Darker blue on hover */
+    background-color: #b85042;
   }
 
-  /* Focus effect */
   &:focus {
-    outline: none; /* Remove default focus outline */
-    box-shadow: 0 0 0 0.2rem #B85042; /* Add focus shadow */
+    outline: none;
+    box-shadow: 0 0 0 0.2rem #b85042;
   }
 
-  /* Disabled state */
   &:disabled {
-    background-color: #B85042; /* Light blue for disabled button */
+    background-color: #b85042;
     cursor: not-allowed;
   }
 }

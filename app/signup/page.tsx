@@ -82,6 +82,7 @@ export default function SignUpSide() {
       lastName: formData.lastName,
       email: formData.email,
       password: formData.password,
+      confirmPassword: formData.confirmPassword,
       user: undefined,
       token: "",
       _id: undefined,

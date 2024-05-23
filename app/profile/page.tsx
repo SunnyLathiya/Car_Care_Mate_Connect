@@ -9,19 +9,16 @@ import Cookies from "js-cookie";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-// import { storage } from "@/components/firebase";
 import { imageDb } from "@/components/firebase";
 import { User } from "../types";
 
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.user);
-  const { _id } = useSelector((state: RootState) => state.user);
   const router = useRouter();
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
-  const [currentPasswordError, setCurrentPasswordError] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
   const dispatch: AppDispatch = useDispatch();
@@ -81,7 +78,6 @@ const Profile = () => {
       if (!file) {
         return;
       }
-
       const storageRef = ref(imageDb, `images/${file.name}`);
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);

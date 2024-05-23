@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import AdminHome from "@/components/admin/AdminHome";
 import Loader from "@/components/common/loader";
+import Notification from "@/components/Notification";
 
 interface Props {
   children: React.ReactNode;
@@ -28,15 +28,14 @@ export default function Layout({ children }: Props) {
     fetchAccountType();
   }, []);
 
-  if (accountType !== "Admin") {
+  if (accountType !== "Customer") {
     return <Loader />;
   }
 
   return (
     <>
       {children}
-      {accountType === "Admin" && <AdminHome />}
+      <Notification/>
     </>
   );
-  
 }

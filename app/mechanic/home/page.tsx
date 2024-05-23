@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
 import { allorders } from '@/redux/slices/adminSlices/orderSlice';
+import Notification from '@/components/Notification';
 
 interface CardProps {
   title: string;
@@ -26,6 +27,7 @@ const Card: React.FC<CardProps> = ({ title, count, icon }:any) => {
 };
 
 const page: React.FC = () => {
+  const [fcmToken, setFcmToken] = useState<string | null>(null);
   const {orders} = useSelector((state: any) => state.order)
   const dispatch: any = useDispatch();
 
@@ -44,12 +46,17 @@ const page: React.FC = () => {
   const processOrder = orders?.filter((order: any) => order.mechanicId === `${mechanicId}` && order.status === "ACCEPTED").length;
 
 
+
+
   useEffect(() => {
     dispatch(allorders())
   }, [dispatch]);
+
     
   return (
+
     <div style={{ minHeight:"200vh", backgroundColor:"#E7E8D1", overflowX:"hidden"}}>
+      <Notification/>
     <hr />
     <div style={{marginTop:"150px", textAlign: "center"}}>
     <hr />

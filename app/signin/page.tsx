@@ -24,6 +24,45 @@ import { formFieldStyle } from "@/css/formstyle/formfieldstyle";
 import { User } from "../types";
 import imgsignup from "../../public/images/Car-Service.jpeg";
 
+import { getMessaging, getToken } from "firebase/messaging";
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBV1houUWoiTApwYId-Gwa23uoK42vEywY",
+  authDomain: "carservices-ac00c.firebaseapp.com",
+  projectId: "carservices-ac00c",
+  storageBucket: "carservices-ac00c.appspot.com",
+  messagingSenderId: "1042279475181",
+  appId: "1:1042279475181:web:3839e39010f73502b2a9e4",
+  measurementId: "G-49V8B3EEQV",
+};
+
+const app = initializeApp(firebaseConfig);
+const messaging = getMessaging(app);
+
+const requestForToken = async () => {
+  try {
+    const serviceWorkerRegistration = await navigator.serviceWorker.register(
+      "/firebase-messaging-sw.js"
+    );
+    const currentToken = await getToken(messaging, {
+      vapidKey:
+        "BHCIBPG7bC1J4e9PxKAxHWvFIS3UIxDOcOjG25Zs0JcVvxwPz2nkwcqCGvMj91LlFPXdPzlTs56jngkjkLdn80M",
+      serviceWorkerRegistration,
+    });
+
+    if (currentToken) {
+      return currentToken;
+    } else {
+      console.log("No registration token available");
+      return null;
+    }
+  } catch (err) {
+    console.error("Error while registering token", err);
+    return null;
+  }
+};
+
 interface LoginFormValues {
   email: string;
   password: string;
@@ -76,7 +115,7 @@ export default function SignInSide() {
     };
 
     if (!isChecked) {
-      setError("Please agree to the terms and conditions")
+      console.log("Please agree to the terms and conditions");
       return;
     }
 
@@ -97,14 +136,23 @@ export default function SignInSide() {
 
     setLoading(true);
     try {
+      const fcmToken = await requestForToken();
+
       const user: User = {
         email: formData.email,
         password: formData.password,
+        fcmToken: fcmToken || "",
         user: undefined,
         token: "",
         _id: undefined,
-        data: ""
+        data: "",
       };
+
+      console.log("fffffffffff", fcmToken);
+      if (fcmToken) {
+        user.fcmToken = fcmToken;
+      }
+
       const response = await dispatch(login(user));
 
       const token = response.payload.token;
@@ -143,25 +191,23 @@ export default function SignInSide() {
       <ThemeProvider theme={defaultTheme}>
         <Grid container component="main" sx={{ height: "100vh" }}>
           <CssBaseline />
-          <Grid container component="main" sx={{ height: "100vh" }}>
-      <CssBaseline />
-      <Grid
-        item
-        xs={false}
-        sm={4}
-        md={7}
-        sx={{
-          mt: "5rem",
-          backgroundImage: `url(${imgsignup.src})`,
-          backgroundRepeat: "no-repeat",
-          backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      />
+          <Grid
+            item
+            xs={false}
+            sm={4}
+            md={7}
+            sx={{
+              mt: "5rem",
+              backgroundImage: `url(${imgsignup.src})`,
+              backgroundRepeat: "no-repeat",
+              backgroundColor: (t) =>
+                t.palette.mode === "light"
+                  ? t.palette.grey[50]
+                  : t.palette.grey[900],
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
           <Grid
             item
             xs={12}
@@ -243,10 +289,10 @@ export default function SignInSide() {
                   sx={{
                     mt: 3,
                     mb: 2,
-                    backgroundColor: "#B85042", // Set background color
-                    color: "white", // Set text color to white
+                    backgroundColor: "#B85042", 
+                    color: "white", 
                     "&:hover": {
-                      backgroundColor: "#974038", // Adjust hover background color
+                      backgroundColor: "#974038",
                     },
                   }}
                   disabled={!isChecked}

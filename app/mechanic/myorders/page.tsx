@@ -1,39 +1,45 @@
-"use client"
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
-import {jwtDecode} from "jwt-decode";
+"use client";
+import React, { useEffect, forwardRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import MaterialTable from "material-table";
-import { Add, Check, Clear, Delete, ChevronRight, Edit, ArrowUpward, Search, FirstPage, LastPage, ChevronLeft } from "@mui/icons-material";
+import {
+  Add,
+  Check,
+  Clear,
+  Delete,
+  ChevronRight,
+  Edit,
+  ArrowUpward,
+  Search,
+  FirstPage,
+  LastPage,
+  ChevronLeft,
+  ArrowDownward,
+} from "@mui/icons-material";
+import Loader from "@/components/common/loader";
+import { fetchOrders } from "@/redux/slices/mechanicSlices/orderManageSlice";
+import { AppDispatch, RootState } from "@/redux/store";
+import { Order } from "@/app/types";
+import { ToastError } from "@/components/common/Toast";
 
 const MyOrders: React.FC = () => {
-  const [orders, setOrders] = useState<any[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const { mechanicorders, loading, error } = useSelector(
+    (state: RootState) => state.ordermanage
+  );
 
-  
   useEffect(() => {
-    const fetchOrders = async () => {
-      const token: string | undefined = Cookies.get("token");
-      if (token) {
-        try {
-          const user: any = jwtDecode(token);
-          const response = await axios.get(`http://localhost:4000/api/v1/mechanic/findmyorders/${user.id}`);
-          setOrders(response.data.orders);
+    dispatch(fetchOrders());
+  }, [dispatch]);
 
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        console.error("Token is undefined");
-      }
-    };
-
-    fetchOrders();
-  }, []);
-
-
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
 
   const columns = [
-    { title: "OrderId", field: "_id" },
+    { title: "OrderId", field: "orderId" },
     { title: "Customer Name", field: "customerName" },
     { title: "Car Name", field: "carName" },
     { title: "Car Number", field: "carNumber" },
@@ -43,46 +49,68 @@ const MyOrders: React.FC = () => {
     { title: "Status", field: "status" },
   ];
 
+  if (loading) {
+    return <Loader />;
+  }
+
+  const enhancedAllOrders = mechanicorders?.map(
+    (order: Order, index: number) => ({ ...order, tableData: { id: index } })
+  );
+
   return (
-    <div style={{marginTop:"70px", marginBottom:"20px", marginLeft:"200px"}}>
+    (loading ? (<Loader/>) : (
+      <div
+      style={{marginTop: "70px", marginBottom: "182px", marginLeft: "200px" }}
+    >
       <MaterialTable
-        title="MY ORDERS DATA"
+        title = "MY ORDERS DATA"
         columns={columns}
-        data={orders}
+        data={enhancedAllOrders}
         icons={{
-          Add: () => <Add style={{ color: '#B85042' }} />,
-          Check: () => <Check style={{ color: '#B85042' }} />,
-          Clear: () => <Clear style={{ color: '#B85042' }} />,
-          Delete: () => <Delete style={{ color: '#B85042' }} />,
-          DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
-          Edit: () => <Edit style={{ color: '#B85042' }} />,
-          Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
-          Filter: () => <Search />,
-          FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
-          LastPage: () => <LastPage style={{ color: '#B85042' }} />,
-          NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
-          PreviousPage: () => <ChevronLeft style={{ color: '#B85042' }} />,
-          ResetSearch: () => <Clear style={{ color: '#B85042' }} />,
-          Search: () => <Search style={{ color: '#B85042' }} />,
-          SortArrow: () => <ArrowUpward/>,
+          Add: forwardRef(() => <Add style={{ color: "#B85042" }} />),
+          Clear: forwardRef(() => <Clear style={{ color: "#B85042" }} />),
+          Check: forwardRef(() => <Check style={{ color: "#B85042" }} />),
+          Delete: forwardRef(() => <Delete style={{ color: "#B85042" }} />),
+          DetailPanel: forwardRef(() => (
+            <ChevronRight style={{ color: "#B85042" }} />
+          )),
+          Edit: forwardRef(() => <Edit style={{ color: "#B85042" }} />),
+          Export: forwardRef(() => (
+            <ArrowUpward style={{ color: "#B85042" }} />
+          )),
+          Filter: forwardRef(() => <Search />),
+          FirstPage: forwardRef(() => (
+            <FirstPage style={{ color: "#B85042" }} />
+          )),
+          LastPage: forwardRef(() => <LastPage style={{ color: "#B85042" }} />),
+          NextPage: forwardRef(() => (
+            <ChevronRight style={{ color: "#B85042" }} />
+          )),
+          PreviousPage: forwardRef(() => (
+            <ChevronLeft style={{ color: "#B85042" }} />
+          )),
+          ResetSearch: forwardRef(() => <Clear style={{ color: "#B85042" }} />),
+          Search: forwardRef(() => <Search style={{ color: "#B85042" }} />),
+          SortArrow: forwardRef(() => <ArrowDownward />),
         }}
         options={{
           headerStyle: {
             backgroundColor: "#B85042",
             color: "#FFF",
-            zIndex:"0",
+            zIndex: "0",
           },
           actionsCellStyle: {
             backgroundColor: "#E7E8D1",
           },
           rowStyle: {
             backgroundColor: "#E7E8D1",
-            border: '1px solid #A7BEAE'
+            border: "1px solid #A7BEAE",
           },
           exportButton: true,
         }}
       />
     </div>
+    ) )
   );
 };
 

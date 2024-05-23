@@ -17,9 +17,9 @@
 }
 
 .chatbot {
-  width: 100%; 
-  height: 100%; 
-  overflow-y: auto; 
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
   padding: 15px;
 }
 
@@ -76,7 +76,7 @@
 }
 
 .toggleButton {
-  position: absolute; /* Position relative to chatbot container */
+  position: absolute;
   bottom: 5px;
   right: 5px;
   padding: 8px 15px;

@@ -29,7 +29,7 @@ import {
   SaveAlt,
   Search,
 } from "@mui/icons-material";
-import { ToastError } from "@/components/common/Toast";
+import { ToastError, ToastSuccess } from "@/components/common/Toast";
 
 function Cars() {
   const { cars, loading, error } = useSelector((state: RootState) => state.car);
@@ -39,26 +39,18 @@ function Cars() {
     dispatch(getAllCars());
   }, [dispatch]);
   const handleRowAdd = async (newRow: Car) => {
-    try {
       if (!newRow.name || !newRow.brand) {
         ToastError("Name and brand are required.")
         throw new Error("Name and brand are required.");
       }
       await dispatch(addCar(newRow));
       ToastSuccess("Car added successfully!");
-      console.log("error", error)
-    } catch (error: any) {
-      ToastError("An error occurred while adding the car.");
-      console.log("ijncijncijncijwn", error)
-    }
   };
   const handleRowDelete = async (oldRow: Car) => {
     try {
       await dispatch(deleteCar(oldRow._id));
-      ToastSuccess("Car deleted successfully!");
     } catch (error: any) {
-        ToastError("An error occurred while deleting the car.");
-        console.log("Error deleting car:", error);
+      ToastError("An error occurred while deleting the car.");
     }
   };
 
@@ -67,7 +59,7 @@ function Cars() {
       try {
         await dispatch(updateCar(newRow));
       } catch (error) {
-        console.error("Error occurred while updating car:", error);
+        ToastError("Error occurred while updating car!")
       }
     }
   };
@@ -81,6 +73,7 @@ function Cars() {
     ...car,
     tableData: { id: index },
   }));
+  
 
   return (
     <>
@@ -137,7 +130,5 @@ function Cars() {
 }
 
 export default Cars;
-function ToastSuccess(arg0: string) {
-  throw new Error("Function not implemented.");
-}
+
 

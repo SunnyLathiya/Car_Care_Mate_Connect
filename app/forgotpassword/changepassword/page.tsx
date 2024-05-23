@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { ToastSuccess } from "@/components/common/Toast";
-import Router, { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import imgsignup from "../../public/images/Car-Service.jpeg";
 
 const ChangePassword = () => {

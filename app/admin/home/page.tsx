@@ -4,6 +4,7 @@ import {
   findCompletedOrders,
   findCompletedOrdersProfit,
 } from "@/redux/slices/adminSlices/orderSlice";
+import styles from '@/css/admin/AdminHome.module.css'
 import { AppDispatch, RootState } from "@/redux/store";
 import {
   FaCartArrowDown,
@@ -28,22 +29,13 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ title, count, icon }: any) => {
   return (
-    <div
-      style={{
-        width: "250px",
-        height: "150px",
-        padding: "20px",
-        backgroundColor: "#ffffff",
-        borderRadius: "8px",
-        boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-      }}
-    >
+    <div className={styles.cardContainer}>
       {icon}
       <hr />
-      <h2 style={{ fontSize: "18px", marginBottom: "10px", color: "#A7BEAE" }}>
+      <h2 className={styles.title}>
         {title}
       </h2>
-      <p style={{ fontSize: "24px", fontWeight: "bold", color: "#B85042" }}>
+      <p className={styles.count}>
         {count}
       </p>
     </div>
@@ -54,38 +46,30 @@ const page: React.FC = () => {
   const order: any = useSelector((state: RootState) => state.order);
   const peoples: any = useSelector((state: RootState) => state.user);
 
-  console.log("7777", order);
-
   const dispatch: AppDispatch = useDispatch();
   useEffect(() => {
-    // dispatch(findCompletedOrders());
     dispatch(findCompletedOrdersProfit());
     dispatch(allorders());
     dispatch(allUsers());
   }, [dispatch]);
 
-  // const totalcomplatedorder = order?.completedOrders;
 
-  const totalcomplatedorder = Array.isArray(peoples?.user)?
-  order?.orders?.filter(
-    (item: { status: string }) => item.status === "COMPLATED"
-  ).length
-: 0;
+  const totalcomplatedorder = Array.isArray(peoples?.user)
+    ? order?.orders?.filter(
+        (item: { status: string }) => item.status === "COMPLATED"
+      ).length
+    : 0;
 
-const PENDING = Array.isArray(peoples?.user)?
-order?.orders?.filter(
-  (item: { status: string }) => item.status === "PENDING"
-).length
-: 0;
-
-  console.log("pending", PENDING)
-
-  console.log("totalcomplatedorder", totalcomplatedorder)
+  const PENDING = Array.isArray(peoples?.user)
+    ? order?.orders?.filter(
+        (item: { status: string }) => item.status === "PENDING"
+      ).length
+    : 0;
 
 
   const totalorders = order?.orders?.length;
-  const InProcessOrders = Array.isArray(peoples?.user)?
-      order?.orders?.filter(
+  const InProcessOrders = Array.isArray(peoples?.user)
+    ? order?.orders?.filter(
         (item: { status: string }) => item.status === "IN-PROCESS"
       ).length
     : 0;
@@ -94,7 +78,6 @@ order?.orders?.filter(
         (item: { status: string }) => item.status === "PLACED"
       ).length
     : 0;
-  // const totalCustomer = peoples?.user?.filter((item: {accountType: string}) => item.accountType === "Customer")?.length || 0;
   const totalCustomer = Array.isArray(peoples?.user)
     ? peoples.user.filter(
         (item: { accountType: string }) => item.accountType === "Customer"
@@ -123,34 +106,20 @@ order?.orders?.filter(
 
   return (
     <div
-      style={{
-        minHeight: "200vh",
-        backgroundColor: "#E7E8D1",
-        marginBottom: 0,
-        overflowX: "hidden",
-        paddingBottom:"100px"
-      }}
+      className={styles.mainContainer}
     >
       <hr />
-      <div style={{ marginTop: "150px", textAlign: "center" }}>
+      <div className={styles.containerTitle}>
         <hr />
         <hr />
         <h1>WELCOME ADMIN</h1>
         <h1>
           Your Total Earnings:
-          {0.2 * order.totalProfit.totalServicePrice}Rs.
+          {(0.2 * order.totalProfit.totalServicePrice).toFixed(2)} Rs.
         </h1>
         <hr />
         <hr />
-        <div
-          style={{
-            marginLeft: "180px",
-            display: "flex",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: "20px",
-          }}
-        >
+        <div className={styles.card}>
           <Card
             title="Total Orders"
             count={totalorders}

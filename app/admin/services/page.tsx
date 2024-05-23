@@ -54,27 +54,15 @@ function Services() {
   };
 
   const handleRowDelete = async (oldRow: ServiceData) => {
-    try {
       await dispatch(deleteService(oldRow._id));
       ToastSuccess("Service deleted successfully!");
-    } catch (error) {
-      console.error('Error occurred while deleting service:', error);
-      ToastError('Failed to delete service');
-    }
   };
 
   const handleRowUpdate = async (newRow: ServiceData, oldRow: ServiceData | undefined) => {
     if (oldRow) {
-      try {
         await dispatch(updateService(newRow));
-        ToastSuccess("Service updated successfully!");
-      } catch (error) {
-        console.error('Error occurred while updating car:', error); 
-        ToastError('Failed to update service');       
-      }
     }
   };
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;

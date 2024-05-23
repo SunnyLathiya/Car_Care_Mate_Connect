@@ -1,10 +1,12 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { forwardRef, useEffect } from "react";
 import MaterialTable, { Column } from "material-table";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-import { Add, Check, Clear, Delete, ChevronRight, Edit, ArrowUpward, Search, FirstPage, LastPage, ChevronLeft } from "@mui/icons-material";
+import { Add, Check, Clear, Delete, ChevronRight, Edit, ArrowUpward, Search, FirstPage, LastPage, ChevronLeft, ArrowDownward } from "@mui/icons-material";
+import { findMyOrders, updateOrder } from "@/redux/slices/mechanicSlices/orderManageSlice";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { useSelector } from "react-redux";
+import Loader from "@/components/common/loader";
 
 interface Order {
   tableData: any;
@@ -19,30 +21,14 @@ interface Order {
 }
 
 const FindOrders: React.FC = () => {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [userD, setUserD] = useState<any>();
+  const dispatch = useDispatch<AppDispatch>();
+  const { allOrders, loading, error } = useSelector((state: any) => state.ordermanage);
+
+  console.log("aaaa", allOrders)
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      const token: string | undefined = Cookies.get("token");
-      console.log(token)
-      if (token) {
-        try {
-          const user: any = jwtDecode(token);
-          console.log(user)
-          setUserD(user);
-          const response = await axios.get(`http://localhost:4000/api/v1/mechanic/findInprocessorders/${user.id}`);
-          setOrders(response.data.response);
-        } catch (error) {
-          console.log(error);
-        }
-      } else {
-        console.error("Token is undefined");
-      }
-    };
-
-    fetchOrders();
-  }, []);
+    dispatch(findMyOrders());
+  }, [dispatch]);
 
   const dynamicMechanicsLookUp = {
     ACCEPTED: "ACCEPTED",
@@ -51,7 +37,7 @@ const FindOrders: React.FC = () => {
   };
 
   const columns: Column<Order>[] = [
-    { title: "OrderId", field: "_id", editable: "never" },
+    { title: "OrderId", field: "orderId", editable: "never" },
     { title: "Customer Name", field: "customerName", editable: "never" },
     { title: "Car Name", field: "carName", editable: "never" },
     { title: "Car Number", field: "carNumber", editable: "never" },
@@ -62,50 +48,47 @@ const FindOrders: React.FC = () => {
   ];
 
   const handleRowUpdate = async (newData: Order, oldData: Order | undefined): Promise<void> => {
-    try {
-      const res = await axios.patch(`http://localhost:4000/api/v1/mechanic/updateorder/${newData._id}`, { status: newData.status });
-      const dataUpdate = [...orders];
-      const index = oldData ? oldData.tableData.id : 0;
-      dataUpdate[index] = newData;
-      setOrders([...dataUpdate]);
-    } catch (error) {
-      console.error("Update failed! Server error");
-    }
+    dispatch(updateOrder({ id: newData._id, status: newData.status }));
   };
 
+  const enhancedAllOrders = allOrders?.map((order: Order, index: number) => ({ ...order, tableData: { id: index } }))
 
+  
   return (
-    <div className="cars_container" style={{marginTop:"70px", marginLeft:"200px"}}>
-      {orders?.length ? (
+
+    <div className="cars_container" style={{ marginTop: "70px", marginLeft: "200px" }}>
+      {loading ? (
+        <Loader />
+      ) : allOrders?.length ? (
         <MaterialTable
           title="IN PROCESS ORDERS DATA"
           columns={columns}
-          data={orders}
+          data={enhancedAllOrders}
           editable={{
             onRowUpdate: handleRowUpdate,
           }}
           icons={{
-            Add: () => <Add style={{ color: '#B85042' }} />,
-            Check: () => <Check style={{ color: '#B85042' }} />,
-            Clear: () => <Clear style={{ color: '#B85042' }} />,
-            Delete: () => <Delete style={{ color: '#B85042' }} />,
-            DetailPanel: () => <ChevronRight style={{ color: '#B85042' }} />,
-            Edit: () => <Edit style={{ color: '#B85042' }} />,
-            Export: () => <ArrowUpward style={{ color: '#B85042' }} />,
-            Filter: () => <Search />,
-            FirstPage: () => <FirstPage style={{ color: '#B85042' }} />,
-            LastPage: () => <LastPage style={{ color: '#B85042' }} />,
-            NextPage: () => <ChevronRight style={{ color: '#B85042' }} />,
-            PreviousPage: () => <ChevronLeft style={{ color: '#B85042' }} />,
-            ResetSearch: () => <Clear style={{ color: '#B85042' }} />,
-            Search: () => <Search style={{ color: '#B85042' }} />,
-            SortArrow: () => <ArrowUpward/>,
+            Add: forwardRef(() => <Add style={{ color: '#B85042' }} />),
+            Clear: forwardRef(() => <Clear style={{ color: '#B85042' }} />),
+            Check: forwardRef(() => <Check style={{ color: '#B85042' }} />),
+            Delete: forwardRef(() => <Delete style={{ color: '#B85042' }} />),
+            DetailPanel: forwardRef(() => <ChevronRight style={{ color: '#B85042' }} />),
+            Edit: forwardRef(() => <Edit style={{ color: '#B85042' }} />),
+            Export: forwardRef(() => <ArrowUpward style={{ color: '#B85042' }} />),
+            Filter: forwardRef(() => <Search />),
+            FirstPage: forwardRef(() => <FirstPage style={{ color: '#B85042' }} />),
+            LastPage: forwardRef(() => <LastPage style={{ color: '#B85042' }} />),
+            NextPage: forwardRef(() => <ChevronRight style={{ color: '#B85042' }} />),
+            PreviousPage: forwardRef(() => <ChevronLeft style={{ color: '#B85042' }} />),
+            ResetSearch: forwardRef(() => <Clear style={{ color: '#B85042' }} />),
+            Search: forwardRef(() => <Search style={{ color: '#B85042' }} />),
+            SortArrow: forwardRef(() => <ArrowDownward />),
           }}
           options={{
             headerStyle: {
               backgroundColor: "#B85042",
               color: "#FFF",
-              zIndex:"0",
+              zIndex: "0",
             },
             actionsCellStyle: {
               backgroundColor: "#E7E8D1",
@@ -117,10 +100,10 @@ const FindOrders: React.FC = () => {
             exportButton: true,
           }}
         />
-     ) : (
-        <div>
+      ) : (
+        <div style={{marginTop:"150px", marginBottom:"450px"}}>
           <br />
-          <h2>&nbsp;&nbsp;NO ASSIGNED ORDERS RIGHT NOW</h2>
+          <h2 style={{textAlign: "center"}}> NO ASSIGNED ORDERS RIGHT NOW </h2>
         </div>
       )}
     </div>
@@ -128,3 +111,4 @@ const FindOrders: React.FC = () => {
 };
 
 export default FindOrders;
+

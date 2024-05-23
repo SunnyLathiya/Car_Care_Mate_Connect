@@ -1,4 +1,5 @@
 export type User = {
+  fcmToken: string;
   user: any;
   firstName?: string;
   lastName?: string;

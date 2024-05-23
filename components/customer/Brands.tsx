@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { allBrands } from "@/redux/slices/customer/cusFunctionsSlice";
+import Notification from "../Notification";
+
 
 export interface Brand {
   [x: string]: any;
@@ -19,6 +21,8 @@ const Brands: React.FC = () => {
   const router = useRouter();
   const { brands, loading } = useSelector((state: RootState) => state.cusFunctions);
   const dispatch: AppDispatch = useDispatch();
+
+
 
   useEffect(() => {
     dispatch(allBrands());
@@ -48,6 +52,8 @@ const Brands: React.FC = () => {
 
   return (
     <div className={styles.brand}>
+
+    <Notification/>
       <h1 className={styles.title}>Available Brands</h1>
       <div className={styles.search}>
         <SearchIcon className={styles.searchIcon} />

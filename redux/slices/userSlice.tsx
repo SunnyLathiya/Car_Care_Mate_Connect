@@ -24,6 +24,7 @@ export const registerUser = createAsyncThunk(
         return createUser.data
       } catch (error : any) {
         // return rejectWithValue(error.response.data);
+        console.log("ghfvhbjnhgcfhvjb")
         return error;
       }
     }
@@ -154,10 +155,7 @@ export const allUsers = createAsyncThunk<User>(
                      Authorization: `Bearer ${token}`,
                  }});
           return response.data;
-
       } catch (error: any) {
-        console.log("state.user212")
-          toast.error(' Error in Order page!');
           throw (error as AxiosError).response?.data || error.message;
       }
   }

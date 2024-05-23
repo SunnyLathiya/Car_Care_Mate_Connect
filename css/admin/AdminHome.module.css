@@ -1,0 +1,41 @@
+.cardContainer {
+  width: 250px;
+  height: 150px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #a7beae;
+}
+
+.count {
+  font-size: 24px;
+  font-weight: bold;
+  color: #b85042;
+}
+
+.mainContainer {
+  min-height: 200vh;
+  background-color: #e7e8d1;
+  margin-bottom: 0;
+  overflow-x: hidden;
+  padding-bottom: 100px;
+}
+
+.containerTitle {
+  margin-top: 150px;
+  text-align: center;
+}
+
+.card {
+  margin-left: 180px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
