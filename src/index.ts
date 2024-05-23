@@ -1,9 +1,8 @@
-
-import express, {Request, Response} from "express";
+import express from "express";
 import cors from "cors";
+
 import authRoutes from "./Auth/routes/userRoutes";
 import profileRoutes from "./Auth/routes/profileRoutes";
-import contactRoutes from "./Auth/routes/contactRoutes"
 
 import CustomerOrderRoutes from "./Customer/routes/orderRoutes";
 import customerCar from "./Customer/routes/carRoutes";
@@ -26,23 +25,16 @@ const envPath = path.join(__dirname, '..', 'config.env');
 dotenv.config({ path: envPath });
 
 
-// import fileupload from 'express-fileupload';
-import { cloudinaryConnect } from "./config/cloudinary"
-
 const app = express();
+
 app.use(express.json());
-cloudinaryConnect();
-// app.use(
-//     fileupload({
-//       useTempFiles: true,
-//       tempFileDir: "/temp"
-//     })
-//   );
 
 const PORT = process.env.PORT || 5000;
 app.use(cors());
 
-app.use('/api/v1', authRoutes, profileRoutes, contactRoutes);
+app.use('/api/payment',CustomerOrderRoutes);
+
+app.use('/api/v1', authRoutes, profileRoutes);
 app.use('/api/v1/customer',  CustomerOrderRoutes, profileRoutes, customerCar)
 app.use('/api/v1/admin', mechCreateRouters, authAdminRoutes, carRoutes, serverRoutes, orderAdminRoutes);
 app.use('/api/v1/mechanic', mechOrderRoutes);

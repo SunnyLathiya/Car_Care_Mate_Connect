@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import userModel from "../../Auth/models/userModel";
+import mailSender from "../../utils/mailSender";
 
 
 export const signup = async (req: Request, res: Response) => {
@@ -42,10 +43,10 @@ export const signup = async (req: Request, res: Response) => {
     let hashedPassword: string;
     try {
       hashedPassword = await bcrypt.hash(password, 12);
-    } catch (error) {
+    } catch (error: any) {
       return res.status(500).json({
         success: false,
-        message: "Error in hashing password",
+        message: error.message || "Error in hashing password",
       });
     }
 
@@ -58,6 +59,19 @@ export const signup = async (req: Request, res: Response) => {
       id,
     });
 
+    const title = "Welcome to Our CarCareMateConnect";
+    const body = `Hello ${mechName},\n\nYour account has been created successfully. You can receive your password with forget option with your email.`;
+
+    try {
+      await mailSender(
+        email,
+        title,
+        body,
+      );
+    } catch (error: any) {
+      message: error.message || "Error sending email"
+    }
+
     return res.status(200).json({
       success: true,
       message: "User created account successfully",
@@ -66,7 +80,7 @@ export const signup = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({
       success: false,
-      message: "User cannot be registered, please try again",
+      message: error.message || "User cannot be registered, please try again",
     });
   }
 };

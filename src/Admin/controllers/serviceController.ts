@@ -3,39 +3,42 @@ import serviceModel, {Service} from '../models/serviceModel';
 
  
 export const addService = (req: Request, res: Response): void => {
-  serviceModel.findOne({ name: req.body.name })
-    .exec()
-    .then((response: Service | null) => {
-      if (response) {
-        return res.status(409).json({
-          message: "Entered Service Name is Already Exist",
-        });
-      } else {
-        const service = new serviceModel({
-          serviceType: req.body.serviceType,
-          name: req.body.name,
-          price: req.body.price,
-          description: req.body.description,
-          timeRequired: req.body.timeRequired,
-          where: req.body.where,
-        });
-        service.save().then((response: Service) => {
-          console.log("Service Added: " + response);
-          res.status(201).json({
-            message: "Service Added Successfully",
-            service
+  try {
+    serviceModel.findOne({ name: req.body.name })
+      .exec()
+      .then((response: Service | null) => {
+        if (response) {
+          return res.status(409).json({
+            message: "Entered Service Name is Already Exist",
           });
-        });
-      }
-    })
-    .catch((error: Error) => {
-      res.status(500).json({
-        message: error.message,
+        } else {
+          const service = new serviceModel({
+            serviceType: req.body.serviceType,
+            name: req.body.name,
+            price: req.body.price,
+            description: req.body.description,
+            timeRequired: req.body.timeRequired,
+            where: req.body.where,
+          });
+          service.save().then((response: Service) => {
+            console.log("Service Added: " + response);
+            res.status(201).json({
+              message: "Service Added Successfully",
+              service
+            });
+          });
+        }
+      })
+      .catch((error: Error) => {
+        throw error; 
       });
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message || "Internal Server Error!",
     });
+  }
 };
 
-// admin, service,              adminslice
 export const findAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const services = await serviceModel.find().select("-__v").exec();
@@ -73,7 +76,7 @@ export const updateService = async (req: Request, res: Response): Promise<void> 
 
     if (!updatedService) {
       res.status(404).json({
-        error: "Service not found",
+        message: "Service not found",
       });
       return;
     }
@@ -96,11 +99,11 @@ export const deleteService = async (req: Request, res: Response): Promise<void> 
 
     if (result.deletedCount === 0) {
       res.status(404).json({
-        error: "Service not found",
+        message: "Service not found",
       });
     } else {
       res.status(200).json({
-        status: "Service Deleted Successfully",
+        message: "Service Deleted Successfully",
       });
     }
   } catch (error: any) {
@@ -110,7 +113,6 @@ export const deleteService = async (req: Request, res: Response): Promise<void> 
   }
 };
 
-//customer
 export const findByServiceId = async (req: Request, res: Response): Promise<void> => {
   try {
     const response = await serviceModel.findOne({ _id: req.params.serviceId }).exec();

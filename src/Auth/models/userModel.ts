@@ -24,6 +24,7 @@ interface User extends Document {
   yourCar: string[];
   favouriteCar: string[];
   isActive: boolean;
+  fcmToken: string;
 }
 
 const userSchema: Schema = new Schema({
@@ -74,7 +75,6 @@ const userSchema: Schema = new Schema({
   profilePhoto: {
     type: String,
     trim: true,
-    // maxLength: 255,
   },
   carselect: {
     type: mongoose.Schema.Types.ObjectId,
@@ -159,6 +159,11 @@ const userSchema: Schema = new Schema({
     type: Boolean,
     default: true,
   },
+
+  fcmToken: {
+    type: String,
+    default: null
+  }
 });
 
 export default mongoose.model<User>("User", userSchema);

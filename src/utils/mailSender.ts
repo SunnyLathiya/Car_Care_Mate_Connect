@@ -1,21 +1,21 @@
 import nodemailer, { Transporter } from "nodemailer";
+import dotenv from 'dotenv';
+import path from 'path';
 
-
-// interface MailSenderOptions {
-//   host: string;
-//   user: string;
-//   pass: string;
-// }
+const envPath = path.join(__dirname, '../..', 'config.env');
+dotenv.config({ path: envPath });
 
 const mailSender = async (email: string, title: string, body: string): Promise<any> => {
+
   try {
     const transporter: Transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: process.env.MAIL_HOST,
       port: 587,
       auth: {
-        user: "sunnylathiya702@gmail.com",
-        pass: "kcehfmljjzjhvndw",
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
       },
+
     } as any);
 
     const info = await transporter.sendMail({
@@ -24,6 +24,7 @@ const mailSender = async (email: string, title: string, body: string): Promise<a
       subject: `${title}`,
       text: `${body}`,
     });
+
     return info;
   } catch (error: any) {
     message: error.message;

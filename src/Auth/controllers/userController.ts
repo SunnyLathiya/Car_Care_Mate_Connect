@@ -85,7 +85,11 @@ export const userSignup = async (req: Request, res: Response) => {
 
 export const userSignin = async (req: Request, res: Response) => {
   try {
-    const { email, password }: { email: string; password: string } = req.body;
+    const {
+      email,
+      password,
+      fcmToken,
+    }: { email: string; password: string; fcmToken: string } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({
@@ -93,6 +97,9 @@ export const userSignin = async (req: Request, res: Response) => {
         message: "Please fill all the details carefully",
       });
     }
+
+    console.log("111", req.body);
+    console.log("222", fcmToken);
 
     let user = await userModel.findOne({ email, isActive: true });
 
@@ -114,6 +121,11 @@ export const userSignin = async (req: Request, res: Response) => {
       let token = jwt.sign(payload, sss, {
         expiresIn: "10h",
       });
+
+      if (fcmToken) {
+        user.fcmToken = fcmToken;
+        await user.save();
+      }
 
       user.token = token;
       user = user.toObject();

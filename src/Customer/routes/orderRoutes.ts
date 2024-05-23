@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import { findMyOrders, addOrder } from "../controllers/orderController";
+import { findMyOrders, addOrder ,webhook} from "../controllers/orderController";
 import { auth, Customer } from "../../middleware/authMiddleware";
 
 
@@ -16,6 +16,6 @@ router.get(
   auth, Customer,
   findMyOrders
 );
-
+router.post('/webhook', express.raw({type: 'application/json'}),webhook )
 
 export default router;

@@ -7,12 +7,13 @@ import {
 } from "../controllers/carController";
 const router: Router = express.Router();
 
-// import { auth, Admin } from "../../middleware/authMiddleware";
+import { auth, Customer} from '../../middleware/authMiddleware'
 
-router.get("/findallbrands", findAllBrands);
 
-router.post("/findbybrand", findByBrand);
+router.get("/findallbrands", auth, Customer, findAllBrands);
 
-router.get("/findbycarid/:carId", findByCarId);
+router.post("/findbybrand", auth, Customer, findByBrand);
+
+router.get("/findbycarid/:carId", auth, Customer, findByCarId);
 
 export default router;

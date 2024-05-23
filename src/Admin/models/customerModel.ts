@@ -51,7 +51,7 @@ const customerSchema: Schema = new Schema({
   },
   token: {
     type: String,
-    maxLength: 1000, 
+    maxLength: 1000,
   },
   resetPasswordExpires: {
     type: Date,

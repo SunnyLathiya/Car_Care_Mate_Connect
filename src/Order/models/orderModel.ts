@@ -15,6 +15,10 @@ export interface Order extends Document {
   deliveredOn?: Date;
   status: string;
   value: string;
+  paymentId: string;
+  paymentStatus: string;
+  lastUpdated: Date;
+  fcmToken: string;
 }
 
 const orderSchema: Schema = new Schema({
@@ -31,7 +35,11 @@ const orderSchema: Schema = new Schema({
   requestedOn: { type: Date, default: Date.now, required: true },
   deliveredOn: { type: Date },
   status: { type: String, default:"PLACED" },
-  value: {type:String}
+  value: {type:String},
+  paymentId: {type:String},
+  paymentStatus: {type:String},
+  lastUpdated: { type: Date },
+  fcmToken: {type: String}
 });
 
 export default model<Order>("Order", orderSchema);

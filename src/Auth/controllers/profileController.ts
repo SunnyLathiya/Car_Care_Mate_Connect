@@ -63,7 +63,6 @@ export const updatedProfile = async (req: Request, res: Response) => {
     } = req.body;
     const id = req.user?.id;
 
-    console.log("profileDetails", profilePhoto);
 
     const profileDetails = await userModel.findById(id);
 

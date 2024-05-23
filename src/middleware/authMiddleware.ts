@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-
 dotenv.config();
 
 interface DecodedToken {
@@ -46,7 +45,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     console.error(error);
     return res.status(401).json({
       success: false,
-      message: "savan kaythiridjasd",
+      message: "UnAuthorized!!!",
     });
   }
 };

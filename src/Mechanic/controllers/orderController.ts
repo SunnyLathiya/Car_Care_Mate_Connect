@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import orderModel, {Order} from '../../Order/models/orderModel';
 import userModel from '../../Auth/models/userModel';
 import mailSender from '../../utils/mailSender';
+import { mauth } from '../../config/firebaseConnection';
+
 
 export const findInProcessOrders = (req: Request, res: Response): void => {
   orderModel.find({
@@ -37,7 +39,7 @@ export const updateOrder = async (req: Request, res: Response): Promise<void> =>
   try {
     await orderModel.updateOne(
       { _id: orderId },
-      { $set: { status: newStatus } }
+      { $set: { status: newStatus,  lastUpdated: new Date() } }
     ).exec();
 
     const order: any = await orderModel.findOne({ _id: orderId }).exec();
@@ -88,3 +90,31 @@ export const findMyOrders = (req: Request, res: Response): void => {
       });
     });
 };
+
+
+export const savetoken = async (req: Request, res: Response) => {
+  const { token, mechanicId } = req.body;
+  try {
+    await userModel.findByIdAndUpdate(mechanicId, { fcmToken: token });
+    res.status(200).json({ message: 'Token saved successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error saving token', error });
+  }
+};
+
+export const notificationSend = async(req: Request, res: Response) => {
+    try{
+          await mauth.messaging().send({
+            token:"",
+            "notification":{
+              "title":"testing 1",
+              "body":"hello",
+            }
+          })
+
+          return res.status(200).send("Notification send successfully");
+    }
+    catch(error){
+
+    }
+}
