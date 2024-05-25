@@ -38,7 +38,6 @@ const ForgotPassword = () => {
         ToastSuccess("Password reset instructions sent to your email.");
       }
     } catch (error: any) {
-      console.error('Error resetting password:', error);
       setError('Failed to reset password. Please try again.');
     }
 

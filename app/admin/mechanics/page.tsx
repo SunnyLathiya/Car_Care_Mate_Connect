@@ -16,6 +16,7 @@ import Cookies from "js-cookie";
 import { AddBox, Cancel, DeleteOutline, SaveAlt, Add, Edit, Delete, Search, Check, Clear, ArrowUpward, FirstPage, LastPage, ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { User } from "@/app/types";
+import Axios from "@/redux/APIs/Axios";
 
 interface MechanicData {
   [x: string]: string;
@@ -31,9 +32,7 @@ interface Props {}
 const Mechanic: React.FC<Props> = () => {
   const {allmechanics}  = useSelector((state: RootState) => state.adminMech);
   const dispatch: AppDispatch = useDispatch();
-  // const [mechanic, setMechanic] = useState<MechanicData>();
 
-  console.log("mechanicsList", allmechanics)
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [mechName, setMechName] = useState("");
@@ -45,7 +44,7 @@ const Mechanic: React.FC<Props> = () => {
     e.preventDefault(); 
     try {
       const token = Cookies.get('token');
-      const response = await axios.post("http://localhost:4000/api/v1/admin/register", {
+      const response = await Axios.post("/admin/register", {
         email,
         mechName,
         phoneNumber,
@@ -56,7 +55,6 @@ const Mechanic: React.FC<Props> = () => {
       setdisplay(false)
       dispatch(getAllMechanics());
 
-      console.log(response);
       if(response.data.status === "success"){
         router.push('/admin/mechanics');
       }
@@ -87,7 +85,7 @@ const Mechanic: React.FC<Props> = () => {
     try {
       await dispatch(deleteMechanic(oldRow._id));
     } catch (error) {
-      console.error('Error occurred while deleting car:', error);
+      ToastError("Error occurred while deleting car")
     }
   };
 

@@ -18,9 +18,10 @@ import { useDispatch } from "react-redux";
 import { registerUser } from "@/redux/slices/userSlice";
 import { AppDispatch } from "@/redux/store";
 import { useRouter } from "next/navigation";
-import {validateForm, FormErrors} from "../../components/validations/SignupValidation";
+import { validateForm, FormErrors } from "../../components/validations/SignupValidation";
 import { formFieldStyle } from "@/css/formstyle/formfieldstyle";
 import { User } from "../types";
+import { ToastInfo } from "@/components/common/Toast";
 
 interface RegisterFormValues {
   firstName: string;
@@ -32,7 +33,6 @@ interface RegisterFormValues {
 
 export default function SignUpSide() {
   const router = useRouter();
-
   const dispatch: AppDispatch = useDispatch();
   const [formData, setFormData] = useState<RegisterFormValues>({
     firstName: "",
@@ -65,7 +65,7 @@ export default function SignUpSide() {
     e.preventDefault();
 
     if (!isChecked) {
-      console.log("Please agree to the terms and conditions");
+      ToastInfo("Please agree to the terms and conditions");
       return;
     }
 
@@ -86,7 +86,8 @@ export default function SignUpSide() {
       user: undefined,
       token: "",
       _id: undefined,
-      data: ""
+      data: "",
+      fcmToken: "",
     };
 
     dispatch(registerUser(user));
@@ -238,7 +239,6 @@ export default function SignUpSide() {
                   onChange={handleChange}
                   error={!!formErrors.confirmPassword}
                   helperText={formErrors.confirmPassword}
-                  
                 />
               </Grid>
               <Grid item xs={12}>

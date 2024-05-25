@@ -1,18 +1,15 @@
-import Head from 'next/head';
-// import styles from '../styles/Home.module.css';
-import Chatbot from '@/components/chat';
+import Head from "next/head";
+import Chatbot from "@/components/chatbotadmin";
 
 export default function Home() {
   return (
-    <div >
+    <div>
       <Head>
         <title>Chatbot Demo</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main style={{marginLeft:"250px"}}>
-        <h1 >Welcome to My Chatbot</h1>
-
+      <main style={{ marginLeft: "250px" }}>
+        <h1>Welcome to My Chatbot</h1>
         <Chatbot />
       </main>
 

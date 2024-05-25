@@ -11,15 +11,20 @@ import { useRouter } from "next/navigation";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageDb } from "@/components/firebase";
 import { User } from "../types";
+import Axios from "@/redux/APIs/Axios";
 
 const Profile = () => {
   const { user } = useSelector((state: RootState) => state.user);
-  const router = useRouter();
-
+  
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  
+  const router = useRouter();
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [phoneNumberError, setPhoneNumberError] = useState("");
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -70,7 +75,6 @@ const Profile = () => {
       return;
     }
     setFile(e.target.files[0]);
-    console.log("file set" + file);
   };
 
   const uploadImage = async () => {
@@ -88,24 +92,64 @@ const Profile = () => {
       }));
 
       ToastSuccess("Image Uploaded successfully.");
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      ToastError("Failed to upload Image.");
+    } catch (error: any) {
+      ToastError(error.message);
     }
   };
 
+  const validateProfile = () => {
+    let isValid = true;
+    if (!formValues.firstName.trim()) {
+      setFirstNameError("First Name is required.");
+      isValid = false;
+    } else {
+      setFirstNameError("");
+    }
+    if (!formValues.lastName.trim()) {
+      setLastNameError("Last Name is required.");
+      isValid = false;
+    } else {
+      setLastNameError("");
+    }
+    if (!formValues.phoneNumber.trim()) {
+      setPhoneNumberError("PhoneNumber is required.");
+      isValid = false;
+    } else if (formValues.phoneNumber.trim().length !== 10) {
+      setPhoneNumberError("Phone number should be exactly 10 digits.");
+      isValid = false;
+    } else {
+      setPhoneNumberError("");
+    }
+    return isValid;
+  };
+
   const handleProfileUpdate = async () => {
+    if (!validateProfile()) {
+      return;
+    }
+
     try {
       await dispatch(updateProfile(formValues as User));
       ToastSuccess("Profile updated successfully");
-    } catch (error) {
-      ToastError("Failed to update profile");
+    } catch (error: any) {
+      ToastError(error.message);
     }
   };
+
 
   const authToken = Cookies.get("token");
 
   const validateNewPassword = () => {
+    if (!currentPassword) {
+      setNewPasswordError('Current password is required.');
+      return false;
+    }
+
+    if (!newPassword) {
+      setNewPasswordError('New password is required.');
+      return false;
+    }
+
     if (newPassword.length < 8) {
       setNewPasswordError("Password must be at least 8 characters long.");
       return false;
@@ -130,12 +174,11 @@ const Profile = () => {
 
     try {
       const authToken = Cookies.get("token");
-      const response = await axios.put(
-        `http://localhost:4000/api/v1/updatedpassword/`,
+      const response = await Axios.put(
+        `/updatedpassword/`,
         { currentPassword, newPassword },
         { headers: { Authorization: `Bearer ${authToken}` } }
       );
-
       ToastSuccess("Password Changed Successfully!");
     } catch (error) {
       ToastError("Failed to update password. Please try again.");
@@ -145,9 +188,8 @@ const Profile = () => {
   const handleDeleteAccount = async () => {
     try {
       const authTokens = Cookies.get("token");
-      console.log(authTokens);
-      await axios.patch(
-        `http://localhost:4000/api/v1/deleteprofile`,
+      await Axios.patch(
+        `/deleteprofile`,
         {},
         {
           headers: {
@@ -160,14 +202,13 @@ const Profile = () => {
       Cookies.remove("token");
       router.push("/signup");
     } catch (error) {
-      ToastError("proble in delete account!");
+      ToastError("problem in delete account!");
     }
   };
 
   return (
     <div
-      className="rounded mt-5 mb-5"
-      style={{ color: "#B85042", backgroundColor: "#E7E8D1" }}
+      className="rounded mt-5 mb-5 "
     >
       <div className="row">
         <div className="col-md-3 border-right">
@@ -179,11 +220,10 @@ const Profile = () => {
               src={formValues.profilePhoto || "/default-profile-photo.png"}
               alt="Profile Picture"
             />
-            <span className="font-weight-bold mb-3">
+            <span className="font-weight-bold mb-3" style={{ marginLeft: "100px" }}>
               <input
                 type="file"
                 onChange={onFileChange}
-                style={{ marginLeft: "100px" }}
               />
             </span>
             <span className="mb-3">
@@ -199,7 +239,7 @@ const Profile = () => {
             </div>
             <div className="row mt-2">
               <div className="col-md-6">
-                <label className={`${styles.labels}`}>FirstName:</label>
+                <label className={`${styles.labels}`}>FirstName*:</label>
                 <input
                   type="text"
                   className="form-control"
@@ -209,91 +249,88 @@ const Profile = () => {
                   onChange={handleInputChange}
                   style={{ fontWeight: "bold" }}
                 />
+                {firstNameError && <div className="text-danger">{firstNameError}</div>}
               </div>
               <div className="col-md-6">
-                <label className={`${styles.labels}`}>LastName:</label>
+                <label className={`${styles.labels}`}>LastName*:</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control fw-bold"
                   name="lastName"
                   placeholder="Surname"
                   value={formValues.lastName}
                   onChange={handleInputChange}
-                  style={{ fontWeight: "bold" }}
                 />
+                {lastNameError && <div className="text-danger">{lastNameError}</div>}
               </div>
             </div>
             <div className="row mt-3">
               <div className="col-md-12">
-                <label className={`${styles.labels}`}>PhoneNumber:</label>
+                <label className={`${styles.labels}`}>PhoneNumber*:</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control fw-bold"
                   placeholder="Enter Phone Number"
                   name="phoneNumber"
                   value={formValues.phoneNumber}
                   onChange={handleInputChange}
-                  style={{ fontWeight: "bold" }}
                 />
+                {phoneNumberError && <div className="text-danger">{phoneNumberError}</div>}
               </div>
               <div className="col-md-12">
-                <label className={`${styles.labels}`}>Email:</label>
+                <label className={`${styles.labels}`}>Email*:</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control fw-bold"
                   placeholder="Enter Email ID"
                   name="email"
                   value={formValues.email}
                   onChange={handleInputChange}
-                  style={{ fontWeight: "bold" }}
+                  disabled
                 />
               </div>
               <div className="col-md-12">
                 <label className={`${styles.labels}`}>YourCar:</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control fw-bold"
                   placeholder="YourCar"
                   name="yourCar"
                   value={formValues.yourCar}
                   onChange={handleInputChange}
-                  style={{ fontWeight: "bold" }}
                 />
               </div>
               <div className="col-md-12">
                 <label className={`${styles.labels}`}>FavouruteCar:</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control fw-bold"
                   placeholder="FavouruteCar"
                   name="favouriteCar"
                   value={formValues.favouriteCar}
                   onChange={handleInputChange}
-                  style={{ fontWeight: "bold" }}
                 />
               </div>
               <div className="col-md-12">
                 <label className={`${styles.labels}`}>Address:</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control fw-bold"
                   placeholder="Enter Address Line 1"
                   name="address"
                   value={formValues.address}
                   onChange={handleInputChange}
-                  style={{ fontWeight: "bold" }}
                 />
               </div>
               <div className="col-md-12">
                 <label className={`${styles.labels}`}>ZipCode:</label>
                 <input
                   type="text"
-                  className="form-control"
+                  className="form-control fw-bold"
                   placeholder="Enter Postcode"
                   name="zipcode"
                   value={formValues.zipcode}
                   onChange={handleInputChange}
-                  style={{ fontWeight: "bold" }}
                 />
               </div>
               <div className="row mt-3">
@@ -301,24 +338,22 @@ const Profile = () => {
                   <label className={`${styles.labels}`}>Country:</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control fw-bold"
                     placeholder="Country"
                     name="country"
                     value={formValues.country}
                     onChange={handleInputChange}
-                    style={{ fontWeight: "bold" }}
                   />
                 </div>
                 <div className="col-md-6">
                   <label className={`${styles.labels}`}>State:</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control fw-bold"
                     placeholder="State/Region"
                     name="state"
                     value={formValues.state}
                     onChange={handleInputChange}
-                    style={{ fontWeight: "bold" }}
                   />
                 </div>
               </div>
@@ -335,7 +370,7 @@ const Profile = () => {
           </div>
         </div>
 
-        <div className="col-md-4" style={{ marginTop: "50PX" }}>
+        <div className={`${styles.rightside} col-md-4`}>
           <div className="p-3 py-5">
             <div className="d-flex justify-content-between align-items-center experience">
               <u>
@@ -344,11 +379,10 @@ const Profile = () => {
                 </h4>
               </u>
               <button
-                className="btn btn-primary"
-                style={{ marginRight: "12px" }}
+                className="btn btn-primary me-3"
                 onClick={handleChangePassword}
               >
-                <i className="fa fa-plus"></i>&nbsp;Change Password
+                <i className="fa fa-plus"></i>Change Password
               </button>
             </div>
             <br />
@@ -378,10 +412,9 @@ const Profile = () => {
                 </div>
               )}
             </div>
-            <div className="position-absolute bottom-0 end-0 mb-4 me-3">
+            <div className="position-absolute bottom-0 end-0 mb-5 me-5">
               <button
-                className="btn btn-danger"
-                style={{ marginTop: "50px", marginLeft: "225px" }}
+                className="btn btn-danger custom-button"
                 onClick={handleDeleteAccount}
               >
                 <i className="fa fa-trash"></i>&nbsp;Delete Account

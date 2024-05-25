@@ -3,7 +3,6 @@ import React from "react";
 import Image from "next/image";
 import styles from "@/css/Why.module.css"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-
 import banner_2 from "../../public/images/banner_2.jpg";
 import banner_3 from "../../public/images/banner_3.png";
 import banner_4 from "../../public/images/banner_4.png";

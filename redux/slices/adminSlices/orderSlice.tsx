@@ -19,7 +19,6 @@ export const findPlacedOrders = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      toast.error(" Error in Order page!");
       throw (error as AxiosError).response?.data || error.message;
     }
   }
@@ -52,7 +51,7 @@ export const findCompletedOrders = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      toast.error(" Error in completed order page!");
+      ToastError(" Error in completed order page!");
       throw (error as AxiosError).response?.data || error.message;
     }
   }

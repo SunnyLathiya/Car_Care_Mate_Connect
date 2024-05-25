@@ -62,7 +62,11 @@ const Services: React.FC = () => {
       <Grid item xs={12} sm={12} md={6} lg={6} key={service._id}>
         <Card className={styles.service_card} variant="outlined">
           <CardContent>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
+            <Typography
+              className={classes.title}
+              color="textSecondary"
+              gutterBottom
+            >
               {service.serviceType}
             </Typography>
             <Typography variant="h5" component="h2">
@@ -72,7 +76,11 @@ const Services: React.FC = () => {
             <Typography variant="body2" component="p">
               {service.description}
             </Typography>
-            <Typography className={classes.title} color="textSecondary" gutterBottom>
+            <Typography
+              className={classes.title}
+              color="textSecondary"
+              gutterBottom
+            >
               {service.where}
             </Typography>
             <hr />
@@ -80,7 +88,10 @@ const Services: React.FC = () => {
               <span className="timeline">
                 {`service done in ${service.timeRequired}`}
               </span>
-              <button className={styles.buy_button} onClick={() => handleBuyClick(service._id)}>
+              <button
+                className={styles.buy_button}
+                onClick={() => handleBuyClick(service._id)}
+              >
                 Buy
               </button>
             </div>
@@ -90,7 +101,9 @@ const Services: React.FC = () => {
     );
   };
 
-  const filteredService = filter ? services.filter((item: any) => item.where === filter ) : services;
+  const filteredService = filter
+    ? services.filter((item: any) => item.where === filter)
+    : services;
   const handleMenuClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -104,9 +117,19 @@ const Services: React.FC = () => {
   return (
     <div className={styles.servicecontainer}>
       <div className={styles.servicediv}>
-        <button className={styles.changeCarButton} onClick={() => router.push(`/customer/cushome`)}>Change Car</button>
+        <button
+          className={styles.changeCarButton}
+          onClick={() => router.push(`/customer/cushome`)}
+        >
+          Change Car
+        </button>
         <div>
-          <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleMenuClick} className={styles.menuButton}>
+          <Button
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleMenuClick}
+            className={styles.menuButton}
+          >
             {menuLabel}
           </Button>
           <Menu
@@ -118,8 +141,12 @@ const Services: React.FC = () => {
           >
             <MenuItem onClick={() => handleMenuClose(null)}>ALL</MenuItem>
             <MenuItem onClick={() => handleMenuClose("HOME")}>HOME</MenuItem>
-            <MenuItem onClick={() => handleMenuClose("Service DoorStep")}>Service DoorStep</MenuItem>
-            <MenuItem onClick={() => handleMenuClose("Free Pickup & Drop")}>Free Pickup & Drop</MenuItem>
+            <MenuItem onClick={() => handleMenuClose("Service DoorStep")}>
+              Service DoorStep
+            </MenuItem>
+            <MenuItem onClick={() => handleMenuClose("Free Pickup & Drop")}>
+              Free Pickup & Drop
+            </MenuItem>
           </Menu>
         </div>
       </div>

@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import Loader from "@/components/common/loader";
+import Axios from "@/redux/APIs/Axios";
 
 interface User {
   userId: string;
@@ -81,19 +82,17 @@ const Order: React.FC = () => {
   };
 
   const getCar = () => {
-
     const token = Cookies.get("token");
     if (!token) {
       ToastError("Authentication token is missing");
       return;
     }
-  
-    axios
-      .get(`http://localhost:4000/api/v1/customer/findbycarid/${carSelected}`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+
+    Axios.get(`/customer/findbycarid/${carSelected}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then((response) => {
         setCar(response.data.response);
       })
@@ -101,7 +100,6 @@ const Order: React.FC = () => {
         ToastError(error.message);
       });
   };
-  
 
   const onSubmit = (data: any) => {
     if (!user || !service || !car) return;
@@ -110,7 +108,6 @@ const Order: React.FC = () => {
 
     const orderData = {
       customerId: user.userId,
-      // customerName: user.name,
       carName: car.name,
       carNumber: data.carNumber,
       custAddress: data.custAddress,
@@ -120,18 +117,14 @@ const Order: React.FC = () => {
 
     setLoading(true);
 
-    axios
-      .post(
-        `http://localhost:4000/api/v1/customer/addorder/${user.id}`,
-        orderData
-      )
+    Axios.post(`/customer/addorder/${user.id}`, orderData)
       .then((response) => {
-        console.log(response.data)
         window.location.href = response.data.url;
         setLoading(false);
       })
       .catch((error: any) => {
         ToastError(error.response.data.message);
+        router.push('/customer/cushome');
       });
   };
 

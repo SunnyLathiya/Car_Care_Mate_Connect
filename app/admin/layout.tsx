@@ -4,6 +4,8 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import AdminHome from "@/components/admin/AdminHome";
 import Loader from "@/components/common/loader";
+import { ToastError } from "@/components/common/Toast";
+import Chatbot from "@/components/chatbotadmin";
 
 interface Props {
   children: React.ReactNode;
@@ -20,7 +22,7 @@ export default function Layout({ children }: Props) {
           const type = decodedToken.accountType;
           setAccountType(type);
         } catch (error) {
-          console.error("Error decoding token:", error);
+          ToastError("Error decoding token");
         }
       }
     };
@@ -36,7 +38,7 @@ export default function Layout({ children }: Props) {
     <>
       {children}
       {accountType === "Admin" && <AdminHome />}
+      <Chatbot />
     </>
   );
-  
 }

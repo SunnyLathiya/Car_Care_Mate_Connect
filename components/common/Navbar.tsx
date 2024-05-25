@@ -5,7 +5,6 @@ import styles from "@/css/Navbar.module.css";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { usePathname } from "next/navigation";
-import logo1 from "../../public/logo-black.png";
 import { ToastError } from "./Toast";
 
 function getToken(): string | null {

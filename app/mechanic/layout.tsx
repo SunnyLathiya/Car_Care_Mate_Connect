@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import {jwtDecode} from 'jwt-decode';
 import Loader from '@/components/common/loader';
 import MechanicHome from '@/components/mechanic/MechanicHome';
+import { ToastError } from '@/components/common/Toast';
 
 interface Props {
   children: React.ReactNode;
@@ -19,9 +20,8 @@ export default function Layout({ children }: Props) {
           const decodedToken: any = jwtDecode(token);
           const type = decodedToken.accountType;
           setAccountType(type);
-          console.log("Account Type:", type);
         } catch (error) {
-          console.error('Error decoding token:', error);
+          ToastError("Error decoding token")
         }
       }
     };

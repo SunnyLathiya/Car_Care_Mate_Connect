@@ -1,6 +1,5 @@
-"use client"
+"use client";
 import React from "react";
-// import "./Working.css";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Timeline from "@material-ui/lab/Timeline";
 import TimelineItem from "@material-ui/lab/TimelineItem";
@@ -27,8 +26,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       transform: "scale(1.05)",
     },
   },
+  maincontainer: {
+    marginTop: 80,
+    marginBottom: -20,
+  },
   secondaryTail: {
     backgroundColor: theme.palette.secondary.main,
+  },
+  heading: {
+    textAlign: "center",
   },
 }));
 
@@ -36,108 +42,120 @@ const Working: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <div style={{backgroundColor:"#E7E8D1"}}>
-    <div style={{ marginTop: 80, marginBottom:-20}}>
-      <h1 style={{ textAlign: 'center'}}>How CarCareMateConnect Works?</h1>
-      <Timeline align="alternate">
-        <TimelineItem>
-          <TimelineSeparator>
-            <TimelineDot color="primary" variant="outlined">
-              <DriveEtaIcon />
-            </TimelineDot>
-            <TimelineConnector />
-          </TimelineSeparator>
-          <TimelineContent>
-            <Paper elevation={3} className={classes.paper}>
-              <Typography variant="h6" component="h1">
-                Select Your Car
-              </Typography>
-              
-              <Typography>We Service most makes and models</Typography>
-              <Typography>Users that their car's make and model can likely be serviced by the platform.</Typography>
-            </Paper>
-          </TimelineContent>
-        </TimelineItem>
-        <TimelineItem>
-          <TimelineSeparator>
-            <TimelineDot color="primary">
-              <SettingsIcon />
-            </TimelineDot>
-            <TimelineConnector className={classes.secondaryTail} />
-          </TimelineSeparator>
-          <TimelineContent>
-            <Paper elevation={3} className={classes.paper}>
-              <Typography variant="h6" component="h1">
-                Select The Perfect Car Service
-              </Typography>
-              
-              <Typography>From CarCareMateConnect's broad portfolio of Services.</Typography>
-              <Typography>Users can select services from a diverse range offered by CarCareMateConnect.</Typography>
-            </Paper>
-          </TimelineContent>
-        </TimelineItem>
-        <TimelineItem>
-          <TimelineSeparator>
-            <TimelineDot color="primary" variant="outlined">
-              <AttachMoneyIcon />
-            </TimelineDot>
-            <TimelineConnector />
-          </TimelineSeparator>
-          <TimelineContent>
-            <Paper elevation={3} className={classes.paper}>
-              <Typography variant="h6" component="h1">
-              Any Inquiry
-              </Typography>
-              
-              <Typography>
-              Informs users about available support options: a chatbot, email, or direct contact with the office for problem resolution.
-              </Typography>
-            </Paper>
-          </TimelineContent>
-        </TimelineItem>
-        <TimelineItem>
-          <TimelineSeparator>
-            <TimelineDot color="primary">
-              <BookmarksIcon />
-            </TimelineDot>
-            <TimelineConnector className={classes.secondaryTail} />
-          </TimelineSeparator>
-          <TimelineContent>
-            <Paper elevation={3} className={classes.paper}>
-              <Typography variant="h6" component="h1">
-                Book An Appointment
-              </Typography>
-              
-              <Typography>
-                Users can schedule an appointment for car service.
-              </Typography>
-              <Typography>
-                A service benefit, indicating that specific booked services include free pickup and drop-off in reasonable price.
-              </Typography>
-            </Paper>
-          </TimelineContent>
-        </TimelineItem>
-        <TimelineItem>
-          <TimelineSeparator>
-            <TimelineDot color="primary" variant="outlined">
-              <WeekendIcon />
-            </TimelineDot>
-            <TimelineConnector />
-          </TimelineSeparator>
-          <TimelineContent>
-            <Paper elevation={3} className={classes.paper}>
-              <Typography variant="h6" component="h1">
-                Relax
-              </Typography>
-              <Typography>
-              A simple directive to suggest that users can relax.
-              </Typography>
-              <Typography>Encourages users to utilize saved time from the appointment booking process for other important tasks or relaxation.</Typography>
-            </Paper>
-          </TimelineContent>
-        </TimelineItem>
-      </Timeline>
+    <div>
+      <div className={classes.maincontainer}>
+        <h1 className={classes.heading}>How CarCareMateConnect Works?</h1>
+        <Timeline align="alternate">
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot color="primary" variant="outlined">
+                <DriveEtaIcon />
+              </TimelineDot>
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography variant="h6" component="h1">
+                  Select Your Car
+                </Typography>
 
+                <Typography>We Service most makes and models</Typography>
+                <Typography>
+                  Users that their car's make and model can likely be serviced
+                  by the platform.
+                </Typography>
+              </Paper>
+            </TimelineContent>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot color="primary">
+                <SettingsIcon />
+              </TimelineDot>
+              <TimelineConnector className={classes.secondaryTail} />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography variant="h6" component="h1">
+                  Select The Perfect Car Service
+                </Typography>
+
+                <Typography>
+                  From CarCareMateConnect's broad portfolio of Services.
+                </Typography>
+                <Typography>
+                  Users can select services from a diverse range offered by
+                  CarCareMateConnect.
+                </Typography>
+              </Paper>
+            </TimelineContent>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot color="primary" variant="outlined">
+                <AttachMoneyIcon />
+              </TimelineDot>
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography variant="h6" component="h1">
+                  Any Inquiry
+                </Typography>
+
+                <Typography>
+                  Informs users about available support options: a chatbot,
+                  email, or direct contact with the office for problem
+                  resolution.
+                </Typography>
+              </Paper>
+            </TimelineContent>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot color="primary">
+                <BookmarksIcon />
+              </TimelineDot>
+              <TimelineConnector className={classes.secondaryTail} />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography variant="h6" component="h1">
+                  Book An Appointment
+                </Typography>
+                <Typography>
+                  Users can schedule an appointment for car service.
+                </Typography>
+                <Typography>
+                  A service benefit, indicating that specific booked services
+                  include free pickup and drop-off in reasonable price.
+                </Typography>
+              </Paper>
+            </TimelineContent>
+          </TimelineItem>
+          <TimelineItem>
+            <TimelineSeparator>
+              <TimelineDot color="primary" variant="outlined">
+                <WeekendIcon />
+              </TimelineDot>
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              <Paper elevation={3} className={classes.paper}>
+                <Typography variant="h6" component="h1">
+                  Relax
+                </Typography>
+                <Typography>
+                  A simple directive to suggest that users can relax.
+                </Typography>
+                <Typography>
+                  Encourages users to utilize saved time from the appointment
+                  booking process for other important tasks or relaxation.
+                </Typography>
+              </Paper>
+            </TimelineContent>
+          </TimelineItem>
+        </Timeline>
       </div>
     </div>
   );

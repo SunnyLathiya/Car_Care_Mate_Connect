@@ -16,7 +16,7 @@ import {
   FaTools,
   FaUsers,
 } from "react-icons/fa";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { allUsers } from "@/redux/slices/userSlice";
@@ -56,7 +56,7 @@ const page: React.FC = () => {
 
   const totalcomplatedorder = Array.isArray(peoples?.user)
     ? order?.orders?.filter(
-        (item: { status: string }) => item.status === "COMPLATED"
+        (item: { status: string }) => item.status === "COMPLETED"
       ).length
     : 0;
 

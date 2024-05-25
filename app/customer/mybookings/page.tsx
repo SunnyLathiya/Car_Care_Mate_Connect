@@ -17,7 +17,30 @@ import moment from "moment";
 import { DateRangePicker } from "react-date-range";
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
+import Axios from "@/redux/APIs/Axios";
+import { ToastError } from "@/components/common/Toast";
 
+interface User {
+  userId: string;
+  email: string;
+  name: string;
+  id: string;
+}
+
+interface Order {
+  _id: string;
+  status: string;
+  carName: string;
+  carNumber: string;
+  custAddress: string;
+  serviceName: string;
+  servicePrice: string;
+  requestedOn: string;
+  mechanicName: string;
+  lastUpdated: string;
+  orderId: string;
+  paymentStatus: string;
+}
 interface MyOrderComponentProps {
   status: "PLACED" | "PENDING" | "ACCEPTED" | "COMPLETED";
 }
@@ -79,31 +102,10 @@ const MyOrderComponent: React.FC<MyOrderComponentProps> = ({ status }) => {
   );
 };
 
-interface User {
-  userId: string;
-  email: string;
-  name: string;
-  id: string;
-}
-
-interface Order {
-  _id: string;
-  status: string;
-  carName: string;
-  carNumber: string;
-  custAddress: string;
-  serviceName: string;
-  servicePrice: string;
-  requestedOn: string;
-  mechanicName: string;
-  lastUpdated: string;
-  orderId: string;
-}
-
 const formatDate = (date: any) => {
   const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-  const year = String(date.getFullYear()).slice(-2); // Get last two digits of the year
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = String(date.getFullYear()).slice(-2);
   return `${day}-${month}-${year}`;
 };
 
@@ -146,7 +148,6 @@ const OrderFullDetails = ({
             .map((rule) => rule.cssText)
             .join("\n");
         } catch (error) {
-          console.warn("Failed to extract CSS rules:", error);
           return "";
         }
       })
@@ -282,7 +283,9 @@ const OrderFullDetails = ({
       <hr style={{ marginLeft: "30px", marginRight: "30px" }} />
       <div className={styles.total}>
         <div className="row">
-          <div className="col-9"></div>
+          <div className="col-9">
+            PaymentStatue:- {order.paymentStatus}
+          </div>
           <div className="col-3">
             <big>{order.servicePrice}Rs.</big>
           </div>
@@ -353,11 +356,6 @@ const MyBookings = (order: Order) => {
       endDate: endDate,
       key: 'selection',
     });
-
-    console.log("Formatted date range", {
-      startDate: formatDate(startDate),
-      endDate: formatDate(endDate),
-    });
   };
   
 
@@ -369,10 +367,8 @@ const MyBookings = (order: Order) => {
           const user: any = jwtDecode(token);
           setUserD(user);
 
-          console.log("user", user);
-
-          const response = await axios.get(
-            `http://localhost:4000/api/v1/customer/findOrders/${user.id}`,
+          const response = await Axios.get(
+            `/customer/findOrders/${user.id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -380,14 +376,12 @@ const MyBookings = (order: Order) => {
             }
           );
 
-          console.log("0", response)
-          console.log("response", response);
           setOrders(response.data.orders);
-        } catch (error) {
-          console.log(error);
+        } catch (error: any) {
+          ToastError(error.message)
         }
       } else {
-        console.error("Token is undefined");
+        ToastError("Token is undefined")
       }
     };
 
@@ -488,8 +482,6 @@ const MyBookings = (order: Order) => {
   
 
   const lastOrder = orders.length > 0 ? orders[orders.length - 1] : null;
-
-  console.log("3", orders)
 
   return (
     <div

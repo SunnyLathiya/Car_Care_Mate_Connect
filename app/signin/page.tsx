@@ -23,19 +23,20 @@ import Loader from "@/components/common/loader";
 import { formFieldStyle } from "@/css/formstyle/formfieldstyle";
 import { User } from "../types";
 import imgsignup from "../../public/images/Car-Service.jpeg";
-
 import { getMessaging, getToken } from "firebase/messaging";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBV1houUWoiTApwYId-Gwa23uoK42vEywY",
-  authDomain: "carservices-ac00c.firebaseapp.com",
-  projectId: "carservices-ac00c",
-  storageBucket: "carservices-ac00c.appspot.com",
-  messagingSenderId: "1042279475181",
-  appId: "1:1042279475181:web:3839e39010f73502b2a9e4",
-  measurementId: "G-49V8B3EEQV",
+  apiKey: process.env.NEXT_PUBLIC_APIKEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTHDOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECTID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGEBUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGINGSENDERID,
+  appId: process.env.NEXT_PUBLIC_APPID,
+  measurementId: process.env.NEXT_PUBLIC_MEASUREMENTID,
 };
+
+const vapidkeys = process.env.NEXT_PUBLIC_VAPIDKEY || ""
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
@@ -47,18 +48,16 @@ const requestForToken = async () => {
     );
     const currentToken = await getToken(messaging, {
       vapidKey:
-        "BHCIBPG7bC1J4e9PxKAxHWvFIS3UIxDOcOjG25Zs0JcVvxwPz2nkwcqCGvMj91LlFPXdPzlTs56jngkjkLdn80M",
+        vapidkeys,
       serviceWorkerRegistration,
     });
 
     if (currentToken) {
       return currentToken;
     } else {
-      console.log("No registration token available");
       return null;
     }
   } catch (err) {
-    console.error("Error while registering token", err);
     return null;
   }
 };
@@ -74,7 +73,6 @@ export default function SignInSide() {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [isChecked, setIsChecked] = useState(false);
 
   const [formData, setFormData] = useState<LoginFormValues>({
@@ -115,7 +113,6 @@ export default function SignInSide() {
     };
 
     if (!isChecked) {
-      console.log("Please agree to the terms and conditions");
       return;
     }
 
@@ -148,7 +145,6 @@ export default function SignInSide() {
         data: "",
       };
 
-      console.log("fffffffffff", fcmToken);
       if (fcmToken) {
         user.fcmToken = fcmToken;
       }
@@ -170,11 +166,10 @@ export default function SignInSide() {
           router.push("/mechanic/home");
           break;
         default:
-          router.push("/login");
+          router.push("/signin");
           break;
       }
     } catch (error) {
-      console.error("Error logging in:", error);
       setErrors({
         ...errors,
         password: "Invalid email or password",
@@ -289,8 +284,8 @@ export default function SignInSide() {
                   sx={{
                     mt: 3,
                     mb: 2,
-                    backgroundColor: "#B85042", 
-                    color: "white", 
+                    backgroundColor: "#B85042",
+                    color: "white",
                     "&:hover": {
                       backgroundColor: "#974038",
                     },

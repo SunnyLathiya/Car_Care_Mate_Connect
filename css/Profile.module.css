@@ -40,3 +40,12 @@
   cursor: pointer;
   border: solid 1px #ba68c8;
 }
+
+.custombutton{
+  margin-top: 50px;
+  margin-left: 225px;
+}
+
+.rightside{
+  margin-top: 50PX;
+}

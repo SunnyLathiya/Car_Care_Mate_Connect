@@ -14,7 +14,7 @@ import {
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { ToastSuccess } from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
-import imgsignup from "../../public/images/Car-Service.jpeg";
+import imgsignup from "../../../public/images/Car-Service.jpeg"
 
 const ChangePassword = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -52,7 +52,6 @@ const ChangePassword = () => {
         }
       );
 
-      console.log("response", response);
 
       if (!response.ok) {
         const data = await response.json();
@@ -62,7 +61,6 @@ const ChangePassword = () => {
         router.push("/signin");
       }
     } catch (error) {
-      console.error("Error updating password:", error);
       setError("Failed to update password. Please try again.");
     }
   };

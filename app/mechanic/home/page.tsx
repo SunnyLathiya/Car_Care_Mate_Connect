@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import Cookies from "js-cookie";
 import {jwtDecode} from "jwt-decode";
 import { allorders } from '@/redux/slices/adminSlices/orderSlice';
-import Notification from '@/components/Notification';
+// import Notification from '@/components/Notification';
 
 interface CardProps {
   title: string;
@@ -30,8 +30,6 @@ const page: React.FC = () => {
   const [fcmToken, setFcmToken] = useState<string | null>(null);
   const {orders} = useSelector((state: any) => state.order)
   const dispatch: any = useDispatch();
-
-  console.log("totalOrders", orders)
 
   const token: any = Cookies.get("token");
   const mech: any = jwtDecode(token);
@@ -56,12 +54,12 @@ const page: React.FC = () => {
   return (
 
     <div style={{ minHeight:"200vh", backgroundColor:"#E7E8D1", overflowX:"hidden"}}>
-      <Notification/>
+      {/* <Notification/> */}
     <hr />
     <div style={{marginTop:"150px", textAlign: "center"}}>
     <hr />
     <hr />
-    <h1>WELCOME ADMIN</h1>
+    <h1>WELCOME MECHANIC</h1>
     <h1>
       Your Total Earnings:
        {formattedTotalProfit}Rs.

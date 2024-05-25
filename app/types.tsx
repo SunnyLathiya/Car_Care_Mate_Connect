@@ -4,7 +4,6 @@ export type User = {
   firstName?: string;
   lastName?: string;
   email?: string;
-  // image?: string;
   password?: string;
   confirmPassword?: string;
   token: string;
@@ -24,11 +23,6 @@ export type User = {
   country?: string;
   yourCar?: string[];
   favouriteCar?: string[];
-  // isAdmin?: boolean;
-  // _id?: string;
-  // token?: string;
-  // createdAt?: string;
-  // updatedAt?: string;
   data: string;
 };
 

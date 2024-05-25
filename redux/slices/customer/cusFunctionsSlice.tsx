@@ -3,7 +3,6 @@ import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
 import { Car, Service } from "@/app/types";
 import Axios from "@/redux/APIs/Axios";
 
@@ -35,7 +34,7 @@ export const fetchCarsByBrand = createAsyncThunk(
       return response.data.cars;
     } catch (error: any) {
       ToastError("Error fetching cars!")
-      return rejectWithValue(error.response?.data.cars || error.message);
+      throw (error as AxiosError).response?.data || error.message;
     }
   }
 );
@@ -86,12 +85,10 @@ const CusFunctionsSlice = createSlice({
       .addCase(fetchCarsByBrand.fulfilled, (state, action) => {
         state.loading = false;
         state.cars = action.payload;
-
-        console.log("gfchjbknm", action.payload)
       })
       .addCase(fetchCarsByBrand.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
+        state.error = action.error.message || "Failed to fetch cars";
       });
   },
 });

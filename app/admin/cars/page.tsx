@@ -13,20 +13,16 @@ import { Car } from "@/app/types";
 import Loader from "@/components/common/loader";
 import {
   Add,
-  AddBox,
   ArrowDownward,
   ArrowUpward,
-  Cancel,
   Check,
   ChevronLeft,
   ChevronRight,
   Clear,
   Delete,
-  DeleteOutline,
   Edit,
   FirstPage,
   LastPage,
-  SaveAlt,
   Search,
 } from "@mui/icons-material";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
@@ -44,7 +40,6 @@ function Cars() {
         throw new Error("Name and brand are required.");
       }
       await dispatch(addCar(newRow));
-      ToastSuccess("Car added successfully!");
   };
   const handleRowDelete = async (oldRow: Car) => {
     try {

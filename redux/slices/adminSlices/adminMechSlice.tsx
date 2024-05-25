@@ -1,4 +1,3 @@
-"use client";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";

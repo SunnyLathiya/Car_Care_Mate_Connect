@@ -1,8 +1,8 @@
 "use client";
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { ToastSuccess, ToastError, ToastInfo } from "@/components/common/Toast";
+import { ToastSuccess, ToastError } from "@/components/common/Toast";
 import { Car } from "@/app/types";
 import Axios from "@/redux/APIs/Axios";
 
@@ -51,6 +51,7 @@ export const deleteCar = createAsyncThunk("cars/delete", async (carId: any) => {
     throw (error as AxiosError).response?.data || error.message;
   }
 });
+
 export const updateCar = createAsyncThunk(
   "cars/update",
   async (updatedCar: Car) => {
@@ -103,8 +104,6 @@ const carSlice = createSlice({
         state.error = null;
         state.success = true;
         state.cars = action.payload;
-        console.log("action", action);
-        console.log("gfhjkhgjh", action.payload);
       })
       .addCase(getAllCars.rejected, (state, action) => {
         state.loading = false;

@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import CarSlides from "./CarSlides";
 import SearchIcon from "@material-ui/icons/Search";
 import { useRouter } from "next/router";
+import { ToastError } from "../common/Toast";
 
 export interface Car {
     _id: string;
@@ -39,10 +40,10 @@ const Cars: NextPage<Props> = ({ match, history }) => {
                 const data = await response.json();
                 setCars(data);
             } else {
-                console.error("Failed to retrieve cars");
+                ToastError("Failed to retrieve cars")
             }
-        } catch (error) {
-            console.error("Error retrieving cars:", error);
+        } catch (error: any) {
+            ToastError(error.message)
         }
     };
 

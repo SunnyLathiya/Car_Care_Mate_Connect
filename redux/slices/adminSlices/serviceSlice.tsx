@@ -33,10 +33,8 @@ export const addService = createAsyncThunk<Service, any>(
           Authorization: `Bearer ${token}`,
         },
       });
-      ToastSuccess("New Service added successfully");
       return response.data;
     } catch (error: any) {
-      ToastError("Problem in new service create!");
       throw (error as AxiosError).response?.data || error.message;
     }
   }

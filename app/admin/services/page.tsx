@@ -48,7 +48,6 @@ function Services() {
       await dispatch(addService(newRow));
       ToastSuccess("Service added successfully!");
     } catch (error) {
-      console.error('Error occurred while adding new service:', error);
       ToastError('Failed to add service');
     }
   };

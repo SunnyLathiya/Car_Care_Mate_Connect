@@ -7,7 +7,7 @@ import Draggable from "react-draggable";
 import { MdAutoDelete } from "react-icons/md";
 import { FiSend } from "react-icons/fi";
 
-const Chatbot = () => {
+const ChatbotAdmin = () => {
   const [question, setQuestion] = useState("");
   const [generatingAnswer, setGeneratingAnswer] = useState(false);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
@@ -18,12 +18,11 @@ const Chatbot = () => {
     setGeneratingAnswer(true);
 
     try {
-      const response = await axios.post(
-        "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyBntEDV8kNuxD7UM8geZdKGbrRgcbpKgco",
-        {
-          contents: [{ parts: [{ text: question }] }],
-        }
-      );
+      const chatBotUrl = process.env.NEXT_PUBLIC_CHATBOT_URL || "";
+
+      const response = await axios.post(chatBotUrl, {
+        contents: [{ parts: [{ text: question }] }],
+      });
 
       const answer = response.data.candidates[0].content.parts[0].text;
       const updatedChatHistory: any = [
@@ -40,9 +39,7 @@ const Chatbot = () => {
       if (chatMessagesContainer) {
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
       }
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
 
     setGeneratingAnswer(false);
   };
@@ -58,37 +55,17 @@ const Chatbot = () => {
   return (
     <div className={styles.container}>
       <div className={styles.chatbotButton}>
-        <span
-          onClick={toggleChatbot}
-          style={{
-            display: "inline-block",
-            backgroundColor: "#007bff",
-            padding: "8px",
-            borderRadius: "50%",
-            cursor: "pointer",
-            position: "fixed",
-            bottom: "40px",
-            right: "40px",
-            zIndex: 1000,
-          }}
-        >
-          <TbMessageChatbot style={{ fontSize: "24px", color: "red" }} />
+        <span onClick={toggleChatbot} className={styles.mainbuttoncontainer}>
+          <TbMessageChatbot className={styles.mainbutton} />
         </span>
       </div>
 
       {isChatbotOpen && (
         <Draggable>
-          <div
-            className={`${styles.chatbotContainer} ${styles.open}`}
-            style={{
-              maxHeight: "500px",
-              width: "380px",
-              overflowY: "auto",
-            }}
-          >
+          <div className={`${styles.chatbotContainer} ${styles.open}`}>
             <div className={styles.chatbot}>
               <div className={styles.chatbotContent}>
-                <div id="chatMessagesContainer" className={styles.chatMessages}>
+                <div className={styles.chatMessages}>
                   {chatHistory.map((message: any, index) => (
                     <div
                       key={index}
@@ -107,24 +84,19 @@ const Chatbot = () => {
                       value={question}
                       onChange={(e) => setQuestion(e.target.value)}
                       required
-                      style={{ flex: "1", marginRight: "8px" }}
+                      className={styles.inputfield}
                     />
                     <button
                       type="submit"
                       disabled={generatingAnswer}
-                      style={{ marginRight: "8px" }}
+                      className={styles.submitbutton}
                     >
                       <FiSend />
                       {generatingAnswer ? "Generating" : "Submit"}
                     </button>
                     <MdAutoDelete
                       onClick={clearChatHistory}
-                      style={{
-                        fontSize: "24px",
-                        color: "red",
-                        marginLeft: "7px",
-                        marginTop: "10px",
-                      }}
+                      className={styles.deletebutton}
                     />
                   </form>
                 </div>
@@ -137,4 +109,4 @@ const Chatbot = () => {
   );
 };
 
-export default Chatbot;
+export default ChatbotAdmin;

@@ -3,7 +3,9 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import Loader from "@/components/common/loader";
-import Notification from "@/components/Notification";
+// import Notification from "@/components/Notification";
+import { ToastError } from "@/components/common/Toast";
+import Chatbot from "@/components/chatbotCustomer";
 
 interface Props {
   children: React.ReactNode;
@@ -20,7 +22,7 @@ export default function Layout({ children }: Props) {
           const type = decodedToken.accountType;
           setAccountType(type);
         } catch (error) {
-          console.error("Error decoding token:", error);
+          ToastError("Error decoding token")
         }
       }
     };
@@ -35,7 +37,7 @@ export default function Layout({ children }: Props) {
   return (
     <>
       {children}
-      <Notification/>
+      <Chatbot/>
     </>
   );
 }
