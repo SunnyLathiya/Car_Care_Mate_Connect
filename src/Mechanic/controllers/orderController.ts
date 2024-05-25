@@ -3,34 +3,14 @@ import orderModel, { Order } from "../../Order/models/orderModel";
 import userModel from "../../Auth/models/userModel";
 import mailSender from "../../utils/mailSender";
 import { mauth } from "../../config/firebaseConnection";
+import Stripe from "stripe";
 
-export const findInProcessOrders = (req: Request, res: Response): void => {
-  orderModel
-    .find({
-      $or: [
-        { mechanicId: req.params.mechId, status: "IN-PROCESS" },
-        { mechanicId: req.params.mechId, status: "ACCEPTED" },
-        { mechanicId: req.params.mechId, status: "PENDING" },
-      ],
-    })
-    .exec()
-    .then((response: Order[]) => {
-      if (response.length === 0) {
-        res.status(200).json({
-          message: "No Orders are available",
-        });
-      } else {
-        res.status(200).json({
-          response,
-        });
-      }
-    })
-    .catch((error: any) => {
-      res.status(500).json({
-        message: error.message || "Internal Server Error",
-      });
-    });
-};
+const stripe = new Stripe(
+  "sk_test_51PHo5FSHLSjFfm6ikkeiKl78yhkg02wxfSZBwC6r7AKROns55LHBgCgG5rrhcpZgulUZc2mBpspkxQHgnMU98YIe00HNnGGuOs",
+  {
+    apiVersion: "2024-04-10",
+  }
+);
 
 export const updateOrder = async (
   req: Request,
@@ -58,7 +38,12 @@ export const updateOrder = async (
     };
     if (newStatus === "ACCEPTED") {
       await updateUserStatus("NOT-AVAILABLE");
-    } else if (newStatus === "COMPLETED" || newStatus === "REJECT") {
+    } else if (newStatus === "REJECT") {
+      stripe.refunds.create({
+        payment_intent: "pi_3PKCOhSHLSjFfm6i0mXT9f8wy",
+      });
+      await updateUserStatus("AVAILABLE");
+    } else if (newStatus === "COMPLETED") {
       await updateUserStatus("AVAILABLE");
     }
 
@@ -75,9 +60,16 @@ export const updateOrder = async (
   }
 };
 
-export const findMyOrders = (req: Request, res: Response): void => {
-  orderModel
-    .find({ mechanicId: req.params.mechId })
+export const findInProcessOrders = (req: Request, res: Response): void => {
+
+  console.log("req.params", req.params._id)
+  orderModel.find({ mechanicId: req.params._id,
+    $or: [
+      { mechanicId: req.params._id, status: "IN-PROCESS" },
+      { mechanicId: req.params._id, status: "ACCEPTED" },
+      { mechanicId: req.params._id, status: "PENDING" },
+    ],
+  })
     .exec()
     .then((response: Order[]) => {
       if (response.length === 0) {
@@ -85,14 +77,45 @@ export const findMyOrders = (req: Request, res: Response): void => {
           message: "No Orders are available",
         });
       } else {
-        res.status(200).json({ orders: response });
+        res.status(200).json({
+          response,
+        });
       }
     })
-    .catch((error: any) => {
+    .catch((err: any) => {
+      console.log("Find All Placed Orders Error: " + err);
       res.status(500).json({
-        message: error.message || "Internal Server Error",
+        error: err,
       });
     });
+};
+
+export const findMyOrders = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+
+  console.log("1", req.params.mechId)
+
+  try {
+    const response: Order[] = await orderModel
+      .find({ mechanicId: req.params.mechId })
+      .exec();
+
+      console.log("2", response)
+
+    if (response.length === 0) {
+      res.status(200).json({
+        message: "No Orders are available",
+      });
+    } else {
+      res.status(200).json({ orders: response });
+    }
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message || "Internal Server Error",
+    });
+  }
 };
 
 export const savetoken = async (req: Request, res: Response) => {

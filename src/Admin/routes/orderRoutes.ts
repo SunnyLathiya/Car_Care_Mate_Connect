@@ -12,7 +12,6 @@ import { auth, Admin } from "../../middleware/authMiddleware";
 
 router.get("/findplacedorders", auth, Admin, findPlacedOrders);
 
-
 router.get("/findcompletedorders", auth, Admin, findCompletedOrders);
 
 router.get("/findcompletedordersprofit", auth, Admin, findCompletedOrdersProfit);

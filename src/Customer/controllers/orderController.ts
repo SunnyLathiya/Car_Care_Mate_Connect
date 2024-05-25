@@ -14,6 +14,8 @@ const stripe = new Stripe(
   "sk_test_51PHo5FSHLSjFfm6ikkeiKl78yhkg02wxfSZBwC6r7AKROns55LHBgCgG5rrhcpZgulUZc2mBpspkxQHgnMU98YIe00HNnGGuOs",
   {
     apiVersion: "2024-04-10",
+    timeout: 30000, // 30 seconds
+    maxNetworkRetries: 2, // Retry twice before failing
   }
 );
 interface OrderRequestBody {
@@ -47,30 +49,31 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const encodedAddress = encodeURIComponent(custAddress);
-    const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
+    // const encodedAddress = encodeURIComponent(custAddress);
+    // const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
 
-    console.log("Encoded Address:", encodedAddress);
-    console.log("Nominatim URL:", nominatimUrl);
+    // console.log("Encoded Address:", encodedAddress);
+    // console.log("Nominatim URL:", nominatimUrl);
 
-    const response = await fetch(nominatimUrl);
-    const data: any = await response.json();
+    // const response = await fetch(nominatimUrl);
+    // const data: any = await response.json();
 
-    if (!data || data.length === 0) {
-      res.status(400).json({ message: "Invalid address" });
-      return;
-    }
+    // if (!data || data.length === 0) {
+    //   res.status(400).json({ message: "Invalid address" });
+    //   return;
+    // }
 
-    const { lat, lon } = data[0];
+    // const { lat, lon } = data[0];
 
-    const mapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}`;
-
-    console.log("2", mapUrl);
+    // const mapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}`;
 
     const availableMechanics = await userModel.find({
       status: "AVAILABLE",
       accountType: "Mechanic",
     });
+
+
+    console.log("224", availableMechanics)
 
     if (availableMechanics.length === 0) {
       res.status(400).json({ message: "No available mechanics at the moment" });
@@ -83,20 +86,25 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
 
     const orderId = generateRandomOrderId();
 
+
+
+
+    console.log("222", orderId)
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
-      success_url: `http://localhost:3000/customer/cushome`,
-      cancel_url: `http://localhost:3000/`,
+      success_url: `http://localhost:3000/customer/mybookings`,
+      cancel_url: `http://localhost:3000/customer/cushome`,
       customer_email: user.email,
       client_reference_id: orderId,
       mode: "payment",
       line_items: [
         {
           price_data: {
-            currency: "usd",
+            currency: "INR",
             product_data: {
               name: serviceName,
-              description: "placce",
+              description: "placed",
             },
             unit_amount: servicePrice * 100,
           },
@@ -108,6 +116,8 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       },
     });
 
+    console.log("223", session)
+
     const order = new OrderModel({
       customerId: req.params.customerId,
       customerName: user.firstName,
@@ -118,14 +128,16 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       serviceName,
       servicePrice,
       mechanicName: nextMechanic.mechName,
-      mechanicId: nextMechanic.id,
+      mechanicId: nextMechanic._id,
       orderId,
-      googleMapsUrl: mapUrl,
+      // googleMapsUrl: mapUrl,
       status: "PENDING",
       paymentStatus: "PENDING",
     });
 
     await order.save();
+
+    console.log("333", order)
 
     await userModel.findByIdAndUpdate(nextMechanic._id, {
       status: "NOT-AVAILABLE",
@@ -149,6 +161,7 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       url: session.url,
     });
   } catch (err) {
+    console.error(err)
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
