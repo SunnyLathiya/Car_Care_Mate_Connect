@@ -56,10 +56,8 @@ function sendVerificationMail(email, otp) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield (0, mailSender_1.default)(email, "Verification Mail from CarCareMateConnect", `Your OTP is: ${otp}`);
-            console.log("Verification email sent successfully.");
         }
         catch (error) {
-            console.error("Error sending verification email:", error);
             throw error; // Propagate the error
         }
     });

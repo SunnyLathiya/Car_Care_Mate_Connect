@@ -28,7 +28,6 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
         }
         try {
             const decode = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-            console.log(decode);
             req.user = decode;
         }
         catch (error) {

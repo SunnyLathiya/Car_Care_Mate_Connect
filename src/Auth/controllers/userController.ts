@@ -75,10 +75,10 @@ export const userSignup = async (req: Request, res: Response) => {
       message: "User created account successfully",
       user,
     });
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({
       success: false,
-      message: "User can not be registered, please try again",
+      message: error.message ||  "User can not be registered, please try again",
     });
   }
 };
@@ -97,9 +97,6 @@ export const userSignin = async (req: Request, res: Response) => {
         message: "Please fill all the details carefully",
       });
     }
-
-    console.log("111", req.body);
-    console.log("222", fcmToken);
 
     let user = await userModel.findOne({ email, isActive: true });
 
@@ -187,8 +184,7 @@ export const ForgotPassword = async (req: Request, res: Response) => {
       .status(200)
       .json({ message: "Password reset link sent successfully", mailInfo });
   } catch (error: any) {
-    console.error("Error sending email:", error.message);
-    res.status(500).json({ error: "Failed to send email" });
+    res.status(500).json({ message: "Failed to send email" });
   }
 };
 
@@ -222,8 +218,7 @@ export const changePasswordWithToken = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error: any) {
-    console.error("Error updating password:", error.message);
-    res.status(500).json({ error: "Failed to update password" });
+    res.status(500).json({ message: error.message ||"Failed to update password" });
   }
 };
 
@@ -242,7 +237,6 @@ export const allUsers = async (req: Request, res: Response): Promise<void> => {
       });
     }
   } catch (error) {
-    console.error("Find All Users Error:", error);
     res.status(500).json({
       error: "Internal Server Error",
     });

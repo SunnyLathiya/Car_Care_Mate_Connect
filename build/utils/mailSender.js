@@ -38,7 +38,6 @@ const mailSender = (email, title, body) => __awaiter(void 0, void 0, void 0, fun
             subject: `${title}`,
             text: `${body}`,
         });
-        // console.log(info);
         return info;
     }
     catch (error) {

@@ -1,18 +1,18 @@
-import { Request, Response } from 'express';
-import orderModel, {Order} from '../../Order/models/orderModel';
-import userModel from '../../Auth/models/userModel';
-import mailSender from '../../utils/mailSender';
-import { mauth } from '../../config/firebaseConnection';
-
+import { Request, Response } from "express";
+import orderModel, { Order } from "../../Order/models/orderModel";
+import userModel from "../../Auth/models/userModel";
+import mailSender from "../../utils/mailSender";
+import { mauth } from "../../config/firebaseConnection";
 
 export const findInProcessOrders = (req: Request, res: Response): void => {
-  orderModel.find({
-    $or: [
-      { mechanicId: req.params.mechId, status: "IN-PROCESS" },
-      { mechanicId: req.params.mechId, status: "ACCEPTED" },
-      { mechanicId: req.params.mechId, status: "PENDING" },
-    ],
-  })
+  orderModel
+    .find({
+      $or: [
+        { mechanicId: req.params.mechId, status: "IN-PROCESS" },
+        { mechanicId: req.params.mechId, status: "ACCEPTED" },
+        { mechanicId: req.params.mechId, status: "PENDING" },
+      ],
+    })
     .exec()
     .then((response: Order[]) => {
       if (response.length === 0) {
@@ -27,35 +27,38 @@ export const findInProcessOrders = (req: Request, res: Response): void => {
     })
     .catch((error: any) => {
       res.status(500).json({
-        message: error.message || "Internal Server Error"
+        message: error.message || "Internal Server Error",
       });
     });
 };
 
-export const updateOrder = async (req: Request, res: Response): Promise<void> => {
+export const updateOrder = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const orderId = req.params.orderId;
   const newStatus = req.body.status;
 
   try {
-    await orderModel.updateOne(
-      { _id: orderId },
-      { $set: { status: newStatus,  lastUpdated: new Date() } }
-    ).exec();
+    await orderModel
+      .updateOne(
+        { _id: orderId },
+        { $set: { status: newStatus, lastUpdated: new Date() } }
+      )
+      .exec();
 
     const order: any = await orderModel.findOne({ _id: orderId }).exec();
     const mechId: string = order.mechanicId;
     const customerId: string = order.customerId;
 
     const updateUserStatus = async (status: string) => {
-      await userModel.updateOne(
-        { _id: mechId },
-        { $set: { status } }
-      ).exec();
+      await userModel
+        .updateOne({ _id: mechId }, { $set: { status } }, { new: true })
+        .exec();
     };
-
     if (newStatus === "ACCEPTED") {
       await updateUserStatus("NOT-AVAILABLE");
-    } else if (newStatus === "COMPLETED" || newStatus === "REJECTED") {
+    } else if (newStatus === "COMPLETED" || newStatus === "REJECT") {
       await updateUserStatus("AVAILABLE");
     }
 
@@ -73,7 +76,8 @@ export const updateOrder = async (req: Request, res: Response): Promise<void> =>
 };
 
 export const findMyOrders = (req: Request, res: Response): void => {
-  orderModel.find({ mechanicId: req.params.mechId })
+  orderModel
+    .find({ mechanicId: req.params.mechId })
     .exec()
     .then((response: Order[]) => {
       if (response.length === 0) {
@@ -86,35 +90,46 @@ export const findMyOrders = (req: Request, res: Response): void => {
     })
     .catch((error: any) => {
       res.status(500).json({
-        message: error.message || "Internal Server Error"
+        message: error.message || "Internal Server Error",
       });
     });
 };
-
 
 export const savetoken = async (req: Request, res: Response) => {
   const { token, mechanicId } = req.body;
   try {
     await userModel.findByIdAndUpdate(mechanicId, { fcmToken: token });
-    res.status(200).json({ message: 'Token saved successfully' });
+    res.status(200).json({ message: "Token saved successfully" });
   } catch (error) {
-    res.status(500).json({ message: 'Error saving token', error });
+    res.status(500).json({ message: "Error saving token", error });
   }
 };
 
-export const notificationSend = async(req: Request, res: Response) => {
-    try{
-          await mauth.messaging().send({
-            token:"",
-            "notification":{
-              "title":"testing 1",
-              "body":"hello",
-            }
-          })
+export const notificationSend = async (req: Request, res: Response) => {
+  try {
+    await mauth.messaging().send({
+      token: "",
+      notification: {
+        title: "testing 1",
+        body: "hello",
+      },
+    });
+    return res.status(200).send("Notification send successfully");
+  } catch (error) {}
+};
 
-          return res.status(200).send("Notification send successfully");
-    }
-    catch(error){
-
-    }
-}
+export const notification = async (req: Request, res: Response) => {
+  const { fcmToken, customerName, title, body } = req.body;
+  try {
+    const abc = await mauth.messaging().send({
+      token: fcmToken,
+      notification: {
+        title: "ORDER UPDATE",
+        body: `${body} ${customerName}`,
+      },
+    });
+    return res.status(200).send("Notification Sent Successfully");
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};

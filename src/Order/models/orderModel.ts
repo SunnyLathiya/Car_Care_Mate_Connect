@@ -18,6 +18,7 @@ export interface Order extends Document {
   paymentId: string;
   paymentStatus: string;
   lastUpdated: Date;
+  googleMapsUrl: string;
   fcmToken: string;
 }
 
@@ -27,7 +28,7 @@ const orderSchema: Schema = new Schema({
   customerName: { type: String },
   carName: { type: String },
   carNumber: { type: String },
-  custAddress: { type: String, maxlength: 40 },
+  custAddress: { type: String, maxlength: 100 },
   serviceName: { type: String },
   servicePrice: { type: Number, required: true, min: 0 },
   mechanicId: { type: String },
@@ -39,7 +40,8 @@ const orderSchema: Schema = new Schema({
   paymentId: {type:String},
   paymentStatus: {type:String},
   lastUpdated: { type: Date },
-  fcmToken: {type: String}
+  fcmToken: {type: String},
+  googleMapsUrl: {type: String}
 });
 
 export default model<Order>("Order", orderSchema);

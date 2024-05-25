@@ -19,7 +19,6 @@ export const findPlacedOrders = async (
       });
     }
   } catch (error: any) {
-    console.error("Find Placed Orders Error: ", error);
     res.status(500).json({
       message: error.message || "Internal Server Error",
     });

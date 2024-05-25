@@ -127,7 +127,6 @@ function sendVerificationMail(email, profilePhoto) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const mailResponse = yield (0, mailSender_1.default)(email, "profile update successfully", `Your profile photo: ${profilePhoto}`);
-            console.log(mailResponse);
         }
         catch (error) {
             console.log("error while sending mail");

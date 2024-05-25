@@ -3,16 +3,14 @@ import OrderModel from "../../Order/models/orderModel";
 import userModel from "../../Auth/models/userModel";
 import mailSender from "../../utils/mailSender";
 import { Stripe } from "stripe";
-import dotenv from 'dotenv';
-import path from 'path';
+import fetch from "cross-fetch";
+import dotenv from "dotenv";
+import path from "path";
 
-
-
-const envPath = path.join(__dirname, '../../..', 'config.env');
+const envPath = path.join(__dirname, "../../..", "config.env");
 dotenv.config({ path: envPath });
 
 const stripe = new Stripe(
-  // "process.env.STRIPE_SK",
   "sk_test_51PHo5FSHLSjFfm6ikkeiKl78yhkg02wxfSZBwC6r7AKROns55LHBgCgG5rrhcpZgulUZc2mBpspkxQHgnMU98YIe00HNnGGuOs",
   {
     apiVersion: "2024-04-10",
@@ -49,6 +47,26 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
+    const encodedAddress = encodeURIComponent(custAddress);
+    const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
+
+    console.log("Encoded Address:", encodedAddress);
+    console.log("Nominatim URL:", nominatimUrl);
+
+    const response = await fetch(nominatimUrl);
+    const data: any = await response.json();
+
+    if (!data || data.length === 0) {
+      res.status(400).json({ message: "Invalid address" });
+      return;
+    }
+
+    const { lat, lon } = data[0];
+
+    const mapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}`;
+
+    console.log("2", mapUrl);
+
     const availableMechanics = await userModel.find({
       status: "AVAILABLE",
       accountType: "Mechanic",
@@ -64,7 +82,7 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
     lastAssignedMechanicIndex++;
 
     const orderId = generateRandomOrderId();
-    
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       success_url: `http://localhost:3000/customer/cushome`,
@@ -100,8 +118,9 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       serviceName,
       servicePrice,
       mechanicName: nextMechanic.mechName,
-      mechanicId: nextMechanic._id,
+      mechanicId: nextMechanic.id,
       orderId,
+      googleMapsUrl: mapUrl,
       status: "PENDING",
       paymentStatus: "PENDING",
     });
@@ -125,7 +144,6 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
 
     await mailSender(emailMech, titleMech, bodyMech);
 
-
     res.status(201).json({
       message: "Order placed successfully",
       url: session.url,
@@ -137,16 +155,14 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
 
 export const webhook = async (request: Request, response: Response) => {
   const sig = request.headers["stripe-signature"];
-  const endpointSecret =
-    "process.env.WEBHOOK_SK";
+  const endpointSecret = process.env.WEBHOOK_SK;
 
   let event;
   try {
-    if (sig) {
+    if (sig && endpointSecret) {
       event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
     }
   } catch (err: any) {
-    console.log("err", err);
     response.status(400).send(`Webhook Error: ${err.message}`);
     return;
   }
@@ -162,15 +178,13 @@ export const webhook = async (request: Request, response: Response) => {
           order.paymentStatus = "PAID";
           await order.save();
         } else {
-          console.log(`Order with ID ${orderId} not found`);
         }
-      } catch (err) {
-        console.log(`Error updating order status for order ID ${orderId}`, err);
+      } catch (err: any) {
+        throw new Error(err.message);
       }
 
       break;
     default:
-      console.log(`Unhandled event type ${event?.type}`);
   }
 
   response.send();
@@ -195,7 +209,6 @@ export const findMyOrders = async (
       });
     }
   } catch (error: any) {
-    console.log("Find My Orders Error: " + error);
     res.status(500).json({
       error: error.message,
     });

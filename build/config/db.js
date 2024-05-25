@@ -6,7 +6,6 @@ function connects() {
         .then(() => {
         console.log("db connected");
     }).catch((error) => {
-        console.log(error);
     });
 }
 exports.default = connects;

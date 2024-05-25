@@ -1,12 +1,15 @@
 import nodemailer, { Transporter } from "nodemailer";
-import dotenv from 'dotenv';
-import path from 'path';
+import dotenv from "dotenv";
+import path from "path";
 
-const envPath = path.join(__dirname, '../..', 'config.env');
+const envPath = path.join(__dirname, "../..", "config.env");
 dotenv.config({ path: envPath });
 
-const mailSender = async (email: string, title: string, body: string): Promise<any> => {
-
+const mailSender = async (
+  email: string,
+  title: string,
+  body: string
+): Promise<any> => {
   try {
     const transporter: Transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
@@ -15,7 +18,6 @@ const mailSender = async (email: string, title: string, body: string): Promise<a
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
       },
-
     } as any);
 
     const info = await transporter.sendMail({

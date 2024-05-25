@@ -21,7 +21,6 @@ export const addService = (req: Request, res: Response): void => {
             where: req.body.where,
           });
           service.save().then((response: Service) => {
-            console.log("Service Added: " + response);
             res.status(201).json({
               message: "Service Added Successfully",
               service

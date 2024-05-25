@@ -42,7 +42,6 @@ export const findByBrand = async (
       });
     }
   } catch (error: any) {
-    console.log("Find By Brand Error: " + error);
     res.status(500).json({
       message: error.message,
     });
@@ -66,7 +65,6 @@ export const findByCarId = async (
       });
     }
   } catch (error: any) {
-    console.log("Find By Car Error: " + error);
     res.status(500).json({
       message: error.message,
     });

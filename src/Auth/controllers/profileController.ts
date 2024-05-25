@@ -36,7 +36,6 @@ export const getProfile = async (req: Request, res: Response) => {
       data: profileDetails,
     });
   } catch (error: any) {
-    console.error(error);
     return res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -90,7 +89,6 @@ export const updatedProfile = async (req: Request, res: Response) => {
 
     const latestProfile = await userModel.findById(id);
 
-    console.log("object", latestProfile);
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully",
@@ -99,8 +97,7 @@ export const updatedProfile = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({
       success: false,
-      message: "Problem in profile updating",
-      error: error.message,
+      message: error.message || "Problem in profile updating",
     });
   }
 };

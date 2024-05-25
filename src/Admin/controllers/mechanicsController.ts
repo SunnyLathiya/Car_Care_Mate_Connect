@@ -44,7 +44,6 @@ export const findAll = async (req: Request, res: Response): Promise<void> => {
       });
     }
   } catch (error: any) {
-    console.error(error);
     res.status(500).json({
       message: error.message || "Internal Server Error!",
     });

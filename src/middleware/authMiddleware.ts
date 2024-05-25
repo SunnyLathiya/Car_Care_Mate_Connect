@@ -23,7 +23,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     const token: string | undefined =
       req.headers.authorization &&
       req.headers.authorization.replace("Bearer", "").trim();
-    console.log(token);
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -42,7 +41,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     }
     next();
   } catch (error) {
-    console.error(error);
     return res.status(401).json({
       success: false,
       message: "UnAuthorized!!!",
