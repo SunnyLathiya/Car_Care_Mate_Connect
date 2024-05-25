@@ -35,6 +35,8 @@ const FindOrders: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { allOrders, loading, error } = useSelector((state: any) => state.ordermanage);
 
+  console.log("---", allOrders)
+
 
   useEffect(() => {
     dispatch(findMyOrders());

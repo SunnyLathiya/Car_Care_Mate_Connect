@@ -1,4 +1,4 @@
-/* .chatbotContainer {
+.chatbotContainer {
   position: fixed;
   bottom: 50px;
   right: 200px;
@@ -121,11 +121,11 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-} */
+}
 
 
 
-.container {
+/* .container {
   position: relative;
 }
 
@@ -219,4 +219,4 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-}
+} */

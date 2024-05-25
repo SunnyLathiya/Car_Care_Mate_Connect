@@ -10,7 +10,7 @@ export const fetchOrders = createAsyncThunk("orders/fetchOrders", async () => {
   const token: string | undefined = Cookies.get("token");
   if (token) {
     const user: any = jwtDecode(token);
-    const response = await Axios.get(`mechanic/findmyorders/${user.id}`, {
+    const response = await Axios.get(`/mechanic/findmyorders/${user.id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -27,6 +27,8 @@ export const findMyOrders = createAsyncThunk(
     try {
       const token: any = Cookies.get("token");
       const user: any = jwtDecode(token);
+
+      console.log("aaaaaaaaaaaaa", user)
       const response = await Axios.get(
         `/mechanic/findInprocessorders/${user.id}`,
         {
@@ -35,6 +37,8 @@ export const findMyOrders = createAsyncThunk(
           },
         }
       );
+
+      console.log("rrrrrrrrrr", response)
       return response.data.response;
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;
