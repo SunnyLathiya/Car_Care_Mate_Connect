@@ -13,30 +13,24 @@ const serviceSchema: Schema = new Schema({
   serviceType: {
     type: String,
     maxlength: 50,
-    required: true,
   },
   name: {
     type: String,
-    required: true,
     unique: true,
   },
   price: {
     type: Number,
-    required: true,
     max: 50000,
   },
   description: {
     type: String,
-    required: true,
     maxlength: 200,
   },
   timeRequired: {
     type: String,
-    required: true,
   },
   where: {
     type: String,
-    required: true,
     maxlength: 50,
   },
   orderCreate: {

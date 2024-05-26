@@ -49,23 +49,23 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // const encodedAddress = encodeURIComponent(custAddress);
-    // const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
+    const encodedAddress = encodeURIComponent(custAddress);
+    const nominatimUrl = `https://nominatim.openstreetmap.org/search?q=${encodedAddress}&format=json&limit=1`;
 
-    // console.log("Encoded Address:", encodedAddress);
-    // console.log("Nominatim URL:", nominatimUrl);
+    console.log("Encoded Address:", encodedAddress);
+    console.log("Nominatim URL:", nominatimUrl);
 
-    // const response = await fetch(nominatimUrl);
-    // const data: any = await response.json();
+    const response = await fetch(nominatimUrl);
+    const data: any = await response.json();
 
-    // if (!data || data.length === 0) {
-    //   res.status(400).json({ message: "Invalid address" });
-    //   return;
-    // }
+    if (!data || data.length === 0) {
+      res.status(400).json({ message: "Invalid address" });
+      return;
+    }
 
-    // const { lat, lon } = data[0];
+    const { lat, lon } = data[0];
 
-    // const mapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}`;
+    const mapUrl = `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}`;
 
     const availableMechanics = await userModel.find({
       status: "AVAILABLE",
@@ -101,10 +101,10 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       line_items: [
         {
           price_data: {
-            currency: "INR",
+            currency: "usd",
             product_data: {
               name: serviceName,
-              description: "placed",
+              description: "Car Service Booking",
             },
             unit_amount: servicePrice * 100,
           },
@@ -130,7 +130,7 @@ export const addOrder = async (req: Request, res: Response): Promise<void> => {
       mechanicName: nextMechanic.mechName,
       mechanicId: nextMechanic._id,
       orderId,
-      // googleMapsUrl: mapUrl,
+      googleMapsUrl: mapUrl,
       status: "PENDING",
       paymentStatus: "PENDING",
     });

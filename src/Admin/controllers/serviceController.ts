@@ -1,36 +1,32 @@
 import { Request, Response } from 'express';
 import serviceModel, {Service} from '../models/serviceModel';
 
- 
-export const addService = (req: Request, res: Response): void => {
+
+export const addService = async (req: Request, res: Response): Promise<void> => {
   try {
-    serviceModel.findOne({ name: req.body.name })
-      .exec()
-      .then((response: Service | null) => {
-        if (response) {
-          return res.status(409).json({
-            message: "Entered Service Name is Already Exist",
-          });
-        } else {
-          const service = new serviceModel({
-            serviceType: req.body.serviceType,
-            name: req.body.name,
-            price: req.body.price,
-            description: req.body.description,
-            timeRequired: req.body.timeRequired,
-            where: req.body.where,
-          });
-          service.save().then((response: Service) => {
-            res.status(201).json({
-              message: "Service Added Successfully",
-              service
-            });
-          });
-        }
-      })
-      .catch((error: Error) => {
-        throw error; 
+    const { serviceType, name, price, description, timeRequired, where } = req.body;
+
+    if (!serviceType || !name || !price || !description || !timeRequired || !where) {
+        res.status(400).json({
+        message: "All fields are required: serviceType, name, price, description, timeRequired, where",
       });
+    }
+
+    const service = new serviceModel({
+      serviceType,
+      name,
+      price,
+      description,
+      timeRequired,
+      where,
+    });
+
+    const savedService = await service.save();
+
+    res.status(201).json({
+      message: "Service Added Successfully",
+      service: savedService,
+    });
   } catch (error: any) {
     res.status(500).json({
       message: error.message || "Internal Server Error!",

@@ -30,7 +30,7 @@ export const findAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const allmechanicsDetails = await userModel
       .find({ accountType: "Mechanic" })
-      .select(" id mechName email phoneNumber status")
+      .select(" id mechName email phoneNumber status orders")
       .exec();
 
     if (allmechanicsDetails.length === 0) {
