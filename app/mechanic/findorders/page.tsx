@@ -35,8 +35,6 @@ const FindOrders: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { allOrders, loading, error } = useSelector((state: any) => state.ordermanage);
 
-  console.log("---", allOrders)
-
 
   useEffect(() => {
     dispatch(findMyOrders());
@@ -60,6 +58,8 @@ const FindOrders: React.FC = () => {
   ];
 
   const sendNotification = async ({ fcmToken, customerName, title, body }: NotificationData): Promise<void> => {
+
+    console.log("111")
     try {
       const response = await Axios.post('/mechanic/notification', {
         fcmToken,
@@ -68,11 +68,15 @@ const FindOrders: React.FC = () => {
         body
       });
 
-  
+      console.log("222", response)
+
+
       if (response.status === 200) {
         ToastInfo("Notification Send Successfully!")
       }
     } catch (error: any) {
+      console.error("333", error)
+      console.log("444", error)
       ToastError("Error sending notification:");
     }
   };
@@ -87,6 +91,8 @@ const FindOrders: React.FC = () => {
       const customerName = newData.customerName;
       const title = "Order Update";
       const body = `Order ${newData.orderId} status has been updated to ${newData.status}`;
+
+      console.log("444", fcmToken, customerName, title, body)
 
       await sendNotification({ fcmToken, customerName, title, body });
     } catch (error) {

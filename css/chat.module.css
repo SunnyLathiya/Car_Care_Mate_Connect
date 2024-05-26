@@ -123,6 +123,23 @@
   cursor: pointer;
 }
 
+.chatbotOptions {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+.chatbotOptions button {
+  margin-top: 8px;
+  padding: 8px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 
 
 /* .container {

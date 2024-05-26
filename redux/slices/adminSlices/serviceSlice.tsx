@@ -28,11 +28,14 @@ export const addService = createAsyncThunk<Service, any>(
   async (newService) => {
     try {
       const token = Cookies.get("token");
+
       const response = await Axios.post(`/admin/addservice`, newService, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      ToastSuccess("Service Added Successfully!");
       return response.data;
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;
@@ -50,6 +53,7 @@ export const deleteService = createAsyncThunk(
           Authorization: `Bearer ${token}`,
         },
       });
+
       ToastSuccess("Service Delete Successfully!");
       return serviceId;
     } catch (error: any) {
@@ -138,7 +142,7 @@ const serviceSlice = createSlice({
       })
       .addCase(addService.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Failed to add car";
+        state.error = action.error.message || " to add car";
       })
       .addCase(deleteService.pending, (state) => {
         state.loading = true;

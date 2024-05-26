@@ -28,7 +28,6 @@ export const findMyOrders = createAsyncThunk(
       const token: any = Cookies.get("token");
       const user: any = jwtDecode(token);
 
-      console.log("aaaaaaaaaaaaa", user)
       const response = await Axios.get(
         `/mechanic/findInprocessorders/${user.id}`,
         {
@@ -38,7 +37,7 @@ export const findMyOrders = createAsyncThunk(
         }
       );
 
-      console.log("rrrrrrrrrr", response)
+      console.log("rrrrrrrrrr", response);
       return response.data.response;
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;
@@ -116,11 +115,20 @@ const orderManageSlice = createSlice({
         state.loading = false;
         state.error = null;
         const updatedOrder = action.payload;
+
+        if (!updatedOrder || !updatedOrder._id) {
+          state.error = "Updated order is invalid";
+          return;
+        }
+
         const index = state.allOrders.findIndex(
-          (order: { _id: any }) => order._id === updatedOrder._id
+          (order: { _id: any }) => order && order._id === updatedOrder._id
         );
+
         if (index !== -1) {
           state.allOrders[index] = updatedOrder;
+        } else {
+          state.error = "Order not found";
         }
       })
       .addCase(updateOrder.rejected, (state, action) => {

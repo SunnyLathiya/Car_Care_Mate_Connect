@@ -33,6 +33,8 @@ const Mechanic: React.FC<Props> = () => {
   const {allmechanics}  = useSelector((state: RootState) => state.adminMech);
   const dispatch: AppDispatch = useDispatch();
 
+  console.log("777", allmechanics)
+
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [mechName, setMechName] = useState("");
@@ -79,6 +81,7 @@ const Mechanic: React.FC<Props> = () => {
     { title: "Email", field: "email" },
     { title: "Mobile", field: "phoneNumber" },
     { title: "Status", field: "status"},
+    { title: "Orders", field: "ordersCount"}
   ];
 
   const handleRowDelete = async (oldRow: User) => {
@@ -97,7 +100,7 @@ const Mechanic: React.FC<Props> = () => {
     setdisplay(false);
   };
 
-  const enhancedMechanics = allmechanics.map((mechanic: MechanicData, index: number) => ({ ...mechanic, tableData: { id: index } }));
+  const enhancedMechanics = allmechanics.map((mechanic: MechanicData, index: number) => ({ ...mechanic, ordersCount: mechanic.orders.length, tableData: { id: index } }));
 
   return (
 

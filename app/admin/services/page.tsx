@@ -9,7 +9,7 @@ import { Add, ArrowDownward, ArrowUpward, Cancel, Check, ChevronLeft, ChevronRig
 import { RootState, AppDispatch } from '@/redux/store';
 import { addService, getAllServices, deleteService, updateService } from '@/redux/slices/adminSlices/serviceSlice';
 import Loader from '@/components/common/loader';
-import { ToastError } from '@/components/common/Toast';
+import { ToastError, ToastSuccess } from '@/components/common/Toast';
 
 interface ServiceData {
   _id: string;
@@ -38,23 +38,20 @@ function Services() {
     }
   }, [error]);
 
-
   const handleRowAdd = async (newRow: ServiceData) => {
     try {
-      if (!newRow.name || !newRow.price || !newRow.description || !newRow.timeRequired || !newRow.where) {
-        ToastError('All fields are required');
-        return;
-      }
-      await dispatch(addService(newRow));
-      ToastSuccess("Service added successfully!");
-    } catch (error) {
-      ToastError('Failed to add service');
+      await dispatch(addService(newRow)).unwrap();
+    } catch (err: any) {
+      throw err;
     }
   };
 
   const handleRowDelete = async (oldRow: ServiceData) => {
-      await dispatch(deleteService(oldRow._id));
-      ToastSuccess("Service deleted successfully!");
+      try {
+        await dispatch(deleteService(oldRow._id));
+      } catch (err: any) {
+        throw err;
+      }
   };
 
   const handleRowUpdate = async (newRow: ServiceData, oldRow: ServiceData | undefined) => {
@@ -136,7 +133,4 @@ function Services() {
 }
 
 export default Services;
-function ToastSuccess(arg0: string) {
-  throw new Error('Function not implemented.');
-}
 

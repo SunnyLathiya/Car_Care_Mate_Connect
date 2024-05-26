@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import Loader from "@/components/common/loader";
-// import Notification from "@/components/Notification";
 import { ToastError } from "@/components/common/Toast";
 import Chatbot from "@/components/chatbotCustomer";
 
