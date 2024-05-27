@@ -16,7 +16,6 @@ router.get("/findcompletedorders", auth, Admin, findCompletedOrders);
 
 router.get("/findcompletedordersprofit", auth, Admin, findCompletedOrdersProfit);
 
-
 router.get("/allorders", auth, allOrders);
 
 export default router;

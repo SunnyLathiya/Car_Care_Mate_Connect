@@ -65,16 +65,12 @@ export const Customer = async (
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: "user role not verify, try again",
+      message: "user role not verify, try again!",
     });
   }
 };
 
-export const Admin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const Admin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user as DecodedToken;
     if (user.accountType !== "Admin") {
@@ -92,11 +88,7 @@ export const Admin = async (
   }
 };
 
-export const Mechanic = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const Mechanic = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user as DecodedToken;
     if (user.accountType !== "Mechanic") {

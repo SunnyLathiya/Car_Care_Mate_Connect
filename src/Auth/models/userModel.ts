@@ -154,12 +154,10 @@ const userSchema: Schema = new Schema({
       maxLength: 100,
     },
   ],
-
   isActive: {
     type: Boolean,
     default: true,
   },
-
   fcmToken: {
     type: String,
     default: null

@@ -70,6 +70,16 @@ export const userSignup = async (req: Request, res: Response) => {
       profilePhoto: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
     });
 
+    try {
+      await mailSender(
+        email,
+        "Welcome to CarCareMate",
+        `Hi ${firstName},\n\nThank you for signing up for CarCareMateConnect! We're excited to have you on board.\n\nBest regards,\nThe CarCareMateConnect Team`
+      );
+    } catch (error: any) {
+      console.error("Error sending email:", error.message);
+    }
+
     return res.status(200).json({
       success: true,
       message: "User created account successfully",
@@ -78,7 +88,7 @@ export const userSignup = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({
       success: false,
-      message: error.message ||  "User can not be registered, please try again",
+      message: error.message || "User can not be registered, please try again",
     });
   }
 };
@@ -180,9 +190,7 @@ export const ForgotPassword = async (req: Request, res: Response) => {
       `Click the link to reset your password: ${resetURL}`
     );
 
-    res
-      .status(200)
-      .json({ message: "Password reset link sent successfully", mailInfo });
+    res.status(200).json({ message: "Password reset link sent successfully", mailInfo });
   } catch (error: any) {
     res.status(500).json({ message: "Failed to send email" });
   }
@@ -196,17 +204,17 @@ export const changePasswordWithToken = async (req: Request, res: Response) => {
     if (!maintoken || !newPassword || !confirmNewPassword) {
       return res
         .status(400)
-        .json({ error: "Token and new passwords are required" });
+        .json({ message: "Token and new passwords are required" });
     }
 
     if (newPassword !== confirmNewPassword) {
-      return res.status(400).json({ error: "Passwords do not match" });
+      return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const user = await userModel.findOne({ resetToken: maintoken });
 
     if (!user) {
-      return res.status(404).json({ error: "Invalid or expired token" });
+      return res.status(404).json({ message: "Invalid or expired token" });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 12);
@@ -218,7 +226,9 @@ export const changePasswordWithToken = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message ||"Failed to update password" });
+    res
+      .status(500)
+      .json({ message: error.message || "Failed to update password" });
   }
 };
 
@@ -236,9 +246,9 @@ export const allUsers = async (req: Request, res: Response): Promise<void> => {
         users,
       });
     }
-  } catch (error) {
+  } catch (error: any) {
     res.status(500).json({
-      error: "Internal Server Error",
+      message: error.message || "Internal Server Error",
     });
   }
 };

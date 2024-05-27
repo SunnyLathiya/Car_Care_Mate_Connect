@@ -1,14 +1,25 @@
-import { Request, Response } from 'express';
-import serviceModel, {Service} from '../models/serviceModel';
+import { Request, Response } from "express";
+import serviceModel, { Service } from "../models/serviceModel";
 
-
-export const addService = async (req: Request, res: Response): Promise<void> => {
+export const addService = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const { serviceType, name, price, description, timeRequired, where } = req.body;
+    const { serviceType, name, price, description, timeRequired, where } =
+      req.body;
 
-    if (!serviceType || !name || !price || !description || !timeRequired || !where) {
-        res.status(400).json({
-        message: "All fields are required: serviceType, name, price, description, timeRequired, where",
+    if (
+      !serviceType ||
+      !name ||
+      !price ||
+      !description ||
+      !timeRequired ||
+      !where
+    ) {
+      res.status(400).json({
+        message:
+          "All fields are required: serviceType, name, price, description, timeRequired, where",
       });
     }
 
@@ -36,7 +47,7 @@ export const addService = async (req: Request, res: Response): Promise<void> => 
 
 export const findAll = async (req: Request, res: Response): Promise<void> => {
   try {
-    const services = await serviceModel.find().select("-__v").exec();
+    const services = await serviceModel.find().select("").exec();
 
     if (services.length === 0) {
       res.status(200).json({
@@ -54,8 +65,10 @@ export const findAll = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
-export const updateService = async (req: Request, res: Response): Promise<void> => {
+export const updateService = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const id = req.params.serviceId;
     const updateFields: Partial<Service> = {
@@ -67,7 +80,11 @@ export const updateService = async (req: Request, res: Response): Promise<void> 
       where: req.body.where,
     };
 
-    const updatedService = await serviceModel.findByIdAndUpdate(id, updateFields, { new: true });
+    const updatedService = await serviceModel.findByIdAndUpdate(
+      id,
+      updateFields,
+      { new: true }
+    );
 
     if (!updatedService) {
       res.status(404).json({
@@ -87,7 +104,10 @@ export const updateService = async (req: Request, res: Response): Promise<void> 
   }
 };
 
-export const deleteService = async (req: Request, res: Response): Promise<void> => {
+export const deleteService = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const id = req.params.serviceId;
     const result = await serviceModel.deleteOne({ _id: id }).exec();
@@ -108,9 +128,14 @@ export const deleteService = async (req: Request, res: Response): Promise<void> 
   }
 };
 
-export const findByServiceId = async (req: Request, res: Response): Promise<void> => {
+export const findByServiceId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
-    const response = await serviceModel.findOne({ _id: req.params.serviceId }).exec();
+    const response = await serviceModel
+      .findOne({ _id: req.params.serviceId })
+      .exec();
 
     if (response === null) {
       res.status(404).json({

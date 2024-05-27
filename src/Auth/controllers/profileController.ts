@@ -124,8 +124,8 @@ export const updatedPassword = async (req: Request, res: Response) => {
     await user.save();
 
     res.status(200).json({ message: "Password updated successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Server error" });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || "Internal Server Error!", });
   }
 };
 
@@ -145,13 +145,12 @@ export const deleteAccount = async (req: Request, res: Response) => {
 
     return res.status(200).json({
       success: true,
-      message: "User deleted successfully",
+      message: "User Deleted Successfully",
     });
   } catch (error: any) {
     return res.status(500).json({
       success: false,
-      message: "User cannot be deleted successfully",
-      error: error.message,
+      message: error.message || "Internal Server Error!",
     });
   }
 };

@@ -1,15 +1,15 @@
 import { Request, Response } from "express";
 import carModel from "../models/carModel";
 
-export const addCar = async (req: Request, res: Response): Promise<void> => {
+export const addCar = async (req: Request, res: Response) => {
   try {
     const existingCar = await carModel.findOne({
       name: req.body.name,
       brand: req.body.brand,
     });
     if (existingCar) {
-      res.status(409).json({
-        message: "Name Already Exist",
+      return res.status(409).json({
+        message: "Name Already Exist!",
       });
     }
 
@@ -21,7 +21,7 @@ export const addCar = async (req: Request, res: Response): Promise<void> => {
     const savedCar = await car.save();
 
     res.status(201).json({
-      message: "Car Added Successfully",
+      message: "Car Added Successfully!",
       car: {
         brand: savedCar.brand,
         name: savedCar.name,
@@ -35,7 +35,7 @@ export const addCar = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const updateCar = async (req: Request, res: Response): Promise<void> => {
+export const updateCar = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const newcar = await carModel.findByIdAndUpdate(
@@ -44,7 +44,7 @@ export const updateCar = async (req: Request, res: Response): Promise<void> => {
       { new: true }
     );
 
-    res.status(200).json({
+    return res.status(200).json({
       message: "Car Updated Successfully",
       newcar,
     });
@@ -55,10 +55,10 @@ export const updateCar = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const deleteCar = async (req: Request, res: Response): Promise<void> => {
+export const deleteCar = async (req: Request, res: Response) => {
   try {
     await carModel.deleteOne({ _id: req.params.carId });
-    res.status(200).json({
+    return res.status(200).json({
       message: "Car deleted Successfully",
     });
   } catch (error: any) {
@@ -68,14 +68,11 @@ export const deleteCar = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const findAllCars = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const findAllCars = async (req: Request, res: Response) => {
   try {
     const cars = await carModel.find().select("_id name brand");
     if (cars.length === 0) {
-      res.status(200).json({
+      return res.status(200).json({
         message: "No Cars Available",
       });
     } else {

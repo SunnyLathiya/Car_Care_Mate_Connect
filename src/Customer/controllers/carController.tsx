@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import carModel, { Car } from "../../Admin/models/carModel";
 
-export const findAllBrands = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const findAllBrands = async (req: Request, res: Response): Promise<void> => {
   try {
     const brands = await carModel.find().distinct("brand");
     if (brands.length === 0) {
@@ -22,19 +19,17 @@ export const findAllBrands = async (
 };
 
 
-export const findByBrand = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const findByBrand = async (req: Request, res: Response ): Promise<void> => {
   try {
     const cars = await carModel.find({ brand: req.body.brand }).select("name");
+
     if (cars.length < 1) {
       res.status(404).json({
         message: "This Brand is Not available",
       });
     } else {
       res.status(200).json({
-        message: "all car of this brand related",
+        message: "All Car Of This Brand Related",
         cars: cars.map((car: Car) => ({
           name: car.name,
           _id: car._id,
@@ -49,10 +44,7 @@ export const findByBrand = async (
 };
 
 
-export const findByCarId = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const findByCarId = async (req: Request, res: Response): Promise<void> => {
   try {
     const car = await carModel.findOne({ _id: req.params.carId });
     if (!car) {
@@ -66,7 +58,7 @@ export const findByCarId = async (
     }
   } catch (error: any) {
     res.status(500).json({
-      message: error.message,
+      message: error.message || "Internal Server Error!",
     });
   }
 };

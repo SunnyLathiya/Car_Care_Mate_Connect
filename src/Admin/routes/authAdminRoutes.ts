@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import {signup } from "../controllers/authController";
 import {auth, Admin} from "../../middleware/authMiddleware"
 

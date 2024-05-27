@@ -12,7 +12,6 @@ router.get("/findmyorders/:mechId", auth, Mechanic, findMyOrders);
 
 router.post("/savetoken", savetoken);
 
-
 router.post("/notification", notification)
 
 export default router;

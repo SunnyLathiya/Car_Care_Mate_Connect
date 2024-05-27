@@ -9,7 +9,6 @@ const router: Router = express.Router();
 
 import { auth, Customer} from '../../middleware/authMiddleware'
 
-
 router.get("/findallbrands", auth, Customer, findAllBrands);
 
 router.post("/findbybrand", auth, Customer, findByBrand);

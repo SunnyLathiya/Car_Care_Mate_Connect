@@ -1,10 +1,7 @@
 import { Request, Response } from "express";
 import orderModel, { Order } from "../../Order/models/orderModel";
 
-export const findPlacedOrders = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const findPlacedOrders = async ( req: Request, res: Response): Promise<void> => {
   try {
     const response = await orderModel.find({ status: "PLACED" }).exec();
 
@@ -25,10 +22,7 @@ export const findPlacedOrders = async (
   }
 };
 
-export const findCompletedOrders = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const findCompletedOrders = async ( req: Request, res: Response): Promise<void> => {
   try {
     const response = await orderModel.find({ status: "COMPLETED" }).exec();
 
@@ -51,9 +45,7 @@ export const findCompletedOrders = async (
 
 export const findCompletedOrdersProfit = async (req: Request, res: Response) => {
   try {
-    const completedOrders: Order[] = await orderModel
-      .find({ status: "COMPLATED" })
-      .exec();
+    const completedOrders: Order[] = await orderModel.find({ status: "COMPLATED" }).exec();
 
     if (completedOrders.length === 0) {
       return res.status(404).json({
@@ -61,10 +53,7 @@ export const findCompletedOrdersProfit = async (req: Request, res: Response) => 
       });
     }
 
-    const totalServicePrice = completedOrders.reduce(
-      (total, order) => total + order.servicePrice,
-      0
-    );
+    const totalServicePrice = completedOrders.reduce((total, order) => total + order.servicePrice, 0 );
 
     res.status(200).json({
       totalServicePrice,
@@ -83,7 +72,7 @@ export const allOrders = async (req: Request, res: Response): Promise<void> => {
 
     if (response.length === 0) {
       res.status(200).json({
-        message: "No Orders!!!",
+        message: "No Orders !!!",
       });
     } else {
       res.status(200).json({

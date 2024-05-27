@@ -35,13 +35,13 @@ const orderSchema: Schema = new Schema({
   mechanicName: { type: String },
   requestedOn: { type: Date, default: Date.now, required: true },
   deliveredOn: { type: Date },
-  status: { type: String, default:"PLACED" },
-  value: {type:String},
-  paymentId: {type:String},
-  paymentStatus: {type:String},
+  status: { type: String, default: "PLACED" },
+  value: { type: String },
+  paymentId: { type: String },
+  paymentStatus: { type: String },
   lastUpdated: { type: Date },
-  fcmToken: {type: String},
-  googleMapsUrl: {type: String}
+  fcmToken: { type: String },
+  googleMapsUrl: { type: String },
 });
 
 export default model<Order>("Order", orderSchema);

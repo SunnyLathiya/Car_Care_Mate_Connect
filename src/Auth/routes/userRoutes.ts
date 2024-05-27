@@ -6,7 +6,7 @@ import {
   changePasswordWithToken,
   allUsers,
 } from "../controllers/userController";
-import { Admin, auth, Customer } from "../../middleware/authMiddleware";
+import { Admin, auth } from "../../middleware/authMiddleware";
 
 const router = express.Router();
 

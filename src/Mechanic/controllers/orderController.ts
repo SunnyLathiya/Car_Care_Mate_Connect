@@ -12,20 +12,12 @@ const stripe = new Stripe(
   }
 );
 
-export const updateOrder = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const updateOrder = async ( req: Request, res: Response): Promise<void> => {
   const orderId = req.params.orderId;
   const newStatus = req.body.status;
 
   try {
-    await orderModel
-      .updateOne(
-        { _id: orderId },
-        { $set: { status: newStatus, lastUpdated: new Date() } }
-      )
-      .exec();
+    await orderModel.updateOne({ _id: orderId }, { $set: { status: newStatus, lastUpdated: new Date() } }).exec();
 
     const order: any = await orderModel.findOne({ _id: orderId }).exec();
     const mechId: string = order.mechanicId;
@@ -62,15 +54,13 @@ export const updateOrder = async (
 
 export const findInProcessOrders = (req: Request, res: Response): void => {
 
-  console.log("req.params", req.params._id)
   orderModel.find({ mechanicId: req.params._id,
     $or: [
       { mechanicId: req.params._id, status: "IN-PROCESS" },
       { mechanicId: req.params._id, status: "ACCEPTED" },
       { mechanicId: req.params._id, status: "PENDING" },
     ],
-  })
-    .exec()
+  }).exec()
     .then((response: Order[]) => {
       if (response.length === 0) {
         res.status(200).json({
@@ -83,26 +73,16 @@ export const findInProcessOrders = (req: Request, res: Response): void => {
       }
     })
     .catch((err: any) => {
-      console.log("Find All Placed Orders Error: " + err);
       res.status(500).json({
         error: err,
       });
     });
 };
 
-export const findMyOrders = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-
-  console.log("1", req.params.mechId)
+export const findMyOrders = async (req: Request, res: Response): Promise<void> => {
 
   try {
-    const response: Order[] = await orderModel
-      .find({ mechanicId: req.params.mechId })
-      .exec();
-
-      console.log("2", response)
+    const response: Order[] = await orderModel.find({ mechanicId: req.params.mechId }).exec();
 
     if (response.length === 0) {
       res.status(200).json({
@@ -128,21 +108,9 @@ export const savetoken = async (req: Request, res: Response) => {
   }
 };
 
-export const notificationSend = async (req: Request, res: Response) => {
-  try {
-    await mauth.messaging().send({
-      token: "",
-      notification: {
-        title: "testing 1",
-        body: "hello",
-      },
-    });
-    return res.status(200).send("Notification send successfully");
-  } catch (error) {}
-};
 
 export const notification = async (req: Request, res: Response) => {
-  const { fcmToken, customerName, title, body } = req.body;
+  const { fcmToken, customerName, body } = req.body;
   try {
     const abc = await mauth.messaging().send({
       token: fcmToken,

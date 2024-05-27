@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.findMyOrders = void 0;
 const orderModel_1 = __importDefault(require("../models/orderModel")); // Adjust the path if necessary
-// Find My Orders
 const findMyOrders = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const orders = yield orderModel_1.default.find({ customerId: req.params.customerId }).exec();

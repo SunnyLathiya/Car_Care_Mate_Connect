@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import userModel from "../../Auth/models/userModel";
 import mailSender from "../../utils/mailSender";
 
-
 export const signup = async (req: Request, res: Response) => {
   try {
     const { mechName, email, password, accountType, phoneNumber } = req.body;
