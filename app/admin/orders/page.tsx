@@ -1,16 +1,40 @@
-"use client"
+"use client";
 import React, { useState, useEffect, forwardRef } from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import MaterialTable, { Column } from "material-table";
 import { AppDispatch, RootState } from "@/redux/store";
-import { allorders, findCompletedOrders, findPlacedOrders } from "@/redux/slices/adminSlices/orderSlice";
-import { Check, Clear, Delete, ChevronRight, Edit, ArrowUpward, Search, FirstPage, LastPage, ChevronLeft, Add, ArrowDownward, Info } from "@mui/icons-material";
-import Cookies from 'js-cookie';
+import {
+  allorders,
+  findCompletedOrders,
+} from "@/redux/slices/adminSlices/orderSlice";
+import {
+  Check,
+  Clear,
+  Delete,
+  ChevronRight,
+  Edit,
+  ArrowUpward,
+  Search,
+  FirstPage,
+  LastPage,
+  ChevronLeft,
+  ArrowDownward,
+  Info,
+} from "@mui/icons-material";
 import { Order } from "@/app/types";
-import { format } from 'date-fns';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
-import { keyframes } from '@emotion/react';
-import styled from '@emotion/styled';
+import { format } from "date-fns";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+} from "@mui/material";
+import { keyframes } from "@emotion/react";
+import styled from "@emotion/styled";
+import { ToastError } from "@/components/common/Toast";
+import Loader from "@/components/common/loader";
 
 interface Props {}
 
@@ -35,8 +59,8 @@ const DialogContainer = styled.div`
 `;
 
 const DialogTitleStyled = styled(DialogTitle)`
-  background-color: #B85042;
-  color: #FFF;
+  background-color: #b85042;
+  color: #fff;
   padding: 16px;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
@@ -65,25 +89,28 @@ const Value = styled(Typography)`
 `;
 
 const Orders: React.FC<Props> = () => {
-  const { orders } = useSelector((state: RootState) => state.order);
-  const completedResponse = useSelector((state: RootState) => state.order.completedOrders);
+  const { orders, loading, error } = useSelector((state: RootState) => state.order);
+  const completedResponse = useSelector(
+    (state: RootState) => state.order.completedOrders
+  );
 
   const dispatch: AppDispatch = useDispatch();
 
-  const [isError, setIsError] = useState<boolean>(false);
   const [display, setDisplay] = useState<boolean>(false);
-  const [mechanicsLookUp, setMechanicsLookUp] = useState<{ [key: string]: string }>({});
   const [open, setOpen] = useState<boolean>(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const authToken = Cookies.get('token');
-
   useEffect(() => {
-    dispatch(allorders())
+    dispatch(allorders());
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(findPlacedOrders());
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
+
+  useEffect(() => {
     if (display) {
       dispatch(findCompletedOrders());
     }
@@ -115,8 +142,12 @@ const Orders: React.FC<Props> = () => {
     { title: "Service Name", field: "serviceName" },
     { title: "Price", field: "servicePrice" },
     { title: "Mechanic Name", field: "mechanicName" },
-    { title: "Date of Order", field: "requestedOn", render: rowData => format(new Date(rowData.requestedOn), 'dd-MM-yyyy') },
-    { title: "Order Status", field: "status" }
+    {
+      title: "Date of Order",
+      field: "requestedOn",
+      render: (rowData) => format(new Date(rowData.requestedOn), "dd-MM-yyyy"),
+    },
+    { title: "Order Status", field: "status" },
   ];
 
   const column: Column<Order>[] = [
@@ -130,12 +161,23 @@ const Orders: React.FC<Props> = () => {
     { title: "Assigned Mechanic", field: "mechanicId" },
   ];
 
-  const enhancedOrders = orders?.map((order: Order, index: number) => ({ ...order, tableData: { id: index } })) || [];
+  const enhancedOrders =
+    orders?.map((order: Order, index: number) => ({
+      ...order,
+      tableData: { id: index },
+    })) || [];
 
-  const completedenhancedOrders = completedResponse?.map((order: Order, index: number) => ({ ...order, tableData: { id: index } })) || [];
+  const completedenhancedOrders =
+    completedResponse?.map((order: Order, index: number) => ({
+      ...order,
+      tableData: { id: index },
+    })) || [];
 
   return (
     <div style={{ marginTop: "70px", marginBottom: "20px", marginLeft: "190px" }}>
+
+      { loading ? (<Loader/>)  : 
+      (<>
       <br />
       <button onClick={openTable}>See Completed Orders</button>
       <br />
@@ -147,19 +189,33 @@ const Orders: React.FC<Props> = () => {
           style={{ backgroundColor: "#E7E8D1" }}
           data={enhancedOrders}
           icons={{
-            Clear: forwardRef(() => <Clear style={{ color: '#B85042' }} />),
-            Check: forwardRef(() => <Check style={{ color: '#B85042' }} />),
-            Delete: forwardRef(() => <Delete style={{ color: '#B85042' }} />),
-            DetailPanel: forwardRef(() => <ChevronRight style={{ color: '#B85042' }} />),
-            Edit: forwardRef(() => <Edit style={{ color: '#B85042' }} />),
-            Export: forwardRef(() => <ArrowUpward style={{ color: '#B85042' }} />),
+            Clear: forwardRef(() => <Clear style={{ color: "#B85042" }} />),
+            Check: forwardRef(() => <Check style={{ color: "#B85042" }} />),
+            Delete: forwardRef(() => <Delete style={{ color: "#B85042" }} />),
+            DetailPanel: forwardRef(() => (
+              <ChevronRight style={{ color: "#B85042" }} />
+            )),
+            Edit: forwardRef(() => <Edit style={{ color: "#B85042" }} />),
+            Export: forwardRef(() => (
+              <ArrowUpward style={{ color: "#B85042" }} />
+            )),
             Filter: forwardRef(() => <Search />),
-            FirstPage: forwardRef(() => <FirstPage style={{ color: '#B85042' }} />),
-            LastPage: forwardRef(() => <LastPage style={{ color: '#B85042' }} />),
-            NextPage: forwardRef(() => <ChevronRight style={{ color: '#B85042' }} />),
-            PreviousPage: forwardRef(() => <ChevronLeft style={{ color: '#B85042' }} />),
-            ResetSearch: forwardRef(() => <Clear style={{ color: '#B85042' }} />),
-            Search: forwardRef(() => <Search style={{ color: '#B85042' }} />),
+            FirstPage: forwardRef(() => (
+              <FirstPage style={{ color: "#B85042" }} />
+            )),
+            LastPage: forwardRef(() => (
+              <LastPage style={{ color: "#B85042" }} />
+            )),
+            NextPage: forwardRef(() => (
+              <ChevronRight style={{ color: "#B85042" }} />
+            )),
+            PreviousPage: forwardRef(() => (
+              <ChevronLeft style={{ color: "#B85042" }} />
+            )),
+            ResetSearch: forwardRef(() => (
+              <Clear style={{ color: "#B85042" }} />
+            )),
+            Search: forwardRef(() => <Search style={{ color: "#B85042" }} />),
             SortArrow: forwardRef(() => <ArrowDownward />),
           }}
           options={{
@@ -173,16 +229,16 @@ const Orders: React.FC<Props> = () => {
             },
             rowStyle: {
               backgroundColor: "#E7E8D1",
-              border: '1px solid #A7BEAE'
+              border: "1px solid #A7BEAE",
             },
             exportButton: true,
           }}
           actions={[
             {
-              icon: () => <Info style={{ color: '#B85042' }} />,
-              tooltip: 'View Details',
-              onClick: (event, rowData) => handleOpen(rowData as Order)
-            }
+              icon: () => <Info style={{ color: "#B85042" }} />,
+              tooltip: "View Details",
+              onClick: (event, rowData) => handleOpen(rowData as Order),
+            },
           ]}
         />
       ) : (
@@ -204,19 +260,33 @@ const Orders: React.FC<Props> = () => {
             style={{ backgroundColor: "#E7E8D1" }}
             data={completedenhancedOrders}
             icons={{
-              Clear: forwardRef(() => <Clear style={{ color: '#B85042' }} />),
-              Check: forwardRef(() => <Check style={{ color: '#B85042' }} />),
-              Delete: forwardRef(() => <Delete style={{ color: '#B85042' }} />),
-              DetailPanel: forwardRef(() => <ChevronRight style={{ color: '#B85042' }} />),
-              Edit: forwardRef(() => <Edit style={{ color: '#B85042' }} />),
-              Export: forwardRef(() => <ArrowUpward style={{ color: '#B85042' }} />),
+              Clear: forwardRef(() => <Clear style={{ color: "#B85042" }} />),
+              Check: forwardRef(() => <Check style={{ color: "#B85042" }} />),
+              Delete: forwardRef(() => <Delete style={{ color: "#B85042" }} />),
+              DetailPanel: forwardRef(() => (
+                <ChevronRight style={{ color: "#B85042" }} />
+              )),
+              Edit: forwardRef(() => <Edit style={{ color: "#B85042" }} />),
+              Export: forwardRef(() => (
+                <ArrowUpward style={{ color: "#B85042" }} />
+              )),
               Filter: forwardRef(() => <Search />),
-              FirstPage: forwardRef(() => <FirstPage style={{ color: '#B85042' }} />),
-              LastPage: forwardRef(() => <LastPage style={{ color: '#B85042' }} />),
-              NextPage: forwardRef(() => <ChevronRight style={{ color: '#B85042' }} />),
-              PreviousPage: forwardRef(() => <ChevronLeft style={{ color: '#B85042' }} />),
-              ResetSearch: forwardRef(() => <Clear style={{ color: '#B85042' }} />),
-              Search: forwardRef(() => <Search style={{ color: '#B85042' }} />),
+              FirstPage: forwardRef(() => (
+                <FirstPage style={{ color: "#B85042" }} />
+              )),
+              LastPage: forwardRef(() => (
+                <LastPage style={{ color: "#B85042" }} />
+              )),
+              NextPage: forwardRef(() => (
+                <ChevronRight style={{ color: "#B85042" }} />
+              )),
+              PreviousPage: forwardRef(() => (
+                <ChevronLeft style={{ color: "#B85042" }} />
+              )),
+              ResetSearch: forwardRef(() => (
+                <Clear style={{ color: "#B85042" }} />
+              )),
+              Search: forwardRef(() => <Search style={{ color: "#B85042" }} />),
               SortArrow: forwardRef(() => <ArrowDownward />),
             }}
             options={{
@@ -230,7 +300,7 @@ const Orders: React.FC<Props> = () => {
               },
               rowStyle: {
                 backgroundColor: "#E7E8D1",
-                border: '1px solid #A7BEAE'
+                border: "1px solid #A7BEAE",
               },
               exportButton: true,
             }}
@@ -243,76 +313,101 @@ const Orders: React.FC<Props> = () => {
         </div>
       ) : null}
 
-
-<Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-        {/* <DialogContainer> */}
-          <DialogTitleStyled>Order Details</DialogTitleStyled>
-          <DialogContentStyled>
-            {selectedOrder && (
-              <>
-                <Row>
-                  <Label>Order ID:</Label>
-                  <Value>{selectedOrder.orderId}</Value>
-                </Row>
-                <Row>
-                  <Label>Customer Name:</Label>
-                  <Value>{selectedOrder.customerName}</Value>
-                </Row>
-                <Row>
-                  <Label>Car Name:</Label>
-                  <Value>{selectedOrder.carName}</Value>
-                </Row>
-                <Row>
-                  <Label>Car Number:</Label>
-                  <Value>{selectedOrder.carNumber}</Value>
-                </Row>
-                <Row>
-                  <Label>Address:</Label>
-                  <Value>{selectedOrder.custAddress}</Value>
-                </Row>
-                <Row>
-                  <Label>Service Name:</Label>
-                  <Value>{selectedOrder.serviceName}</Value>
-                </Row>
-                <Row>
-                  <Label>Price:</Label>
-                  <Value>{selectedOrder.servicePrice}</Value>
-                </Row>
-                <Row>
-                  <Label>Mechanic Name:</Label>
-                  <Value>{selectedOrder.mechanicName}</Value>
-                </Row>
-                <Row>
-                  <Label>Date of Order:</Label>
-                  <Value>{format(new Date(selectedOrder.requestedOn), 'dd-MM-yyyy')}</Value>
-                </Row>
-                <Row>
-                  <Label>Status:</Label>
-                  <Value>{selectedOrder.status}</Value>
-                </Row>
-                <Row>
-                  <Label>MechanicId:</Label>
-                  <Value>{selectedOrder.Id}</Value>
-                </Row>
-                {/* Uncomment if deliveredOn is available in the order object */}
-                {/* <Row>
-                  <Label>Delivered On:</Label>
-                  <Value>{format(new Date(selectedOrder.deliveredOn), 'dd-MM-yyyy')}</Value>
-                </Row> */}
-              </>
-            )}
-          </DialogContentStyled>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">Close</Button>
-          </DialogActions>
-        {/* </DialogContainer> */}
+      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+        <DialogTitleStyled>Order Details</DialogTitleStyled>
+        <DialogContentStyled>
+          {selectedOrder && (
+            <>
+              <Row>
+                <Label>Order ID:</Label>
+                <Value>{selectedOrder.orderId}</Value>
+              </Row>
+              <Row>
+                <Label>Customer Name:</Label>
+                <Value>{selectedOrder.customerName}</Value>
+              </Row>
+              <Row>
+                <Label>Car Name:</Label>
+                <Value>{selectedOrder.carName}</Value>
+              </Row>
+              <Row>
+                <Label>Car Number:</Label>
+                <Value>{selectedOrder.carNumber}</Value>
+              </Row>
+              <Row>
+                <Label>Address:</Label>
+                <Value>{selectedOrder.custAddress}</Value>
+              </Row>
+              <Row>
+                <Label>Service Name:</Label>
+                <Value>{selectedOrder.serviceName}</Value>
+              </Row>
+              <Row>
+                <Label>Price:</Label>
+                <Value>{selectedOrder.servicePrice}</Value>
+              </Row>
+              <Row>
+                <Label>paymentStatus:</Label>
+                <Value>{selectedOrder.paymentStatus}</Value>
+              </Row>
+              <Row>
+                <Label>Mechanic Name:</Label>
+                <Value>{selectedOrder.mechanicName}</Value>
+              </Row>
+              <Row>
+                <Label>Date of Order:</Label>
+                <Value>
+                  {format(new Date(selectedOrder.requestedOn), "dd-MM-yyyy")}
+                </Value>
+              </Row>
+              <Row>
+                <Label>Time of order:</Label>
+                <Value>
+                  {format(new Date(selectedOrder?.requestedOn), "HH:mm:ss")}
+                </Value>
+              </Row>
+              <Row>
+                <Label>Status:</Label>
+                <Value>{selectedOrder.status}</Value>
+              </Row>
+              <Row>
+                <Label>Date of last update order:</Label>
+                <Value>
+                  {format(
+                    new Date(
+                      selectedOrder.lastUpdated || selectedOrder.requestedOn
+                    ),
+                    "dd-MM-yyyy"
+                  )}
+                </Value>
+              </Row>
+              <Row>
+                <Label>Time of last update order:</Label>
+                <Value>
+                  {format(
+                    new Date(
+                      selectedOrder.lastUpdated || selectedOrder.requestedOn
+                    ),
+                    "HH:mm:ss"
+                  )}
+                </Value>
+              </Row>
+              <Row>
+                <Label>MechanicId:</Label>
+                <Value>{selectedOrder.Id}</Value>
+              </Row>
+            </>
+          )}
+        </DialogContentStyled>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
       </Dialog>
-      
-
-
+      </>)}
     </div>
   );
 };
 
 export default Orders;
-

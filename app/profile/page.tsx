@@ -12,21 +12,30 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { imageDb } from "@/components/firebase";
 import { User } from "../types";
 import Axios from "@/redux/APIs/Axios";
+import Loader from "@/components/common/loader";
 
 const Profile = () => {
-  const { user } = useSelector((state: RootState) => state.user);
-  
+  const { user, loading, error } = useSelector(
+    (state: RootState) => state.user
+  );
+
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordError, setNewPasswordError] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  
+
   const router = useRouter();
   const [firstNameError, setFirstNameError] = useState("");
   const [lastNameError, setLastNameError] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
 
   const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
 
   const [formValues, setFormValues] = useState({
     firstName: user?.firstName || "",
@@ -136,17 +145,16 @@ const Profile = () => {
     }
   };
 
-
   const authToken = Cookies.get("token");
 
   const validateNewPassword = () => {
     if (!currentPassword) {
-      setNewPasswordError('Current password is required.');
+      setNewPasswordError("Current password is required.");
       return false;
     }
 
     if (!newPassword) {
-      setNewPasswordError('New password is required.');
+      setNewPasswordError("New password is required.");
       return false;
     }
 
@@ -207,222 +215,232 @@ const Profile = () => {
   };
 
   return (
-    <div
-      className="rounded mt-5 mb-5 "
-    >
-      <div className="row">
-        <div className="col-md-3 border-right">
-          <div className="d-flex flex-column align-items-center text-center p-3 py-5">
-            <img
-              className="rounded-circle mt-5 mb-3"
-              width="150px"
-              height="150px"
-              src={formValues.profilePhoto || "/default-profile-photo.png"}
-              alt="Profile Picture"
-            />
-            <span className="font-weight-bold mb-3" style={{ marginLeft: "100px" }}>
-              <input
-                type="file"
-                onChange={onFileChange}
-              />
-            </span>
-            <span className="mb-3">
-              <button onClick={uploadImage}>upload</button>
-            </span>
-            <span className="text-black-50">{user?.email}</span>
-          </div>
-        </div>
-        <div className="col-md-5 border-right">
-          <div className="p-3 py-5">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h4 className="text-right">Profile Settings</h4>
-            </div>
-            <div className="row mt-2">
-              <div className="col-md-6">
-                <label className={`${styles.labels}`}>FirstName*:</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  name="firstName"
-                  placeholder="First Name"
-                  value={formValues.firstName}
-                  onChange={handleInputChange}
-                  style={{ fontWeight: "bold" }}
+    <div className="rounded mt-5 mb-5 ">
+      {loading ? (
+        <Loader />
+      ) : (
+        <>
+          <div className="row">
+            <div className="col-md-3 border-right">
+              <div className="d-flex flex-column align-items-center text-center p-3 py-5">
+                <img
+                  className="rounded-circle mt-5 mb-3"
+                  width="150px"
+                  height="150px"
+                  src={formValues.profilePhoto || "/default-profile-photo.png"}
+                  alt="Profile Picture"
                 />
-                {firstNameError && <div className="text-danger">{firstNameError}</div>}
-              </div>
-              <div className="col-md-6">
-                <label className={`${styles.labels}`}>LastName*:</label>
-                <input
-                  type="text"
-                  className="form-control fw-bold"
-                  name="lastName"
-                  placeholder="Surname"
-                  value={formValues.lastName}
-                  onChange={handleInputChange}
-                />
-                {lastNameError && <div className="text-danger">{lastNameError}</div>}
+                <span
+                  className="font-weight-bold mb-3"
+                  style={{ marginLeft: "100px" }}
+                >
+                  <input type="file" onChange={onFileChange} />
+                </span>
+                <span className="mb-3">
+                  <button onClick={uploadImage}>upload</button>
+                </span>
+                <span className="text-black-50">{user?.email}</span>
               </div>
             </div>
-            <div className="row mt-3">
-              <div className="col-md-12">
-                <label className={`${styles.labels}`}>PhoneNumber*:</label>
-                <input
-                  type="text"
-                  className="form-control fw-bold"
-                  placeholder="Enter Phone Number"
-                  name="phoneNumber"
-                  value={formValues.phoneNumber}
-                  onChange={handleInputChange}
-                />
-                {phoneNumberError && <div className="text-danger">{phoneNumberError}</div>}
-              </div>
-              <div className="col-md-12">
-                <label className={`${styles.labels}`}>Email*:</label>
-                <input
-                  type="text"
-                  className="form-control fw-bold"
-                  placeholder="Enter Email ID"
-                  name="email"
-                  value={formValues.email}
-                  onChange={handleInputChange}
-                  disabled
-                />
-              </div>
-              <div className="col-md-12">
-                <label className={`${styles.labels}`}>YourCar:</label>
-                <input
-                  type="text"
-                  className="form-control fw-bold"
-                  placeholder="YourCar"
-                  name="yourCar"
-                  value={formValues.yourCar}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-12">
-                <label className={`${styles.labels}`}>FavouruteCar:</label>
-                <input
-                  type="text"
-                  className="form-control fw-bold"
-                  placeholder="FavouruteCar"
-                  name="favouriteCar"
-                  value={formValues.favouriteCar}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-12">
-                <label className={`${styles.labels}`}>Address:</label>
-                <input
-                  type="text"
-                  className="form-control fw-bold"
-                  placeholder="Enter Address Line 1"
-                  name="address"
-                  value={formValues.address}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="col-md-12">
-                <label className={`${styles.labels}`}>ZipCode:</label>
-                <input
-                  type="text"
-                  className="form-control fw-bold"
-                  placeholder="Enter Postcode"
-                  name="zipcode"
-                  value={formValues.zipcode}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="row mt-3">
-                <div className="col-md-6">
-                  <label className={`${styles.labels}`}>Country:</label>
-                  <input
-                    type="text"
-                    className="form-control fw-bold"
-                    placeholder="Country"
-                    name="country"
-                    value={formValues.country}
-                    onChange={handleInputChange}
-                  />
+            <div className="col-md-5 border-right">
+              <div className="p-3 py-5">
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                  <h4 className="text-right">Profile Settings</h4>
                 </div>
-                <div className="col-md-6">
-                  <label className={`${styles.labels}`}>State:</label>
-                  <input
-                    type="text"
-                    className="form-control fw-bold"
-                    placeholder="State/Region"
-                    name="state"
-                    value={formValues.state}
-                    onChange={handleInputChange}
-                  />
+                <div className="row mt-2">
+                  <div className="col-md-6">
+                    <label className={`${styles.labels}`}>FirstName*:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="firstName"
+                      placeholder="First Name"
+                      value={formValues.firstName}
+                      onChange={handleInputChange}
+                      style={{ fontWeight: "bold" }}
+                    />
+                    {firstNameError && (
+                      <div className="text-danger">{firstNameError}</div>
+                    )}
+                  </div>
+                  <div className="col-md-6">
+                    <label className={`${styles.labels}`}>LastName*:</label>
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      name="lastName"
+                      placeholder="Surname"
+                      value={formValues.lastName}
+                      onChange={handleInputChange}
+                    />
+                    {lastNameError && (
+                      <div className="text-danger">{lastNameError}</div>
+                    )}
+                  </div>
+                </div>
+                <div className="row mt-3">
+                  <div className="col-md-12">
+                    <label className={`${styles.labels}`}>PhoneNumber*:</label>
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      placeholder="Enter Phone Number"
+                      name="phoneNumber"
+                      value={formValues.phoneNumber}
+                      onChange={handleInputChange}
+                    />
+                    {phoneNumberError && (
+                      <div className="text-danger">{phoneNumberError}</div>
+                    )}
+                  </div>
+                  <div className="col-md-12">
+                    <label className={`${styles.labels}`}>Email*:</label>
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      placeholder="Enter Email ID"
+                      name="email"
+                      value={formValues.email}
+                      onChange={handleInputChange}
+                      disabled
+                    />
+                  </div>
+                  <div className="col-md-12">
+                    <label className={`${styles.labels}`}>YourCar:</label>
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      placeholder="YourCar"
+                      name="yourCar"
+                      value={formValues.yourCar}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-12">
+                    <label className={`${styles.labels}`}>FavouruteCar:</label>
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      placeholder="FavouruteCar"
+                      name="favouriteCar"
+                      value={formValues.favouriteCar}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-12">
+                    <label className={`${styles.labels}`}>Address:</label>
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      placeholder="Enter Address Line 1"
+                      name="address"
+                      value={formValues.address}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="col-md-12">
+                    <label className={`${styles.labels}`}>ZipCode:</label>
+                    <input
+                      type="text"
+                      className="form-control fw-bold"
+                      placeholder="Enter Postcode"
+                      name="zipcode"
+                      value={formValues.zipcode}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="row mt-3">
+                    <div className="col-md-6">
+                      <label className={`${styles.labels}`}>Country:</label>
+                      <input
+                        type="text"
+                        className="form-control fw-bold"
+                        placeholder="Country"
+                        name="country"
+                        value={formValues.country}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="col-md-6">
+                      <label className={`${styles.labels}`}>State:</label>
+                      <input
+                        type="text"
+                        className="form-control fw-bold"
+                        placeholder="State/Region"
+                        name="state"
+                        value={formValues.state}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-5 text-center">
+                  <button
+                    className={`${styles.profileButton} btn btn-primary`}
+                    type="button"
+                    onClick={handleProfileUpdate}
+                  >
+                    Save Profile
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="mt-5 text-center">
-              <button
-                className={`${styles.profileButton} btn btn-primary`}
-                type="button"
-                onClick={handleProfileUpdate}
-              >
-                Save Profile
-              </button>
-            </div>
-          </div>
-        </div>
 
-        <div className={`${styles.rightside} col-md-4`}>
-          <div className="p-3 py-5">
-            <div className="d-flex justify-content-between align-items-center experience">
-              <u>
-                <h4>
-                  <span>Edit Password</span>
-                </h4>
-              </u>
-              <button
-                className="btn btn-primary me-3"
-                onClick={handleChangePassword}
-              >
-                <i className="fa fa-plus"></i>Change Password
-              </button>
-            </div>
-            <br />
-            <div className="col-md-12">
-              <label className={`${styles.labels}`}>Current Password</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="Current Password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-              />
-            </div>
-            <br />
-            <div className="col-md-12">
-              <label className={`${styles.labels}`}>New Password:</label>
-              <input
-                type="password"
-                className="form-control"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-              {newPasswordError && (
-                <div style={{ color: "red", marginTop: "5px" }}>
-                  {newPasswordError}
+            <div className={`${styles.rightside} col-md-4`}>
+              <div className="p-3 py-5">
+                <div className="d-flex justify-content-between align-items-center experience">
+                  <u>
+                    <h4>
+                      <span>Edit Password</span>
+                    </h4>
+                  </u>
+                  <button
+                    className="btn btn-primary me-3"
+                    onClick={handleChangePassword}
+                  >
+                    <i className="fa fa-plus"></i>Change Password
+                  </button>
                 </div>
-              )}
-            </div>
-            <div className="position-absolute bottom-0 end-0 mb-5 me-5">
-              <button
-                className="btn btn-danger custom-button"
-                onClick={handleDeleteAccount}
-              >
-                <i className="fa fa-trash"></i>&nbsp;Delete Account
-              </button>
+                <br />
+                <div className="col-md-12">
+                  <label className={`${styles.labels}`}>Current Password</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="Current Password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                  />
+                </div>
+                <br />
+                <div className="col-md-12">
+                  <label className={`${styles.labels}`}>New Password:</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    placeholder="New Password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                  />
+                  {newPasswordError && (
+                    <div style={{ color: "red", marginTop: "5px" }}>
+                      {newPasswordError}
+                    </div>
+                  )}
+                </div>
+                <div className="position-absolute bottom-0 end-0 mb-5 me-5">
+                  <button
+                    className="btn btn-danger custom-button"
+                    onClick={handleDeleteAccount}
+                  >
+                    <i className="fa fa-trash"></i>&nbsp;Delete Account
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };

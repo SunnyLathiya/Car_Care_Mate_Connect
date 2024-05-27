@@ -1,5 +1,4 @@
 "use client";
-import { ToastSuccess } from "@/components/common/Toast";
 import Axios from "@/redux/APIs/Axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
@@ -36,8 +35,6 @@ export const findMyOrders = createAsyncThunk(
           },
         }
       );
-
-      console.log("rrrrrrrrrr", response);
       return response.data.response;
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;
@@ -61,7 +58,6 @@ export const updateOrder = createAsyncThunk(
           },
         }
       );
-      // ToastSuccess("Order Update Successfully!")
       return response.data.response;
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;

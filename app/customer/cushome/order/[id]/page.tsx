@@ -71,8 +71,7 @@ const Order: React.FC = () => {
   }, [carSelected, id]);
 
   const getPackage = () => {
-    axios
-      .get(`http://localhost:4000/api/v1/admin/findbyserviceid/${id}`)
+    Axios.get(`/admin/findbyserviceid/${id}`)
       .then((response) => {
         setService(response.data.response);
       })
@@ -103,7 +102,6 @@ const Order: React.FC = () => {
 
   const onSubmit = (data: any) => {
     if (!user || !service || !car) return;
-
     const formData = new FormData();
 
     const orderData = {
@@ -121,10 +119,11 @@ const Order: React.FC = () => {
       .then((response) => {
         window.location.href = response.data.url;
         setLoading(false);
+        ToastSuccess(response.data.message);
       })
       .catch((error: any) => {
         ToastError(error.response.data.message);
-        router.push('/customer/cushome');
+        router.push("/customer/cushome");
       });
   };
 

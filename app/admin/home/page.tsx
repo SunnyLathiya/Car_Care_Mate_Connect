@@ -1,17 +1,15 @@
 "use client";
 import {
   allorders,
-  findCompletedOrders,
   findCompletedOrdersProfit,
 } from "@/redux/slices/adminSlices/orderSlice";
-import styles from '@/css/admin/AdminHome.module.css'
+import styles from "@/css/admin/AdminHome.module.css";
 import { AppDispatch, RootState } from "@/redux/store";
 import {
   FaCartArrowDown,
   FaClipboardCheck,
   FaClock,
   FaHourglassHalf,
-  FaSpinner,
   FaStar,
   FaTools,
   FaUsers,
@@ -32,12 +30,8 @@ const Card: React.FC<CardProps> = ({ title, count, icon }: any) => {
     <div className={styles.cardContainer}>
       {icon}
       <hr />
-      <h2 className={styles.title}>
-        {title}
-      </h2>
-      <p className={styles.count}>
-        {count}
-      </p>
+      <h2 className={styles.title}>{title}</h2>
+      <p className={styles.count}>{count}</p>
     </div>
   );
 };
@@ -53,7 +47,6 @@ const page: React.FC = () => {
     dispatch(allUsers());
   }, [dispatch]);
 
-
   const totalcomplatedorder = Array.isArray(peoples?.user)
     ? order?.orders?.filter(
         (item: { status: string }) => item.status === "COMPLETED"
@@ -66,11 +59,11 @@ const page: React.FC = () => {
       ).length
     : 0;
 
-
   const totalorders = order?.orders?.length;
+
   const InProcessOrders = Array.isArray(peoples?.user)
     ? order?.orders?.filter(
-        (item: { status: string }) => item.status === "IN-PROCESS"
+        (item: { status: string }) => item.status === "ACCEPTED"
       ).length
     : 0;
   const placedOrders = Array.isArray(peoples?.user)
@@ -105,9 +98,7 @@ const page: React.FC = () => {
     : 0;
 
   return (
-    <div
-      className={styles.mainContainer}
-    >
+    <div className={styles.mainContainer}>
       <hr />
       <div className={styles.containerTitle}>
         <hr />
@@ -123,54 +114,42 @@ const page: React.FC = () => {
           <Card
             title="Total Orders"
             count={totalorders}
-            icon={
-              <FaCartArrowDown
-                style={{
-                  fontSize: "24px",
-                  marginRight: "8px",
-                  color: "#B85042",
-                }}
-              />
-            }
+            icon={<FaCartArrowDown className={styles.totalorders} />}
           />
           <Card
             title="Completed Orders"
             count={totalcomplatedorder}
-            icon={<FaClock style={{ fontSize: "24px", color: "orange" }} />}
+            icon={<FaClock className={styles.totalcomplatedorder} />}
           />
           <Card
             title="In-Progress Orders"
             count={InProcessOrders}
-            icon={
-              <FaClipboardCheck style={{ fontSize: "24px", color: "green" }} />
-            }
+            icon={<FaClipboardCheck className={styles.InProcessOrders} />}
           />
           <Card
             title="Placed Orders"
             count={placedOrders}
-            icon={
-              <FaHourglassHalf style={{ fontSize: "24px", color: "orange" }} />
-            }
+            icon={<FaHourglassHalf className={styles.placedOrders} />}
           />
           <Card
             title="Total Mechanics"
             count={totalMechanics}
-            icon={<FaUsers style={{ fontSize: "24px", marginRight: "8px" }} />}
+            icon={<FaUsers className={styles.totalMechanics} />}
           />
           <Card
             title="Available Mechanics"
             count={totalAvailableMechanics}
-            icon={<FaTools style={{ fontSize: "24px", marginRight: "8px" }} />}
+            icon={<FaTools className={styles.totalAvailableMechanics} />}
           />
           <Card
             title="Total Customers"
             count={totalCustomer}
-            icon={<FaUsers style={{ fontSize: "24px", marginRight: "8px" }} />}
+            icon={<FaUsers className={styles.totalCustomer} />}
           />
           <Card
             title="Total * Customers"
             count={totalCustomersWithOrders}
-            icon={<FaStar style={{ fontSize: "24px", color: "gold" }} />}
+            icon={<FaStar className={styles.totalCustomersWithOrders} />}
           />
         </div>
       </div>

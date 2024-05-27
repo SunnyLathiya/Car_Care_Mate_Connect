@@ -11,6 +11,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { setCarSelected } from "@/redux/slices/userSlice";
 import { getAllServices } from "@/redux/slices/adminSlices/serviceSlice";
+import { ToastError } from "@/components/common/Toast";
+import Loader from "@/components/common/loader";
 
 interface Service {
   _id: string;
@@ -33,7 +35,7 @@ const useStyles = makeStyles({
 
 const Services: React.FC = () => {
   const classes = useStyles();
-  const { services } = useSelector((state: RootState) => state.service);
+  const { services, loading, error } = useSelector((state: RootState) => state.service);
   const router = useRouter();
 
   const { id } = useParams<{ id: string }>();
@@ -52,6 +54,12 @@ const Services: React.FC = () => {
       dispatch(setCarSelected(id));
     }
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
 
   const handleBuyClick = (serviceId: string) => {
     router.push(`/customer/cushome/order/${serviceId}`);
@@ -116,7 +124,9 @@ const Services: React.FC = () => {
 
   return (
     <div className={styles.servicecontainer}>
-      <div className={styles.servicediv}>
+      {loading ? (<Loader/>) : (
+        <>
+        <div className={styles.servicediv}>
         <button
           className={styles.changeCarButton}
           onClick={() => router.push(`/customer/cushome`)}
@@ -154,6 +164,8 @@ const Services: React.FC = () => {
       <Grid container spacing={5} className="grid_container">
         {filteredService.map((item: any) => getServiceCards(item))}
       </Grid>
+      </>
+      )}
     </div>
   );
 };

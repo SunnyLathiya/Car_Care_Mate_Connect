@@ -8,20 +8,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import CarSlides from "@/components/customer/CarSlides";
 import { fetchCarsByBrand } from "@/redux/slices/customer/cusFunctionsSlice";
+import { ToastError } from "@/components/common/Toast";
+import Loader from "@/components/common/loader";
 
 const Brands: React.FC = () => {
+  const { cars, loading, error } = useSelector((state: RootState) => state.cusFunctions);
   const router = useRouter();
   const { brand } = useParams<{ brand: string }>();
   const [filter, setFilter] = useState<string>("");
   
   const dispatch = useDispatch<AppDispatch>();
-  const { cars, loading } = useSelector((state: RootState) => state.cusFunctions);
 
   useEffect(() => {
     if (brand) {
       dispatch(fetchCarsByBrand(brand));
     }
   }, [dispatch, brand]);
+
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
@@ -57,7 +65,7 @@ const Brands: React.FC = () => {
         </div>
 
         {loading ? (
-          <CircularProgress />
+          <Loader />
         ) : (
           <Grid container spacing={3} className={styles.grid_container}>
             {filteredCars.map((car) => getCarCard(car))}

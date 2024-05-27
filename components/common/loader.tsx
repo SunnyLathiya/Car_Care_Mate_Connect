@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Image from "next/image";
 import load from "../../public/loaderCar.gif";
+import { loadBindings } from "next/dist/build/swc";
 
 const LoaderContainer = styled.div`
   display: flex;
@@ -19,7 +20,7 @@ const LoaderContainer = styled.div`
 const Loader: React.FC = () => {
   return (
     <LoaderContainer>
-      <Image src={load} alt={""} />
+      <Image src={load} alt={"Loading..."} />
     </LoaderContainer>
   );
 };

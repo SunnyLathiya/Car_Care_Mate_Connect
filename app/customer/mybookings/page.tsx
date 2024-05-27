@@ -1,12 +1,10 @@
 "use client";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, Grid, CardContent } from "@mui/material";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
-import axios from "axios";
 import {
   FormControl,
-  InputLabel,
   MenuItem,
   Select,
   Button,
@@ -15,8 +13,8 @@ import {
 import styles from "../../../css/customers/Myorder.module.css";
 import moment from "moment";
 import { DateRangePicker } from "react-date-range";
-import 'react-date-range/dist/styles.css';
-import 'react-date-range/dist/theme/default.css';
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import Axios from "@/redux/APIs/Axios";
 import { ToastError } from "@/components/common/Toast";
 
@@ -26,7 +24,6 @@ interface User {
   name: string;
   id: string;
 }
-
 interface Order {
   _id: string;
   status: string;
@@ -42,7 +39,7 @@ interface Order {
   paymentStatus: string;
 }
 interface MyOrderComponentProps {
-  status: "PLACED" | "PENDING" | "ACCEPTED" | "COMPLETED";
+  status: "PLACED" | "PENDING" | "ACCEPTED" | "COMPLETED" | "REJECT";
 }
 const MyOrderComponent: React.FC<MyOrderComponentProps> = ({ status }) => {
   const getActiveSteps = (status: MyOrderComponentProps["status"]) => {
@@ -103,8 +100,8 @@ const MyOrderComponent: React.FC<MyOrderComponentProps> = ({ status }) => {
 };
 
 const formatDate = (date: any) => {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
   const year = String(date.getFullYear()).slice(-2);
   return `${day}-${month}-${year}`;
 };
@@ -283,9 +280,7 @@ const OrderFullDetails = ({
       <hr style={{ marginLeft: "30px", marginRight: "30px" }} />
       <div className={styles.total}>
         <div className="row">
-          <div className="col-9">
-            PaymentStatue:- {order.paymentStatus}
-          </div>
+          <div className="col-9">PaymentStatue:- {order.paymentStatus}</div>
           <div className="col-3">
             <big>{order.servicePrice}Rs.</big>
           </div>
@@ -329,7 +324,7 @@ const MyBookings = (order: Order) => {
   const [dateRange, setDateRange] = useState<any>({
     startDate: new Date(),
     endDate: new Date(),
-    key: 'selection',
+    key: "selection",
   });
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -354,10 +349,9 @@ const MyBookings = (order: Order) => {
     setDateRange({
       startDate: startDate,
       endDate: endDate,
-      key: 'selection',
+      key: "selection",
     });
   };
-  
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -367,30 +361,24 @@ const MyBookings = (order: Order) => {
           const user: any = jwtDecode(token);
           setUserD(user);
 
-          const response = await Axios.get(
-            `/customer/findOrders/${user.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          const response = await Axios.get(`/customer/findOrders/${user.id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
 
           setOrders(response.data.orders);
         } catch (error: any) {
-          ToastError(error.message)
+          ToastError(error.message);
         }
       } else {
-        ToastError("Token is undefined")
+        ToastError("Token is undefined");
       }
     };
-
     fetchUser();
   }, []);
 
-
   const statusStyle = {
-    // color: orders..status === 'pending' ? 'orange' : 'green', // Set color based on status
     fontWeight: "bold",
     marginBottom: "10px",
   };
@@ -430,7 +418,6 @@ const MyBookings = (order: Order) => {
               style={{
                 padding: "10px",
                 boxShadow: "0 3px 6px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "yellow",
               }}
             >
               <CardContent>
@@ -461,27 +448,32 @@ const MyBookings = (order: Order) => {
     );
   };
 
-
-
-  const filteredOrders = orders.filter((order) => {
+  const filteredOrders = orders?.filter((order) => {
     const orderDate = new Date(order.requestedOn);
-    const isStatusMatch = selectedStatus === 'ALL' || order.status === selectedStatus;
-    const isDateInRange = orderDate >= dateRange.startDate && orderDate <= dateRange.endDate;
+    const isStatusMatch =
+      selectedStatus === "ALL" || order.status === selectedStatus;
+    const isDateInRange =
+      orderDate >= dateRange.startDate && orderDate <= dateRange.endDate;
 
-    if (selectedStatus === 'ALL' && dateRange.startDate && dateRange.endDate) {
+    if (selectedStatus === "ALL" && dateRange.startDate && dateRange.endDate) {
       return isDateInRange;
-    } else if (selectedStatus !== 'ALL' && (!dateRange.startDate || !dateRange.endDate)) {
+    } else if (
+      selectedStatus !== "ALL" &&
+      (!dateRange.startDate || !dateRange.endDate)
+    ) {
       return isStatusMatch;
-    } else if (selectedStatus !== 'ALL' && dateRange.startDate && dateRange.endDate) {
+    } else if (
+      selectedStatus !== "ALL" &&
+      dateRange.startDate &&
+      dateRange.endDate
+    ) {
       return isStatusMatch && isDateInRange;
     } else {
       return true;
     }
-
   });
-  
 
-  const lastOrder = orders.length > 0 ? orders[orders.length - 1] : null;
+  const lastOrder = orders?.length > 0 ? orders[orders?.length - 1] : null;
 
   return (
     <div
@@ -501,25 +493,34 @@ const MyBookings = (order: Order) => {
         <h1 style={{ color: "#B85042" }}>MY BOOKINGS</h1>
 
         <div style={{ display: "flex", alignItems: "center" }}>
+          <div>
+            <Button
+              variant="outlined"
+              onClick={toggleDatePicker}
+              style={{ right: "20px" }}
+            >
+              Select Date Range
+            </Button>
+            {showDatePicker && (
+              <div
+                style={{
+                  position: "absolute",
+                  zIndex: 1000,
+                  marginRight: "-100px",
+                  right: "150px",
+                }}
+              >
+                <DateRangePicker
+                  ranges={[dateRange]}
+                  onChange={handleDateRangeChange}
+                  months={1}
+                  direction="horizontal"
+                />
+              </div>
+            )}
+          </div>
 
-      <div>
-      <Button variant="outlined" onClick={toggleDatePicker} style={{right:"20px"}}>
-        Select Date Range
-      </Button>
-      {showDatePicker && (
-        <div style={{ position: 'absolute', zIndex: 1000, marginRight:'-100px', right:"150px" }}>
-          <DateRangePicker
-            ranges={[dateRange]}
-            onChange={handleDateRangeChange}
-            months={1}
-            direction="horizontal"
-          />
-        </div>
-         )}
-      </div>
-
-
-      <FormControl variant="outlined" style={{ minWidth: 200 }}>
+          <FormControl variant="outlined" style={{ minWidth: 200 }}>
             <Select
               value={selectedStatus}
               onChange={handleStatusChange}
@@ -532,7 +533,6 @@ const MyBookings = (order: Order) => {
               <MenuItem value="COMPLETED">Completed</MenuItem>
             </Select>
           </FormControl>
-
         </div>
       </div>
 
@@ -592,7 +592,7 @@ const MyBookings = (order: Order) => {
         />
       ) : (
         <Grid container spacing={3} className="cards_container">
-          {filteredOrders.map((order: any) => {
+          {filteredOrders?.map((order: any) => {
             const formattedDate = moment(order.requestedOn).format(
               "DD-MM-YYYY"
             );
@@ -663,7 +663,6 @@ const MyBookings = (order: Order) => {
             );
           })}
         </Grid>
-        
       )}
     </div>
   );

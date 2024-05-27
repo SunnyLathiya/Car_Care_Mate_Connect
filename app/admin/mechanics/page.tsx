@@ -6,14 +6,12 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import Container from "@material-ui/core/Container";
 import MaterialTable, { Column } from "material-table";
-import { getAllMechanics, getAllAvailableMechanics, deleteMechanic } from "@/redux/slices/adminSlices/adminMechSlice";
+import { getAllMechanics, deleteMechanic } from "@/redux/slices/adminSlices/adminMechSlice";
 import { RootState, AppDispatch } from '@/redux/store';
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import axios from "axios";
-import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { AddBox, Cancel, DeleteOutline, SaveAlt, Add, Edit, Delete, Search, Check, Clear, ArrowUpward, FirstPage, LastPage, ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { Edit, Delete, Search, Check, Clear, ArrowUpward, FirstPage, LastPage, ChevronLeft, ChevronRight } from "@mui/icons-material";
 import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { User } from "@/app/types";
 import Axios from "@/redux/APIs/Axios";
@@ -30,12 +28,9 @@ interface MechanicData {
 interface Props {}
 
 const Mechanic: React.FC<Props> = () => {
-  const {allmechanics}  = useSelector((state: RootState) => state.adminMech);
+  const {allmechanics, loading, error}  = useSelector((state: RootState) => state.adminMech);
   const dispatch: AppDispatch = useDispatch();
 
-  console.log("777", allmechanics)
-
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [mechName, setMechName] = useState("");
   const [password, setPassword] = useState("");
@@ -54,25 +49,24 @@ const Mechanic: React.FC<Props> = () => {
       }, { headers: {
         Authorization: `Bearer ${token}`,
       },});
+
+      ToastSuccess(response.data.message)
       setdisplay(false)
       dispatch(getAllMechanics());
-
-      if(response.data.status === "success"){
-        router.push('/admin/mechanics');
-      }
-      if (response.data.success) {
-        ToastSuccess(response.data.message)
-      } else {
-        throw new Error(response.data.message);
-      }
     } catch (error: any) {
-        ToastError(error.message)
+        throw error;
     }
   };
 
   useEffect(() => {
     dispatch(getAllMechanics());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
 
 
   const columns: Column<MechanicData>[] = [
@@ -88,7 +82,7 @@ const Mechanic: React.FC<Props> = () => {
     try {
       await dispatch(deleteMechanic(oldRow._id));
     } catch (error) {
-      ToastError("Error occurred while deleting car")
+      throw error;
     }
   };
 
@@ -175,7 +169,7 @@ const Mechanic: React.FC<Props> = () => {
                     name="mechName"
                     variant="outlined"
                     fullWidth
-                    label="Name"
+                    label="Name*"
                     value={mechName}
                     onChange={(e) => setMechName(e.target.value)}
                   />
@@ -184,7 +178,7 @@ const Mechanic: React.FC<Props> = () => {
                   <TextField
                     variant="outlined"
                     fullWidth
-                    label="Number"
+                    label="Number*"
                     name="phoneNumber"
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
@@ -194,7 +188,7 @@ const Mechanic: React.FC<Props> = () => {
                   <TextField
                     variant="outlined"
                     fullWidth
-                    label="Email Address"
+                    label="Email Address*"
                     name="email"
                     autoComplete="email"
                     value={email}
@@ -206,7 +200,7 @@ const Mechanic: React.FC<Props> = () => {
                     variant="outlined"
                     fullWidth
                     name="password"
-                    label="Password"
+                    label="Password*"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

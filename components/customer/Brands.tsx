@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import { allBrands } from "@/redux/slices/customer/cusFunctionsSlice";
-// import Notification from "../Notification";
+import { ToastError } from "../common/Toast";
 
 export interface Brand {
   [x: string]: any;
@@ -25,7 +25,7 @@ export interface Brand {
 const Brands: React.FC = () => {
   const [filter, setFilter] = useState<string>("");
   const router = useRouter();
-  const { brands, loading } = useSelector(
+  const { brands, loading, error } = useSelector(
     (state: RootState) => state.cusFunctions
   );
   const dispatch: AppDispatch = useDispatch();
@@ -33,6 +33,12 @@ const Brands: React.FC = () => {
   useEffect(() => {
     dispatch(allBrands());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(e.target.value);
@@ -63,7 +69,6 @@ const Brands: React.FC = () => {
 
   return (
     <div className={styles.brand}>
-      {/* <Notification /> */}
       <h1 className={styles.title}>Available Brands</h1>
       <div className={styles.search}>
         <SearchIcon className={styles.searchIcon} />

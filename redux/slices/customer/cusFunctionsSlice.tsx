@@ -1,5 +1,4 @@
 "use client";
-import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
@@ -16,7 +15,6 @@ export const allBrands = createAsyncThunk("brands/allbrands", async () => {
     });
     return response.data;
   } catch (error: any) {
-    ToastError(" Error in Order page!")
     throw (error as AxiosError).response?.data || error.message;
   }
 });
@@ -33,7 +31,6 @@ export const fetchCarsByBrand = createAsyncThunk(
       });
       return response.data.cars;
     } catch (error: any) {
-      ToastError("Error fetching cars!")
       throw (error as AxiosError).response?.data || error.message;
     }
   }

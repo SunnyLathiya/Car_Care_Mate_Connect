@@ -37,18 +37,18 @@ const ContactPage: React.FC = () => {
                   <a href={`tel:${+919484497949}`}>
                     <div className={`${styles.text_one}`}>+91 9484 497949</div>
                   </a>
-                  <a href={`tel:${+917777777777}`}>
-                    <div className={`${styles.text_two}`}>+01 7777 777777</div>
+                  <a href={`tel:${+918469665556}`}>
+                    <div className={`${styles.text_two}`}>+91 8469 665556</div>
                   </a>
                 </div>
                 <div className={`${styles.email} ${styles.details}`}>
                   <i className="fas fa-envelope"></i>
                   <div className={`${styles.topic}`}>Email</div>
                   <div className={`${styles.text_one}`}>
-                    carcaremateconnect7@gmail.com
+                    <a href="mailto:carcaremateconnect7@gmail.com"> carcaremateconnect7@gmail.com </a>
                   </div>
                   <div className={`${styles.text_two}`}>
-                    sunnylathiya701@gmail.com
+                    <a href="mailto:sunnylathiya701@gmail.com"> sunnylathiya701@gmail.com </a>
                   </div>
                 </div>
               </div>

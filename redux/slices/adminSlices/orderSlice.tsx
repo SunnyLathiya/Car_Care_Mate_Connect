@@ -1,9 +1,8 @@
 "use client";
-import { ToastError, ToastSuccess } from "@/components/common/Toast";
+import { ToastError } from "@/components/common/Toast";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { toast } from "react-toastify";
 import { Order } from "@/app/types";
 import Axios from "@/redux/APIs/Axios";
 
@@ -19,6 +18,7 @@ export const findPlacedOrders = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
+      ToastError(error.response.data.message)
       throw (error as AxiosError).response?.data || error.message;
     }
   }
@@ -34,7 +34,6 @@ export const allorders = createAsyncThunk("order/allorders", async () => {
     });
     return response.data;
   } catch (error: any) {
-    ToastError(" Error in Order page!");
     throw (error as AxiosError).response?.data || error.message;
   }
 });
@@ -51,7 +50,6 @@ export const findCompletedOrders = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      ToastError(" Error in completed order page!");
       throw (error as AxiosError).response?.data || error.message;
     }
   }
@@ -69,7 +67,6 @@ export const findCompletedOrdersProfit = createAsyncThunk(
       });
       return response.data;
     } catch (error: any) {
-      ToastError(error.message);
       throw (error as AxiosError).response?.data || error.message;
     }
   }

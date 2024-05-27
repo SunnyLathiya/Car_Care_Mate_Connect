@@ -1,5 +1,5 @@
 "use client"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField, Button, Typography, Box, Grid, Paper, Avatar, Link, CircularProgress } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Loader from '@/components/common/loader';
@@ -9,7 +9,13 @@ import imgsignup from "../../public/images/Car-Service.jpeg";
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // State for loading indicator
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,7 +38,6 @@ const ForgotPassword = () => {
       if (!response.ok) {
         const data = await response.json();
         setError(data.error || 'Failed to reset password.');
-        ToastError('Failed to reset password.')
       } else {
         setError('');
         ToastSuccess("Password reset instructions sent to your email.");

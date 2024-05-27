@@ -34,8 +34,7 @@ export const addService = createAsyncThunk<Service, any>(
           Authorization: `Bearer ${token}`,
         },
       });
-
-      ToastSuccess("Service Added Successfully!");
+      ToastSuccess(response.data.message);
       return response.data;
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;
@@ -48,16 +47,15 @@ export const deleteService = createAsyncThunk(
   async (serviceId: string) => {
     try {
       const token = Cookies.get("token");
-      await Axios.delete(`/admin/deleteservice/${serviceId}`, {
+      const response = await Axios.delete(`/admin/deleteservice/${serviceId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      ToastSuccess("Service Delete Successfully!");
+      ToastSuccess(response.data.message);
       return serviceId;
     } catch (error: any) {
-      ToastError("Error in Delete New Service!");
       throw (error as AxiosError).response?.data || error.message;
     }
   }
@@ -82,7 +80,7 @@ export const updateService = createAsyncThunk(
       const index = service.findIndex((ser: { _id: any }) => {
         return ser._id === response.data.data._id;
       });
-      ToastSuccess("Service updated successfully!");
+      ToastSuccess(response.data.message);
       return { data: response.data.data, index };
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;

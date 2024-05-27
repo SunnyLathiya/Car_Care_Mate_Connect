@@ -45,6 +45,7 @@ export type Service = {
 };
 
 export type Order = {
+  googleMapsUrl: string;
   _id: any;
   orderId: string;
   customerId: string;
@@ -60,6 +61,8 @@ export type Order = {
   status: string;
   value: string;
   mechanicName: string;
+  lastUpdated: string;
+  paymentStatus: string;
 };
 
 export type Passwords = {
@@ -68,9 +71,4 @@ export type Passwords = {
   confirmPassword: string;
 };
 
-export type RowsType = {
-  data: any;
-  users: any;
-  onEditFunction?: any;
-  onDeleteFunction?: any;
-};
+

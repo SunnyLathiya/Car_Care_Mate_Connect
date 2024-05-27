@@ -39,3 +39,34 @@
   flex-wrap: wrap;
   gap: 20px;
 }
+
+.totalorders {
+  font-size: 24px;
+  margin-right: 8px;
+  color: #b85042;
+}
+
+.totalcomplatedorder{
+  font-size: 24px; 
+  color: orange;
+}
+
+.InProcessOrders{
+  font-size: 24px;
+  color: green;
+}
+
+.placedOrders {
+  font-size: 24px;
+  color: orange;
+}
+
+.totalMechanics{
+  font-size: 24px; 
+  margin-right: 8px;
+}
+
+.totalAvailableMechanics{
+  font-size: 24px;
+  margin-right: 8px;
+}

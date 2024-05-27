@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar,
   Box,
@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { ToastSuccess } from "@/components/common/Toast";
+import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { useRouter } from "next/navigation";
 import imgsignup from "../../../public/images/Car-Service.jpeg"
 
@@ -21,6 +21,12 @@ const ChangePassword = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (error) {
+      ToastError(error);
+    }
+  }, [error]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -108,10 +114,10 @@ const ChangePassword = () => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: '#B85042', color: '#E7E8D1' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <Typography component="h1" variant="h5">
+          <Typography component="h1" variant="h5" style={{color:"#B85042"}}>
             Change Password
           </Typography>
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
@@ -125,6 +131,25 @@ const ChangePassword = () => {
               autoComplete="new-password"
               value={newPassword}
               onChange={handleNewPasswordChange}
+              sx={{
+                '& .MuiInputLabel-root': {
+                  color: '#A7BEAE',
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#B85042',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#B85042',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#B85042',
+                  },
+                  '&.Mui-focused .MuiInputLabel-root': {
+                    color: '#B85042',
+                  },
+                },
+              }} 
             />
             <TextField
               margin="normal"
@@ -138,23 +163,50 @@ const ChangePassword = () => {
               onChange={handleConfirmPasswordChange}
               error={!!error}
               helperText={error}
+              sx={{
+                '& .MuiInputLabel-root': {
+                  color: '#A7BEAE',
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#B85042',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#B85042',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#B85042',
+                  },
+                  '&.Mui-focused .MuiInputLabel-root': {
+                    color: '#B85042',
+                  },
+                },
+              }} 
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{
+                mt: 3,
+                mb: 2,
+                backgroundColor: '#B85042', 
+                color: 'white', 
+                '&:hover': {
+                  backgroundColor: '#974038',
+                },
+               }}
             >
               Change Password
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/signin" variant="body2">
+                <Link href="/signin" variant="body2" style={{color:'#B85042'}}>
                   Back to Sign In
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="/signup" variant="body2">
+                <Link href="/signup" variant="body2" style={{color:'#B85042'}}>
                   Don't have an account? Sign Up
                 </Link>
               </Grid>
@@ -167,3 +219,5 @@ const ChangePassword = () => {
 };
 
 export default ChangePassword;
+
+

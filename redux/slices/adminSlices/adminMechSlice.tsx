@@ -45,12 +45,12 @@ export const deleteMechanic = createAsyncThunk(
   async (mechId: User) => {
     try {
       const token = Cookies.get("token");
-      await Axios.delete(`/admin/deletemechanic/${mechId}`, {
+       const response = await Axios.delete(`/admin/deletemechanic/${mechId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      ToastSuccess("Mechanic account deleted successfully!");
+      ToastSuccess(response.data.message);
       return mechId;
     } catch (error: any) {
       ToastError(error.response.data.message);

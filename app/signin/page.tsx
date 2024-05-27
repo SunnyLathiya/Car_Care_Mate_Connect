@@ -36,7 +36,7 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_MEASUREMENTID,
 };
 
-const vapidkeys = process.env.NEXT_PUBLIC_VAPIDKEY || ""
+const vapidkeys = process.env.NEXT_PUBLIC_VAPIDKEY || "";
 
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
@@ -47,8 +47,7 @@ const requestForToken = async () => {
       "/firebase-messaging-sw.js"
     );
     const currentToken = await getToken(messaging, {
-      vapidKey:
-        vapidkeys,
+      vapidKey: vapidkeys,
       serviceWorkerRegistration,
     });
 
@@ -61,7 +60,6 @@ const requestForToken = async () => {
     return null;
   }
 };
-
 interface LoginFormValues {
   email: string;
   password: string;
@@ -181,9 +179,10 @@ export default function SignInSide() {
 
   return (
     <>
-      {loading && <Loader />}
 
-      <ThemeProvider theme={defaultTheme}>
+      {loading ? ( <Loader/>) : 
+      (
+        <ThemeProvider theme={defaultTheme}>
         <Grid container component="main" sx={{ height: "100vh" }}>
           <CssBaseline />
           <Grid
@@ -319,6 +318,7 @@ export default function SignInSide() {
           </Grid>
         </Grid>
       </ThemeProvider>
+      )}
     </>
   );
 }

@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 import { validateForm, FormErrors } from "../../components/validations/SignupValidation";
 import { formFieldStyle } from "@/css/formstyle/formfieldstyle";
 import { User } from "../types";
-import { ToastInfo } from "@/components/common/Toast";
+import { ToastInfo, ToastSuccess } from "@/components/common/Toast";
 
 interface RegisterFormValues {
   firstName: string;
@@ -64,11 +64,6 @@ export default function SignUpSide() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!isChecked) {
-      ToastInfo("Please agree to the terms and conditions");
-      return;
-    }
-
     const errors = validateForm(formData);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -91,6 +86,7 @@ export default function SignUpSide() {
     };
 
     dispatch(registerUser(user));
+    ToastSuccess("Account created successfully!");
     setFormData({
       firstName: "",
       lastName: "",
@@ -239,6 +235,7 @@ export default function SignUpSide() {
                   onChange={handleChange}
                   error={!!formErrors.confirmPassword}
                   helperText={formErrors.confirmPassword}
+                  sx={formFieldStyle}
                 />
               </Grid>
               <Grid item xs={12}>

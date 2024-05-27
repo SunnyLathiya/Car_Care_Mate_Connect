@@ -3,10 +3,10 @@ import React from "react";
 import Image from "next/image";
 import styles from "@/css/Why.module.css"
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import banner_2 from "../../public/images/banner_2.jpg";
-import banner_3 from "../../public/images/banner_3.png";
-import banner_4 from "../../public/images/banner_4.png";
-import banner_5 from "../../public/images/banner_5.png";
+import banner2 from "../../public/images/banner_2.jpg";
+import banner3 from "../../public/images/banner_3.png";
+import banner4 from "../../public/images/banner_4.png";
+import banner5 from "../../public/images/banner_5.png";
 
 interface Props {}
 
@@ -15,7 +15,7 @@ const WhyUs: React.FC<Props> = () => {
     <div className={`${styles.component}`}>
       <div className={`${styles.banner}`}>
         <div>
-          <Image src={banner_2} alt="LOGO" />
+          <Image src={banner2} alt="CarCareMateConnect" />
         </div>
         <div className={`${styles.banner__contentRight}`}>
           <br /> <br /> <br />
@@ -58,13 +58,13 @@ const WhyUs: React.FC<Props> = () => {
           </p>
         </div>
         <div>
-          <Image src={banner_3} alt="WYPE LOGO" />
+          <Image src={banner3} alt="CarCareMateConnect" />
         </div>
       </div>
 
       <div className={`${styles.banner}`}>
         <div>
-          <Image src={banner_4} alt="WYPE LOGO" />
+          <Image src={banner4} alt="CarCareMateConnect" />
         </div>
         <div className={`${styles.banner__contentRight}`}>
           <h1 className={`${styles.feature__heading}`}>TRANSPARENT</h1>
@@ -112,7 +112,7 @@ const WhyUs: React.FC<Props> = () => {
           </p>
         </div>
         <div>
-          <Image src={banner_5} alt="WYPE LOGO" />
+          <Image src={banner5} alt="CarCareMateConnect" />
         </div>
       </div>
     </div>

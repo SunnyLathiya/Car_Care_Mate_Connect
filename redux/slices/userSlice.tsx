@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "../../app/types";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
-import { ToastSuccess, ToastError } from "@/components/common/Toast";
 import { RootState } from "../store";
 import Axios from "../APIs/Axios";
 
@@ -11,10 +10,7 @@ export const registerUser = createAsyncThunk(
   "user/register",
   async (userData: User) => {
     try {
-      const createUser = await Axios.post(
-        `/register`,
-        userData
-      );
+      const createUser = await Axios.post(`/register`, userData);
       return createUser.data;
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;
@@ -26,10 +22,7 @@ export const login = createAsyncThunk(
   "user/login",
   async (userData: User, { rejectWithValue }) => {
     try {
-      const createUser = await Axios.post(
-        `/login`,
-        userData
-      );
+      const createUser = await Axios.post(`/login`, userData);
       return createUser.data;
     } catch (error: any) {
       throw (error as AxiosError).response?.data || error.message;
@@ -53,7 +46,7 @@ export const getProfile = createAsyncThunk<User>("profile/", async () => {
 
 export const updateProfile = createAsyncThunk(
   "user/updateProfile",
-  async (updatedUser: User, { rejectWithValue, getState }) => {
+  async (updatedUser: User, { getState }) => {
     try {
       const token = Cookies.get("token");
       if (!token) {
@@ -65,7 +58,6 @@ export const updateProfile = createAsyncThunk(
       if (!userId) {
         throw new Error("User ID not found in state");
       }
-
       const response = await Axios.put(
         `/updatedProfile/${userId}`,
         updatedUser,
@@ -75,11 +67,8 @@ export const updateProfile = createAsyncThunk(
           },
         }
       );
-
-      // ToastSuccess("Profile Updated Successfully!");
       return response.data.profile;
     } catch (error: any) {
-      ToastError("Problem in updating profile!");
       throw (error as AxiosError).response?.data || error.message;
     }
   }
@@ -206,7 +195,3 @@ const userSlice = createSlice({
 
 export const { setCarSelected } = userSlice.actions;
 export default userSlice.reducer;
-function rejectWithValue(data: any): any {
-  throw new Error("Function not implemented.");
-}
-

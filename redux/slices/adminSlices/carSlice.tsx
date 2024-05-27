@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
-import { ToastSuccess, ToastError } from "@/components/common/Toast";
+import { ToastSuccess } from "@/components/common/Toast";
 import { Car } from "@/app/types";
 import Axios from "@/redux/APIs/Axios";
 
@@ -28,10 +28,9 @@ export const addCar = createAsyncThunk("cars/add", async (newCar: Car) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    ToastSuccess("Car created successfully!");
+    ToastSuccess(response.data.message);
     return response.data;
   } catch (error: any) {
-    ToastError("Problem in create new Car Detail");
     throw (error as AxiosError).response?.data || error.message;
   }
 });
@@ -39,15 +38,14 @@ export const addCar = createAsyncThunk("cars/add", async (newCar: Car) => {
 export const deleteCar = createAsyncThunk("cars/delete", async (carId: any) => {
   try {
     const token = Cookies.get("token");
-    await Axios.delete(`/admin/deletecar/${carId}`, {
+    const response =await Axios.delete(`/admin/deletecar/${carId}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    ToastSuccess("car details deleted successfully!");
+    ToastSuccess(response.data.message);
     return carId;
   } catch (error: any) {
-    ToastError("Problem in Delete Car Details!");
     throw (error as AxiosError).response?.data || error.message;
   }
 });
@@ -57,8 +55,8 @@ export const updateCar = createAsyncThunk(
   async (updatedCar: Car) => {
     try {
       const token = Cookies.get("token");
-      const response = await axios.patch(
-        `http://localhost:4000/api/v1/admin/updatecar/${updatedCar._id}`,
+      const response = await Axios.patch(
+        `/admin/updatecar/${updatedCar._id}`,
         updatedCar,
         {
           headers: {
@@ -66,10 +64,9 @@ export const updateCar = createAsyncThunk(
           },
         }
       );
-      ToastSuccess("Car detailes updated successfully!");
+      ToastSuccess(response.data.message);
       return response.data;
     } catch (error: any) {
-      ToastError("Problem in  update car details!");
       throw (error as AxiosError).response?.data || error.message;
     }
   }

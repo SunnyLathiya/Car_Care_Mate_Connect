@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import styles from "@/css/Navbar.module.css";
 import { jwtDecode } from "jwt-decode";
@@ -8,13 +8,7 @@ import { usePathname } from "next/navigation";
 import { ToastError } from "./Toast";
 
 function getToken(): string | null {
-  const token = Cookies.get("token");
-
-  if (token) {
-    return token;
-  } else {
-    return null;
-  }
+  return Cookies.get("token") || null;
 }
 
 function getAccountTypeFromToken(): string | null {
@@ -28,9 +22,8 @@ function getAccountTypeFromToken(): string | null {
     } catch (error) {
       return null;
     }
-  } else {
-    return null;
   }
+  return null;
 }
 
 const handleLogout = () => {
@@ -39,34 +32,32 @@ const handleLogout = () => {
 
 const Navbar: React.FC = () => {
   const pathname = usePathname();
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(false);
   const [accountType, setAccountType] = useState<string | null>(null);
 
-  const fetchAccountType = async () => {
+  const fetchAccountType = useCallback(async () => {
     try {
-      const type = await getAccountTypeFromToken();
+      const type = getAccountTypeFromToken();
       setAccountType(type);
     } catch (error) {
       ToastError("Error fetching account type");
     }
-  };
-  fetchAccountType();
+  }, []);
+
+  useEffect(() => {
+    fetchAccountType();
+  }, [fetchAccountType]);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 100) {
-        setShow(true);
-      } else {
-        setShow(false);
-      }
+      setShow(window.scrollY > 100);
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [accountType]);
+  }, []);
 
   const customerhome = pathname.startsWith("/customer/cushome");
   return (
@@ -100,6 +91,7 @@ const Navbar: React.FC = () => {
               className={`${styles.nav__link} ${
                 pathname === "/whyus" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="Why Us?"
             >
               WHY US?
             </Link>
@@ -109,6 +101,7 @@ const Navbar: React.FC = () => {
               className={`${styles.nav__link} ${
                 pathname === "/working" ? styles.active : ""
               }  ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="How It Works"
             >
               HOW IT WORKS
             </Link>
@@ -118,6 +111,7 @@ const Navbar: React.FC = () => {
               className={`${styles.nav__link} ${
                 pathname === "/contactus" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="Contact Us"
             >
               CONTACT US
             </Link>
@@ -127,6 +121,7 @@ const Navbar: React.FC = () => {
               className={`${styles.nav__link} ${
                 pathname === "/signin" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="Login"
             >
               LOGIN
             </Link>
@@ -141,6 +136,7 @@ const Navbar: React.FC = () => {
               className={`${styles.nav__link} ${
                 customerhome ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="Home"
             >
               HOME
             </Link>
@@ -150,6 +146,7 @@ const Navbar: React.FC = () => {
               className={`${styles.nav__link} ${
                 pathname === "/customer/mybookings" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="My Bookings"
             >
               MY BOOKINGS
             </Link>
@@ -159,6 +156,7 @@ const Navbar: React.FC = () => {
               className={`${styles.nav__link} ${
                 pathname === "/profile" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="Profile"
             >
               PROFILE
             </Link>
@@ -168,6 +166,7 @@ const Navbar: React.FC = () => {
               className={`${styles.nav__link} ${
                 pathname === "/contactus" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="Contact Us"
             >
               CONTACT US
             </Link>
@@ -178,6 +177,7 @@ const Navbar: React.FC = () => {
                 pathname === "/signin" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
               onClick={handleLogout}
+              aria-label="Logout"
             >
               LOGOUT
             </Link>
@@ -190,8 +190,9 @@ const Navbar: React.FC = () => {
               href="/admin/profile"
               passHref
               className={`${styles.nav__link} ${
-                pathname === "/profile" ? styles.active : ""
+                pathname === "/admin/profile" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="Admin Profile"
             >
               PROFILE
             </Link>
@@ -202,6 +203,7 @@ const Navbar: React.FC = () => {
                 pathname === "/signin" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
               onClick={handleLogout}
+              aria-label="Logout"
             >
               LOGOUT
             </Link>
@@ -211,11 +213,12 @@ const Navbar: React.FC = () => {
         {accountType === "Mechanic" && (
           <>
             <Link
-              href="mechanic/profile"
+              href="/profile"
               passHref
               className={`${styles.nav__link} ${
                 pathname === "/profile" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
+              aria-label="Mechanic Profile"
             >
               PROFILE
             </Link>
@@ -226,6 +229,7 @@ const Navbar: React.FC = () => {
                 pathname === "/signin" ? styles.active : ""
               } ${show ? styles.nav__linkscroll : ""}`}
               onClick={handleLogout}
+              aria-label="Logout"
             >
               LOGOUT
             </Link>

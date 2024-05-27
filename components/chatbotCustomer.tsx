@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { TbMessageChatbot } from 'react-icons/tb';
+import { MdRefresh } from 'react-icons/md';
 import Draggable from 'react-draggable';
 import styles from "@/css/chat.module.css";
 
@@ -138,6 +139,11 @@ const ChatbotCustomer = () => {
     }
   };
 
+  const resetChat = () => {
+    setMessages([]);
+    setOptions(initialQuestions[0].options);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.chatbotButton}>
@@ -157,7 +163,7 @@ const ChatbotCustomer = () => {
                       key={index}
                       className={`${styles.message} ${styles[message.sender]}`}
                     >
-                      <p >{message.text}</p>
+                      <p>{message.text}</p>
                     </div>
                   ))}
                 </div>
@@ -168,6 +174,13 @@ const ChatbotCustomer = () => {
                       {option}
                     </button>
                   ))}
+                </div>
+
+                <div className={styles.resetButtonContainer}>
+                  <button className={styles.resetButton} onClick={resetChat}>
+                    <MdRefresh className={styles.resetIcon} />
+                    Reset
+                  </button>
                 </div>
               </div>
             </div>

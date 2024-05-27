@@ -1,0 +1,38 @@
+.pagecontainer {
+    margin: 20px;
+  }
+  
+  .addmechanicbutton {
+    background-color: #B85042;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .addmechanicbutton:hover {
+    background-color: #A73F38;
+  }
+  
+  .formContainer {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .formTitle {
+    margin-bottom: 20px;
+  }
+  
+  .closeFormButton {
+    margin-top: 15px;
+  }
+  
