@@ -7,10 +7,13 @@ import {
   findCompletedOrders,
   findCompletedOrdersProfit,
   allOrders,
+  updateOrder,
 } from "../controllers/orderController";
 import { auth, Admin } from "../../middleware/authMiddleware";
 
 router.get("/findplacedorders", auth, Admin, findPlacedOrders);
+
+router.patch("/updateorder/:orderId", auth, Admin, updateOrder);
 
 router.get("/findcompletedorders", auth, Admin, findCompletedOrders);
 
