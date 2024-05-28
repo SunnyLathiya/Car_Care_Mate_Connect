@@ -118,7 +118,7 @@ const FindOrders: React.FC = () => {
   }));
 
   return (
-    <div style={{ marginTop: "70px", marginLeft: "200px" }}>
+    <div style={{ marginTop: "70px", marginBottom: "250px", marginLeft: "200px" }}>
       {loading ? (
         <Loader />
       ) : (

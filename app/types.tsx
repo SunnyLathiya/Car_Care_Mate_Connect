@@ -45,6 +45,7 @@ export type Service = {
 };
 
 export type Order = {
+  mechanicId: ReactNode;
   googleMapsUrl: string;
   _id: any;
   orderId: string;

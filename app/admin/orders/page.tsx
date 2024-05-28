@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "@/redux/store";
 import {
   allorders,
   findCompletedOrders,
+  updateOrder,
 } from "@/redux/slices/adminSlices/orderSlice";
 import {
   Check,
@@ -34,7 +35,8 @@ import {
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import { ToastError } from "@/components/common/Toast";
-import Loader from "@/components/common/loader";
+import Axios from "@/redux/APIs/Axios";
+import Cookies from 'js-cookie';
 
 interface Props {}
 
@@ -90,15 +92,13 @@ const Value = styled(Typography)`
 
 const Orders: React.FC<Props> = () => {
   const { orders, loading, error } = useSelector((state: RootState) => state.order);
-  const completedResponse = useSelector(
-    (state: RootState) => state.order.completedOrders
-  );
 
   const dispatch: AppDispatch = useDispatch();
 
   const [display, setDisplay] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [mechanicsLookUp, setMechanicsLookUp] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     dispatch(allorders());
@@ -133,7 +133,29 @@ const Orders: React.FC<Props> = () => {
     setSelectedOrder(null);
   };
 
-  const columns: Column<Order>[] = [
+  const authToken = Cookies.get('token');
+
+  useEffect(() => {
+
+    Axios.get('/admin/findavailable', { 
+      headers: { Authorization: `Bearer ${authToken}` } 
+    })
+    .then(response => {
+      const availableMechanics = response.data.mechanicsList;
+  
+      const updatedMechanicsLookUp = availableMechanics.reduce((lookup: { [key: string]: string }, mechanic: { _id: string; id: string }) => {
+        lookup[mechanic._id] = mechanic.id;
+        return lookup;
+      }, {});
+      setMechanicsLookUp(updatedMechanicsLookUp);
+    })
+    .catch(error => {
+      console.error('Error fetching available mechanics:', error);
+    });
+  }, []);
+  
+
+  const currentOrderColumns: Column<Order>[] = [
     { title: "OrderId", field: "orderId" },
     { title: "Customer Name", field: "customerName" },
     { title: "Car Name", field: "carName" },
@@ -150,15 +172,29 @@ const Orders: React.FC<Props> = () => {
     { title: "Order Status", field: "status" },
   ];
 
-  const column: Column<Order>[] = [
-    { title: "OrderId", field: "orderId" },
-    { title: "Customer Name", field: "customerName" },
-    { title: "Car Name", field: "carName" },
-    { title: "Car Number", field: "carNumber" },
-    { title: "Address", field: "custAddress" },
-    { title: "Service Name", field: "serviceName" },
-    { title: "Price", field: "servicePrice" },
-    { title: "Assigned Mechanic", field: "mechanicId" },
+  const handleRowUpdate = async (newRow: Order, oldRow: Order | undefined) => {
+    if (oldRow) {
+      try {
+        await dispatch(updateOrder(newRow));
+      } catch (error: any) {
+        console.error('Error occurred while updating order:', error);
+      }
+    }
+  };
+
+  const placedOrderColumns: Column<Order>[] = [
+    { title: "OrderId", field: "orderId", editable: "never" },
+    { title: "Customer Name", field: "customerName", editable: "never" },
+    { title: "Car Name", field: "carName", editable: "never" },
+    { title: "Car Number", field: "carNumber", editable: "never" },
+    { title: "Address", field: "custAddress", editable: "never" },
+    { title: "Service Name", field: "serviceName", editable: "never" },
+    { title: "Price", field: "servicePrice", editable: "never" },
+    {
+      title: "Assign Mechanic",
+      field: "mechanicId",
+      lookup:mechanicsLookUp
+    },
   ];
 
   const enhancedOrders =
@@ -167,245 +203,255 @@ const Orders: React.FC<Props> = () => {
       tableData: { id: index },
     })) || [];
 
-  const completedenhancedOrders =
-    completedResponse?.map((order: Order, index: number) => ({
-      ...order,
-      tableData: { id: index },
-    })) || [];
+    console.log("7", orders)
+
+    const placedorders =
+    orders
+      ?.filter((order: Order) => order.status === "PLACED")
+      .map((order: Order, index: number) => ({
+        ...order,
+        tableData: { id: index },
+      })) || [];
+
+
+      console.log("77", placedorders)
 
   return (
     <div style={{ marginTop: "70px", marginBottom: "20px", marginLeft: "190px" }}>
+        <>
+          <br />
+          <button onClick={openTable}>See Pending Orders</button>
+          <br />
 
-      { loading ? (<Loader/>)  : 
-      (<>
-      <br />
-      <button onClick={openTable}>See Completed Orders</button>
-      <br />
-
-      {enhancedOrders.length > 0 ? (
-        <MaterialTable
-          title="CURRENT ORDERS DATA"
-          columns={columns}
-          style={{ backgroundColor: "#E7E8D1" }}
-          data={enhancedOrders}
-          icons={{
-            Clear: forwardRef(() => <Clear style={{ color: "#B85042" }} />),
-            Check: forwardRef(() => <Check style={{ color: "#B85042" }} />),
-            Delete: forwardRef(() => <Delete style={{ color: "#B85042" }} />),
-            DetailPanel: forwardRef(() => (
-              <ChevronRight style={{ color: "#B85042" }} />
-            )),
-            Edit: forwardRef(() => <Edit style={{ color: "#B85042" }} />),
-            Export: forwardRef(() => (
-              <ArrowUpward style={{ color: "#B85042" }} />
-            )),
-            Filter: forwardRef(() => <Search />),
-            FirstPage: forwardRef(() => (
-              <FirstPage style={{ color: "#B85042" }} />
-            )),
-            LastPage: forwardRef(() => (
-              <LastPage style={{ color: "#B85042" }} />
-            )),
-            NextPage: forwardRef(() => (
-              <ChevronRight style={{ color: "#B85042" }} />
-            )),
-            PreviousPage: forwardRef(() => (
-              <ChevronLeft style={{ color: "#B85042" }} />
-            )),
-            ResetSearch: forwardRef(() => (
-              <Clear style={{ color: "#B85042" }} />
-            )),
-            Search: forwardRef(() => <Search style={{ color: "#B85042" }} />),
-            SortArrow: forwardRef(() => <ArrowDownward />),
-          }}
-          options={{
-            headerStyle: {
-              backgroundColor: "#B85042",
-              color: "#FFF",
-              zIndex: "0",
-            },
-            actionsCellStyle: {
-              backgroundColor: "#E7E8D1",
-            },
-            rowStyle: {
-              backgroundColor: "#E7E8D1",
-              border: "1px solid #A7BEAE",
-            },
-            exportButton: true,
-          }}
-          actions={[
-            {
-              icon: () => <Info style={{ color: "#B85042" }} />,
-              tooltip: "View Details",
-              onClick: (event, rowData) => handleOpen(rowData as Order),
-            },
-          ]}
-        />
-      ) : (
-        <div>
-          <br />
-          <h2>NO CURRENT ORDERS RIGHT NOW......</h2>
-        </div>
-      )}
-      <br />
-      <br />
-      <br />
-
-      {display ? (
-        <div>
-          <h1>COMPLETED ORDERS</h1>
-          <MaterialTable
-            title="COMPLETED ORDERS DATA"
-            columns={column}
-            style={{ backgroundColor: "#E7E8D1" }}
-            data={completedenhancedOrders}
-            icons={{
-              Clear: forwardRef(() => <Clear style={{ color: "#B85042" }} />),
-              Check: forwardRef(() => <Check style={{ color: "#B85042" }} />),
-              Delete: forwardRef(() => <Delete style={{ color: "#B85042" }} />),
-              DetailPanel: forwardRef(() => (
-                <ChevronRight style={{ color: "#B85042" }} />
-              )),
-              Edit: forwardRef(() => <Edit style={{ color: "#B85042" }} />),
-              Export: forwardRef(() => (
-                <ArrowUpward style={{ color: "#B85042" }} />
-              )),
-              Filter: forwardRef(() => <Search />),
-              FirstPage: forwardRef(() => (
-                <FirstPage style={{ color: "#B85042" }} />
-              )),
-              LastPage: forwardRef(() => (
-                <LastPage style={{ color: "#B85042" }} />
-              )),
-              NextPage: forwardRef(() => (
-                <ChevronRight style={{ color: "#B85042" }} />
-              )),
-              PreviousPage: forwardRef(() => (
-                <ChevronLeft style={{ color: "#B85042" }} />
-              )),
-              ResetSearch: forwardRef(() => (
-                <Clear style={{ color: "#B85042" }} />
-              )),
-              Search: forwardRef(() => <Search style={{ color: "#B85042" }} />),
-              SortArrow: forwardRef(() => <ArrowDownward />),
-            }}
-            options={{
-              headerStyle: {
-                backgroundColor: "#B85042",
-                color: "#FFF",
-                zIndex: "0",
-              },
-              actionsCellStyle: {
-                backgroundColor: "#E7E8D1",
-              },
-              rowStyle: {
-                backgroundColor: "#E7E8D1",
-                border: "1px solid #A7BEAE",
-              },
-              exportButton: true,
-            }}
-          />
-          <br />
-          <button onClick={closeTable}>Close Table</button>
-          <br />
-          <br />
-          <br />
-        </div>
-      ) : null}
-
-      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
-        <DialogTitleStyled>Order Details</DialogTitleStyled>
-        <DialogContentStyled>
-          {selectedOrder && (
-            <>
-              <Row>
-                <Label>Order ID:</Label>
-                <Value>{selectedOrder.orderId}</Value>
-              </Row>
-              <Row>
-                <Label>Customer Name:</Label>
-                <Value>{selectedOrder.customerName}</Value>
-              </Row>
-              <Row>
-                <Label>Car Name:</Label>
-                <Value>{selectedOrder.carName}</Value>
-              </Row>
-              <Row>
-                <Label>Car Number:</Label>
-                <Value>{selectedOrder.carNumber}</Value>
-              </Row>
-              <Row>
-                <Label>Address:</Label>
-                <Value>{selectedOrder.custAddress}</Value>
-              </Row>
-              <Row>
-                <Label>Service Name:</Label>
-                <Value>{selectedOrder.serviceName}</Value>
-              </Row>
-              <Row>
-                <Label>Price:</Label>
-                <Value>{selectedOrder.servicePrice}</Value>
-              </Row>
-              <Row>
-                <Label>paymentStatus:</Label>
-                <Value>{selectedOrder.paymentStatus}</Value>
-              </Row>
-              <Row>
-                <Label>Mechanic Name:</Label>
-                <Value>{selectedOrder.mechanicName}</Value>
-              </Row>
-              <Row>
-                <Label>Date of Order:</Label>
-                <Value>
-                  {format(new Date(selectedOrder.requestedOn), "dd-MM-yyyy")}
-                </Value>
-              </Row>
-              <Row>
-                <Label>Time of order:</Label>
-                <Value>
-                  {format(new Date(selectedOrder?.requestedOn), "HH:mm:ss")}
-                </Value>
-              </Row>
-              <Row>
-                <Label>Status:</Label>
-                <Value>{selectedOrder.status}</Value>
-              </Row>
-              <Row>
-                <Label>Date of last update order:</Label>
-                <Value>
-                  {format(
-                    new Date(
-                      selectedOrder.lastUpdated || selectedOrder.requestedOn
-                    ),
-                    "dd-MM-yyyy"
-                  )}
-                </Value>
-              </Row>
-              <Row>
-                <Label>Time of last update order:</Label>
-                <Value>
-                  {format(
-                    new Date(
-                      selectedOrder.lastUpdated || selectedOrder.requestedOn
-                    ),
-                    "HH:mm:ss"
-                  )}
-                </Value>
-              </Row>
-              <Row>
-                <Label>MechanicId:</Label>
-                <Value>{selectedOrder.Id}</Value>
-              </Row>
-            </>
+          {enhancedOrders.length > 0 ? (
+            <MaterialTable
+              title="ALL ORDERS DATA"
+              columns={currentOrderColumns}
+              style={{ backgroundColor: "#E7E8D1" }}
+              data={enhancedOrders}
+              icons={{
+                Clear: forwardRef(() => <Clear style={{ color: "#B85042" }} />),
+                Check: forwardRef(() => <Check style={{ color: "#B85042" }} />),
+                Delete: forwardRef(() => <Delete style={{ color: "#B85042" }} />),
+                DetailPanel: forwardRef(() => (
+                  <ChevronRight style={{ color: "#B85042" }} />
+                )),
+                Edit: forwardRef(() => <Edit style={{ color: "#B85042" }} />),
+                Export: forwardRef(() => (
+                  <ArrowUpward style={{ color: "#B85042" }} />
+                )),
+                Filter: forwardRef(() => <Search />),
+                FirstPage: forwardRef(() => (
+                  <FirstPage style={{ color: "#B85042" }} />
+                )),
+                LastPage: forwardRef(() => (
+                  <LastPage style={{ color: "#B85042" }} />
+                )),
+                NextPage: forwardRef(() => (
+                  <ChevronRight style={{ color: "#B85042" }} />
+                )),
+                PreviousPage: forwardRef(() => (
+                  <ChevronLeft style={{ color: "#B85042" }} />
+                )),
+                ResetSearch: forwardRef(() => (
+                  <Clear style={{ color: "#B85042" }} />
+                )),
+                Search: forwardRef(() => <Search style={{ color: "#B85042" }} />),
+                SortArrow: forwardRef(() => <ArrowDownward />),
+              }}
+              options={{
+                headerStyle: {
+                  backgroundColor: "#B85042",
+                  color: "#FFF",
+                  zIndex: "0",
+                },
+                actionsCellStyle: {
+                  backgroundColor: "#E7E8D1",
+                },
+                rowStyle: {
+                  backgroundColor: "#E7E8D1",
+                  border: "1px solid #A7BEAE",
+                },
+                exportButton: true,
+              }}
+              actions={[
+                {
+                  icon: () => <Info style={{ color: "#B85042" }} />,
+                  tooltip: "View Details",
+                  onClick: (event, rowData) => handleOpen(rowData as Order),
+                },
+              ]}
+            />
+          ) : (
+            <div>
+              <br />
+              <h2>NO ORDERS RIGHT NOW......</h2>
+            </div>
           )}
-        </DialogContentStyled>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
-      </>)}
+
+          <br />
+          <br />
+          <br />
+
+          {display && (
+            <div>
+              <h1>PENDING ORDERS</h1>       
+              <MaterialTable
+                title="PENDING ORDERS DATA"
+                columns={placedOrderColumns}
+                style={{ backgroundColor: "#E7E8D1" }}
+                data={placedorders}
+                editable={{
+                  onRowUpdate: handleRowUpdate
+                }}
+                icons={{
+                  Clear: forwardRef(() => <Clear style={{ color: "#B85042" }} />),
+                  Check: forwardRef(() => <Check style={{ color: "#B85042" }} />),
+                  Delete: forwardRef(() => <Delete style={{ color: "#B85042" }} />),
+                  DetailPanel: forwardRef(() => (
+                    <ChevronRight style={{ color: "#B85042" }} />
+                  )),
+                  Edit: forwardRef(() => <Edit style={{ color: "#B85042" }} />),
+                  Export: forwardRef(() => (
+                    <ArrowUpward style={{ color: "#B85042" }} />
+                  )),
+                  Filter: forwardRef(() => <Search />),
+                  FirstPage: forwardRef(() => (
+                    <FirstPage style={{ color: "#B85042" }} />
+                  )),
+                  LastPage: forwardRef(() => (
+                    <LastPage style={{ color: "#B85042" }} />
+                  )),
+                  NextPage: forwardRef(() => (
+                    <ChevronRight style={{ color: "#B85042" }} />
+                  )),
+                  PreviousPage: forwardRef(() => (
+                    <ChevronLeft style={{ color: "#B85042" }} />
+                  )),
+                  ResetSearch: forwardRef(() => (
+                    <Clear style={{ color: "#B85042" }} />
+                  )),
+                  Search: forwardRef(() => <Search style={{ color: "#B85042" }} />),
+                  SortArrow: forwardRef(() => <ArrowDownward />),
+                }}
+                options={{
+                  headerStyle: {
+                    backgroundColor: "#B85042",
+                    color: "#FFF",
+                    zIndex: "0",
+                  },
+                  actionsCellStyle: {
+                    backgroundColor: "#E7E8D1",
+                  },
+                  rowStyle: {
+                    backgroundColor: "#E7E8D1",
+                    border: "1px solid #A7BEAE",
+                  },
+                  exportButton: true,
+                }}
+              />
+
+              <br />
+              <button onClick={closeTable}>Close Table</button>
+              <br />
+              <br />
+              <br />
+            </div>
+          )}
+
+          <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+            <DialogTitleStyled>Order Details</DialogTitleStyled>
+            <DialogContentStyled>
+              {selectedOrder && (
+                <>
+                  <Row>
+                    <Label>Order ID:</Label>
+                    <Value>{selectedOrder.orderId}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Customer Name:</Label>
+                    <Value>{selectedOrder.customerName}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Car Name:</Label>
+                    <Value>{selectedOrder.carName}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Car Number:</Label>
+                    <Value>{selectedOrder.carNumber}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Address:</Label>
+                    <Value>{selectedOrder.custAddress}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Service Name:</Label>
+                    <Value>{selectedOrder.serviceName}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Price:</Label>
+                    <Value>{selectedOrder.servicePrice}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Payment Status:</Label>
+                    <Value>{selectedOrder.paymentStatus}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Mechanic Name:</Label>
+                    <Value>{selectedOrder.mechanicName}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Date of Order:</Label>
+                    <Value>
+                      {format(new Date(selectedOrder.requestedOn), "dd-MM-yyyy")}
+                    </Value>
+                  </Row>
+                  <Row>
+                    <Label>Time of Order:</Label>
+                    <Value>
+                      {format(new Date(selectedOrder?.requestedOn), "HH:mm:ss")}
+                    </Value>
+                  </Row>
+                  <Row>
+                    <Label>Status:</Label>
+                    <Value>{selectedOrder.status}</Value>
+                  </Row>
+                  <Row>
+                    <Label>Date of Last Update:</Label>
+                    <Value>
+                      {format(
+                        new Date(
+                          selectedOrder.lastUpdated || selectedOrder.requestedOn
+                        ),
+                        "dd-MM-yyyy"
+                      )}
+                    </Value>
+                  </Row>
+                  <Row>
+                    <Label>Time of Last Update:</Label>
+                    <Value>
+                      {format(
+                        new Date(
+                          selectedOrder.lastUpdated || selectedOrder.requestedOn
+                        ),
+                        "HH:mm:ss"
+                      )}
+                    </Value>
+                  </Row>
+                  <Row>
+                    <Label>Mechanic ID:</Label>
+                    <Value>{selectedOrder.mechanicId}</Value>
+                  </Row>
+                </>
+              )}
+            </DialogContentStyled>
+            <DialogActions>
+              <Button onClick={handleClose} color="primary">
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </>
     </div>
   );
 };

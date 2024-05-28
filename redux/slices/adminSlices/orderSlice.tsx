@@ -1,5 +1,5 @@
 "use client";
-import { ToastError } from "@/components/common/Toast";
+import { ToastError, ToastSuccess } from "@/components/common/Toast";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import Cookies from "js-cookie";
@@ -37,6 +37,28 @@ export const allorders = createAsyncThunk("order/allorders", async () => {
     throw (error as AxiosError).response?.data || error.message;
   }
 });
+
+export const updateOrder = createAsyncThunk(
+  "cars/update",
+  async (updatedOrder: any) => {
+    try {
+      const token = Cookies.get("token");
+      const response = await Axios.patch(
+        `/admin/updateOrder/${updatedOrder._id}`,
+        updatedOrder,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      ToastSuccess(response.data.message)
+      return response.data;
+    } catch (error: any) {
+      throw (error as AxiosError).response?.data || error.message;
+    }
+  }
+);
 
 export const findCompletedOrders = createAsyncThunk(
   "order/findcompletedorders",
@@ -108,6 +130,26 @@ const orderSlice = createSlice({
       .addCase(allorders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch cars";
+      })
+      .addCase(updateOrder.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateOrder.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+
+        const index = state.orders.findIndex(
+          (order: any) => order._id === action.payload.neworder._id
+        );
+        if (index !== -1) {
+          state.orders[index] = action.payload.newcar;
+        }
+      })
+      .addCase(updateOrder.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to update order";
+        console.log("1111111", action)
       })
       .addCase(findPlacedOrders.pending, (state) => {
         state.loading = true;
