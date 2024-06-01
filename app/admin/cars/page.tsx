@@ -37,7 +37,7 @@ function Cars() {
 
   useEffect(() => {
     dispatch(getAllCars());
-  }, [dispatch]);
+  }, [dispatch]); 
 
   useEffect(() => {
     if (error) {

@@ -123,6 +123,7 @@ const orderManageSlice = createSlice({
 
         if (index !== -1) {
           state.allOrders[index] = updatedOrder;
+          state.allOrders = [...state.allOrders];
         } else {
           state.error = "Order not found";
         }

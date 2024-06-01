@@ -46,10 +46,14 @@ const requestForToken = async () => {
     const serviceWorkerRegistration = await navigator.serviceWorker.register(
       "/firebase-messaging-sw.js"
     );
+
+    console.log("2", serviceWorkerRegistration)
     const currentToken = await getToken(messaging, {
       vapidKey: vapidkeys,
       serviceWorkerRegistration,
     });
+
+    console.log("1", currentToken)
 
     if (currentToken) {
       return currentToken;

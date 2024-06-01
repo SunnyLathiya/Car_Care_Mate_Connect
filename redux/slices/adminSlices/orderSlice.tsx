@@ -149,7 +149,6 @@ const orderSlice = createSlice({
       .addCase(updateOrder.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to update order";
-        console.log("1111111", action)
       })
       .addCase(findPlacedOrders.pending, (state) => {
         state.loading = true;

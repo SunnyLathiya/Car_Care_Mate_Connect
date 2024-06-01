@@ -37,6 +37,7 @@ import styled from "@emotion/styled";
 import { ToastError } from "@/components/common/Toast";
 import Axios from "@/redux/APIs/Axios";
 import Cookies from 'js-cookie';
+import Loader from "@/components/common/loader";
 
 interface Props {}
 
@@ -203,7 +204,6 @@ const Orders: React.FC<Props> = () => {
       tableData: { id: index },
     })) || [];
 
-    console.log("7", orders)
 
     const placedorders =
     orders
@@ -214,11 +214,11 @@ const Orders: React.FC<Props> = () => {
       })) || [];
 
 
-      console.log("77", placedorders)
-
   return (
     <div style={{ marginTop: "70px", marginBottom: "20px", marginLeft: "190px" }}>
-        <>
+        { loading ? (<Loader/>) : 
+        (
+          <>
           <br />
           <button onClick={openTable}>See Pending Orders</button>
           <br />
@@ -452,6 +452,7 @@ const Orders: React.FC<Props> = () => {
             </DialogActions>
           </Dialog>
         </>
+        )}
     </div>
   );
 };

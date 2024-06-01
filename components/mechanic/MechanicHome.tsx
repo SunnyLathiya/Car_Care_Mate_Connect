@@ -38,7 +38,7 @@ const MechanicHome: React.FC<MechanicHomeProps> = () => {
     {
       text: "Log Out",
       icon: <ExitToAppIcon />,
-      path: "/login",
+      path: "/signin",
     },
   ];
 

@@ -209,7 +209,7 @@ const MyOrders: React.FC = () => {
         </div>
       )}
 
-      <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitleStyled>Order Details</DialogTitleStyled>
         <DialogContentStyled>
           {selectedOrder && (
