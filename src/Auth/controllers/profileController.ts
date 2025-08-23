@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../models/userModel";
-import bcrypt from "bcryptJS";
+import bcrypt from "bcryptjs";
 
 export const getProfile = async (req: Request, res: Response) => {
   try {

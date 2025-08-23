@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptJS";
+import bcrypt from "bcryptjs";
 import userModel from "../../Auth/models/userModel";
 import mailSender from "../../utils/mailSender";
 

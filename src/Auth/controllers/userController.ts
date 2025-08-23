@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import userModel, { User } from "../models/userModel";
-import bcrypt from "bcryptJS";
+import bcrypt from "bcryptjs";
 import mailSender from "../../utils/mailSender";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
