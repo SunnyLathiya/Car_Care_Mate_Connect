@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../models/userModel";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptJS";
 
 export const getProfile = async (req: Request, res: Response) => {
   try {
@@ -61,7 +61,6 @@ export const updatedProfile = async (req: Request, res: Response) => {
       favouriteCar,
     } = req.body;
     const id = req.user?.id;
-
 
     const profileDetails = await userModel.findById(id);
 
@@ -125,7 +124,9 @@ export const updatedPassword = async (req: Request, res: Response) => {
 
     res.status(200).json({ message: "Password updated successfully" });
   } catch (error: any) {
-    res.status(500).json({ message: error.message || "Internal Server Error!", });
+    res
+      .status(500)
+      .json({ message: error.message || "Internal Server Error!" });
   }
 };
 
@@ -141,7 +142,7 @@ export const deleteAccount = async (req: Request, res: Response) => {
       });
     }
 
-    await userModel.findByIdAndUpdate(id, { isActive: false}, { new: true });
+    await userModel.findByIdAndUpdate(id, { isActive: false }, { new: true });
 
     return res.status(200).json({
       success: true,

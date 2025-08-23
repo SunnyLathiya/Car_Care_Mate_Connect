@@ -1,11 +1,24 @@
-import * as admin from 'firebase-admin';
-import * as serviceAccount from './serviceAccountKey.json';
+import * as admin from "firebase-admin";
 
-const serviceAccountKey: any = serviceAccount;
-
+const serviceAccountKey: any = {
+  type: "service_account",
+  project_id: "carservices-ac00c",
+  private_key_id: "22097527f502eb3f88806317c640a448a0386579",
+  private_key:
+    "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDBu/EnO+D0CYvu\nhxmc41Lh18DNwvL0/UWBdJ5B4AOvq8n84UVHlnigMnuj8FDYStb+XIklR/LhT8f+\nw++ty+FvHyM1vsY5iIe88BRC+PGzkHtj0vHLb1jcX2qADacHIlM4llFDFAXUComV\nLBbg3iN6Qv5di9pc88yHAJXx8CNY7LEQTxC9i7L05jTbNL/39inqw/wuqkDFvMsa\nfyAPi1KhGB8nQ3hjUr4y+vJ5AkRO1eRS95ZllbTpPy8I4T4HqvOY3YaVTaiB1qNU\nGJRIW5RUbK0nXFM8EbzztnIEhRozYjRg0KIg2udyhvuS4BnS+ai80rvxwFbE4nDH\np6GlfuZ5AgMBAAECggEAKUKDHgV5J9Aerqq0MD8TyEiAZfIGd1m3Y1Y4XDQ+5Ltz\n9bjuXcw0nX2S6nvEZAQwXJTNmpSDrCunHuGQ2pVIyjc58vjR06/5pKoGzqqhI0p6\nlOx4lYh9xtVFY8dEktbjHXKaFOyfPyUNXyk4KCT3LlM1RCwEUfaUUQ41YQTxKj9D\nFNgC/JKq4F92Z8zAj+kkKuWyBI/pRDMcRp2MbBEtNAWskOfobY/500HwOVb9FKqL\nbfqRTUARh1bg6sawDhakHLoUdg55/a8BWSMpRAXHiHGWyRS/auwzGOIdwI7orco0\nXpSWLh0vm6xV/7bZaY9QJRaBEkIMjJY4pr/7tgvdpwKBgQD5BM1brK6LFzkYrUEQ\n2MmGN4Xx8poLNMi9toW6IRefRJd6eHHc8CGt60go9qUL0mECTOdcNjiN6HFu39FQ\nTSvVSy5bMYAw3CmdWRf3yqz7rPzyCi3IaKMA4G+/OAlCoF5NAVxn98XqqmgWRd/d\nbBCf8tklibVj4iFXsNaESpdmOwKBgQDHKl1GdOBuO2BM5gqkDxXSQlN5NFog0fBr\n0SnrbVqv6y617nbBlQ+QqmEhsIaJPY/HX4q7xTJ1KFJrG8f4IdZpGiHa0qGx3Bz6\niGe6d3HzEFjT1cc093r8gdDaPR2EYhws+36FZwFGiPjoU4F3kq/jUb6P30AdZgvT\nXWa3ip422wKBgCLYxDAG+ynlpwzH+en0nEbW8DyKWXol+c1qhE4moVqdS6FMx4pG\nZEAlQ6TP1wrPdtnOjzW9NK7PD0iXs3/MPM0NR0Blre2ocX5eYFdBmnFhpMfuGrgH\nxH+z6I9WtR0IugmGnjrCVoTfMc+kGY6vt6faYP66xZJjq4zM50f99C/PAoGBAKlK\nD0LGMcZA3hg/KShOUkQIcJ+DqmBfUraycalVqFID3A50hakCJNrYl/tk6tZY54+W\nXHxCoCMJhRTZ5l25lWB8/+3aP+rIqDEkJNdQlCEA8iANhGg3O+jKB1aZwC84na52\njxKhfWoRH1GLOW8D1lGouAvevca/aKneqGK2hsklAoGAcvRB4x55HODbFK0M3c9j\nuMSV7seOejVj/V46a0dD1p5Pc5ZGI7DURaXwMmB6VpY4TUuADAUxKMj0fV5h3GPU\nvyAzth5VG5zIRqDpmfnH1nOKD2dX4XxmbCA6jsOrBYykLDC7f8DBUAp9n5HZfZ0B\nP5Vhs+Y8wvE/fXOwnRT54bk=\n-----END PRIVATE KEY-----\n",
+  client_email:
+    "firebase-adminsdk-9jy64@carservices-ac00c.iam.gserviceaccount.com",
+  client_id: "101004257611003092047",
+  auth_uri: "https://accounts.google.com/o/oauth2/auth",
+  token_uri: "https://oauth2.googleapis.com/token",
+  auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+  client_x509_cert_url:
+    "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-9jy64%40carservices-ac00c.iam.gserviceaccount.com",
+  universe_domain: "googleapis.com",
+};
 admin.initializeApp({
-    credential: admin.credential.cert(serviceAccountKey),
-    storageBucket: 'gs://carserviceproject-51b11.appspot.com'
+  credential: admin.credential.cert(serviceAccountKey),
+  storageBucket: "gs://carserviceproject-51b11.appspot.com",
 });
 
 const mauth = admin as unknown as admin.app.App;

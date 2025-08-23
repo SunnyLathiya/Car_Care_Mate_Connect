@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptJS";
 import userModel from "../../Auth/models/userModel";
 import mailSender from "../../utils/mailSender";
 
@@ -62,13 +62,9 @@ export const signup = async (req: Request, res: Response) => {
     const body = `Hello ${mechName},\n\nYour account has been created successfully. You can receive your password with forget option with your email.`;
 
     try {
-      await mailSender(
-        email,
-        title,
-        body,
-      );
+      await mailSender(email, title, body);
     } catch (error: any) {
-      message: error.message || "Error sending email"
+      message: error.message || "Error sending email";
     }
 
     return res.status(200).json({

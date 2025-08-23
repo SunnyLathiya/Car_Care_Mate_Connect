@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import userModel, { User } from "../models/userModel";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptJS";
 import mailSender from "../../utils/mailSender";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -190,7 +190,9 @@ export const ForgotPassword = async (req: Request, res: Response) => {
       `Click the link to reset your password: ${resetURL}`
     );
 
-    res.status(200).json({ message: "Password reset link sent successfully", mailInfo });
+    res
+      .status(200)
+      .json({ message: "Password reset link sent successfully", mailInfo });
   } catch (error: any) {
     res.status(500).json({ message: "Failed to send email" });
   }
