@@ -112,16 +112,15 @@
 
 {
   "compilerOptions": {
-    "target": "es2020",                   /* Use modern JS features */
-    "module": "commonjs",                 /* Node.js uses CommonJS */
-    "rootDir": "./src",                   /* All TS files are inside src */
-    "outDir": "./build",                  /* Compiled JS goes into build */
-    "resolveJsonModule": true,            /* Allow importing JSON files */
-    "esModuleInterop": true,              /* For import compatibility */
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,                       /* Enable strict type checking */
-    "skipLibCheck": true                  /* Speeds up build by skipping .d.ts checks */
+    "outDir": "dist",
+    "rootDir": "src",
+    "module": "commonjs",
+    "target": "es2019",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
-  "include": ["src"],                     /* Compile everything inside src */
-  "exclude": ["node_modules", "build"]    /* Don’t compile these */
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
+
