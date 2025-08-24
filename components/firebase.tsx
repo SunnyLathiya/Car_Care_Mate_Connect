@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getMessaging } from "firebase/messaging";
+import { getMessaging, isSupported } from "firebase/messaging";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -14,4 +14,13 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 export const imageDb = getStorage(app);
-export const messaging = getMessaging();
+// ✅ Only load messaging in browser & if supported
+export let messaging: ReturnType<typeof getMessaging> | null = null;
+
+if (typeof window !== "undefined") {
+  isSupported().then((supported) => {
+    if (supported) {
+      messaging = getMessaging(app);
+    }
+  });
+}
