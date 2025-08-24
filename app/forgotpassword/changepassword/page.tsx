@@ -45,7 +45,7 @@ const ChangePassword = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/v1/changepasswordwithtoken/${token}`,
+        `https://car-care-mate-connect-backend.onrender.com/api/v1/changepasswordwithtoken/${token}`,
         {
           method: "POST",
           headers: {
@@ -149,7 +149,7 @@ const ChangePassword = () => {
                     color: '#B85042',
                   },
                 },
-              }} 
+              }}
             />
             <TextField
               margin="normal"
@@ -181,7 +181,7 @@ const ChangePassword = () => {
                     color: '#B85042',
                   },
                 },
-              }} 
+              }}
             />
             <Button
               type="submit"
@@ -195,7 +195,7 @@ const ChangePassword = () => {
                 '&:hover': {
                   backgroundColor: '#974038',
                 },
-               }}
+              }}
             >
               Change Password
             </Button>

@@ -27,7 +27,7 @@ const ForgotPassword = () => {
 
     setLoading(true); 
     try {
-      const response = await fetch('http://localhost:4000/api/v1/forgotpassword', {
+      const response = await fetch('https://car-care-mate-connect-backend.onrender.com/api/v1/forgotpassword', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
