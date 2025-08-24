@@ -1,13 +1,13 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Navbar from "@/components/common/Navbar";
 import { StoreProvider } from "@/redux/provider";
 import { ToastContainer } from "../components/common/Toast";
 import "react-toastify/dist/ReactToastify.css";
 import Footer from "@/components/common/Footer";
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "CarCareMateConnect",
@@ -56,7 +56,7 @@ export default function RootLayout({
           media="screen"
         ></link>
       </head>
-      <body className={inter.className}>
+      <body>
         <StoreProvider>
           <ToastContainer />
           <Navbar />

@@ -39,31 +39,32 @@ const firebaseConfig = {
 const vapidkeys = process.env.NEXT_PUBLIC_VAPIDKEY || "";
 
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
+// const messaging = getMessaging(app);
 
+// ✅ Wrap in a function, only run in browser
 const requestForToken = async () => {
+  if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
+    return null; // SSR safe
+  }
+
   try {
+    const messaging = getMessaging(app);
     const serviceWorkerRegistration = await navigator.serviceWorker.register(
       "/firebase-messaging-sw.js"
     );
 
-    console.log("2", serviceWorkerRegistration)
     const currentToken = await getToken(messaging, {
       vapidKey: vapidkeys,
       serviceWorkerRegistration,
     });
 
-    console.log("1", currentToken)
-
-    if (currentToken) {
-      return currentToken;
-    } else {
-      return null;
-    }
+    return currentToken || null;
   } catch (err) {
+    console.error("FCM Token error:", err);
     return null;
   }
 };
+
 interface LoginFormValues {
   email: string;
   password: string;
